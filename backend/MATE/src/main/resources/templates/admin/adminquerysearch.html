@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>정정게시판</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #FFF;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #FFCC00;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        .header-left img {
+            width: 50px;
+            height: 50px;
+            margin-right: 20px;
+        }
+        .header-left h1 {
+            font-size: 50px;
+            color: #FFF;
+            margin: 0;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .header-right span {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        .header-right button {
+            background-color: white;
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .header-right button:hover {
+            background-color: #f1f1f1;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 40px;
+        }
+        .search-bar input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        .search-bar button {
+            background-color: #FFCC00;
+            color: #FFF;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .search-bar button:hover {
+            background-color: #FFBB00;
+        }
+
+        .table-container {
+            padding: 20px 40px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th, table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        table th {
+            background-color: #FFCC00;
+            color: #FFF;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .table-scroll {
+            max-height: calc(100vh - 300px);
+            overflow-y: auto;
+            border: 1px solid #ccc;
+        }
+
+        label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="header-left">
+        <img src="file:///C:\Users\User\Desktop\MATE_Aivle_BP-main\screenshare_java\src\main\resources\static\img/logo.png" alt="Mate Logo">
+        <h1>정정게시판</h1>
+    </div>
+    <div class="header-right">
+        <span>관리자님 반갑습니다.</span>
+        <button>정정게시판</button>
+        <button>로그아웃</button>
+    </div>
+</header>
+
+<div class="search-bar">
+    <div>
+        <label for="employee-name">사원명</label>
+        <input id="employee-name" type="text" placeholder="입력하세요">
+        <label for="department-name">부서명</label>
+        <input id="department-name" type="text" placeholder="입력하세요">
+        <label for="date-range">기간</label>
+        <input id="date-range" type="date">
+    </div>
+    <button>조회</button>
+</div>
+
+<div class="table-container">
+    <div class="table-scroll">
+        <table>
+            <thead>
+                <tr>
+                    <th>발언자</th>
+                    <th>시간</th>
+                    <th>최종결과</th>
+                    <th>내용</th>
+                </tr>
+            </thead>
+            
+            <!-- 테이블 내용은 임의로 작성한 것이므로 실제 데이터로 대체해야 합니다. -->
+            <tbody>
+                <tr>
+                    <td>Mike</td>
+                    <td>2024-11-03 15:22:43</td>
+                    <td>독성</td>
+                    <td>너 일 참 너처럼 한다.</td>
+                </tr>
+                <tr>
+                    <td>Sam</td>
+                    <td>2024-11-03 15:23:04</td>
+                    <td>일반</td>
+                    <td>네, 저 일 잘하죠?</td>
+                </tr>
+                <tr>
+                    <td>Mike</td>
+                    <td>2024-11-03 15:24:04</td>
+                    <td>독성</td>
+                    <td>예흠, 뭐 저런 것과 상종하나</td>
+                </tr>
+                <tr>
+                    <td>Lisa</td>
+                    <td>2024-11-03 15:25:10</td>
+                    <td>일반</td>
+                    <td>오늘 회의 주제는 운영중인 서버 고도화 작업입니다.</td>
+                </tr>
+                <tr>
+                    <td>Sam</td>
+                    <td>2024-11-03 15:27:10</td>
+                    <td>일반</td>
+                    <td>가장 비싼 서버를 구매하는 건 어떨까요?</td>
+                </tr>
+                <tr>
+                    <td>Lisa</td>
+                    <td>2024-11-03 15:28:10</td>
+                    <td>일반</td>
+                    <td>저희 회사는 돈이 없습니다.</td>
+                </tr>
+                <tr>
+                    <td>Sam</td>
+                    <td>2024-11-03 15:30:10</td>
+                    <td>일반</td>
+                    <td>저희 회사는 돈이 없습니다.2222</td>
+                </tr>
+                <tr>
+                    <td>Mike</td>
+                    <td>2024-11-03 15:31:10</td>
+                    <td>일반</td>
+                    <td>저희 회사는 돈이 없습니다.3333</td>
+                </tr>
+                <tr>
+                    <td>Mike</td>
+                    <td>2024-11-03 15:22:43</td>
+                    <td>독성</td>
+                    <td>너 일 참 너처럼 한다.</td>
+                </tr>
+                <tr>
+                    <td>Mike</td>
+                    <td>2024-11-03 15:24:04</td>
+                    <td>독성</td>
+                    <td>예흠, 뭐 저런 것과 상종하나</td>
+                </tr>
+                <tr>
+                    <td>John</td>
+                    <td>2024-11-04 14:32:21</td>
+                    <td>독성</td>
+                    <td>이따위로밖에 못하냐?</td>
+                </tr>
+                <tr>
+                    <td>Jane</td>
+                    <td>2024-11-05 13:45:12</td>
+                    <td>독성</td>
+                    <td>너 같은 사람은 처음 봐.</td>
+                </tr>
+                <tr>
+                    <td>Sam</td>
+                    <td>2024-11-06 16:28:09</td>
+                    <td>독성</td>
+                    <td>일 좀 똑바로 해라.</td>
+                </tr>
+                <tr>
+                    <td>Lisa</td>
+                    <td>2024-11-07 10:12:45</td>
+                    <td>독성</td>
+                    <td>너랑 일하기 정말 힘들다.</td>
+                </tr>
+                <tr>
+                    <td>Tom</td>
+                    <td>2024-11-08 09:15:33</td>
+                    <td>독성</td>
+                    <td>진짜 이건 너무 심한 거 아니냐?</td>
+                </tr>
+                <tr>
+                    <td>Alice</td>
+                    <td>2024-11-09 18:20:50</td>
+                    <td>독성</td>
+                    <td>왜 항상 문제를 만드는 거야?</td>
+                </tr>
+                <tr>
+                    <td>Mike</td>
+                    <td>2024-11-10 11:22:01</td>
+                    <td>독성</td>
+                    <td>도대체 네가 할 수 있는 게 뭐냐?</td>
+                </tr>
+                <tr>
+                    <td>Jane</td>
+                    <td>2024-11-11 15:42:38</td>
+                    <td>독성</td>
+                    <td>이런 식으로 할 거면 나가라.</td>
+                </tr>
+                <tr>
+                    <td>Sam</td>
+                    <td>2024-11-03 15:23:04</td>
+                    <td>일반</td>
+                    <td>네, 저 일 잘하죠?</td>
+                </tr>
+                <tr>
+                    <td>Lisa</td>
+                    <td>2024-11-03 15:25:10</td>
+                    <td>일반</td>
+                    <td>오늘 회의 주제는 운영중인 서버 고도화 작업입니다.</td>
+                </tr>
+                <tr>
+                    <td>Sam</td>
+                    <td>2024-11-03 15:27:10</td>
+                    <td>일반</td>
+                    <td>가장 비싼 서버를 구매하는 건 어떨까요?</td>
+                </tr>
+                <tr>
+                    <td>Lisa</td>
+                    <td>2024-11-03 15:28:10</td>
+                    <td>일반</td>
+                    <td>저희 회사는 돈이 없습니다.</td>
+                </tr>
+                <tr>
+                    <td>Tom</td>
+                    <td>2024-11-12 14:20:50</td>
+                    <td>일반</td>
+                    <td>새로운 프로젝트를 시작해야겠어요.</td>
+                </tr>
+                <tr>
+                    <td>Alice</td>
+                    <td>2024-11-13 16:42:30</td>
+                    <td>일반</td>
+                    <td>오늘은 정말 좋은 날이에요!</td>
+                </tr>
+                <tr>
+                    <td>John</td>
+                    <td>2024-11-14 11:38:15</td>
+                    <td>일반</td>
+                    <td>제가 맡은 일은 모두 완료했습니다.</td>
+                </tr>
+                <tr>
+                    <td>Jane</td>
+                    <td>2024-11-15 09:50:12</td>
+                    <td>일반</td>
+                    <td>새로운 아이디어를 제안드립니다.</td>
+                </tr>
+                <tr>
+                    <td>Mike</td>
+                    <td>2024-11-16 15:18:00</td>
+                    <td>일반</td>
+                    <td>회의를 진행해보겠습니다.</td>
+                </tr>
+                <tr>
+                    <td>Lisa</td>
+                    <td>2024-11-17 10:15:45</td>
+                    <td>일반</td>
+                    <td>모두 수고하셨습니다.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // html 문서가 완전히 로드되면 하단 코드 실행
+        const tableRows = document.querySelectorAll('tbody tr'); // 테이블의 모든 행을 가져옴
+        const filterButton = document.querySelector('.search-bar button'); // 조회 버튼을 가져옴
+        const dateInput = document.getElementById('date-range'); // 날짜 입력 필드를 가져옴
+        const nameInput = document.getElementById('employee-name'); // 사원명 입력 필드를 가져옴
+
+        tableRows.forEach(row => {
+            const resultCell = row.cells[2]; // '최종결과' 셀
+
+            // 독성 발언 강조 표시
+            if (resultCell.textContent.trim() === '독성') {
+                Array.from(row.cells).forEach(cell => { // 각 셀에 대해 반복
+                    cell.style.color = 'red'; // 글자색을 빨간색으로 변경   
+                    cell.style.fontWeight = 'bold'; // 글자 굵기를 두꺼운체로 변경
+                });
+            }
+        });
+
+        // 필터링 기능
+        filterButton.addEventListener('click', () => { // 조회 버튼 클릭 이벤트 리스너
+            const selectedDate = dateInput.value; // 선택된 날짜
+            const enteredName = nameInput.value.trim().toLowerCase(); // 입력된 사원명 (소문자 변환)
+
+            tableRows.forEach(row => {
+                const timeCell = row.cells[1].textContent.trim(); // 시간 셀
+                const nameCell = row.cells[0].textContent.trim().toLowerCase(); // 사원명 셀 (소문자 변환)
+                const rowDate = timeCell.split(' ')[0]; // 날짜 추출 (YYYY-MM-DD)
+
+                const matchesDate = !selectedDate || rowDate === selectedDate; // 날짜 조건 (선택된 날짜가 없거나, 행의 날짜가 선택된 날짜와 일치하는 경우)
+                const matchesName = !enteredName || nameCell.includes(enteredName); // 사원명 조건 (입력된 사원명이 없거나, 제목 열에 입력된 값이 포함된 경우)
+
+                if (matchesDate && matchesName) {
+                    row.style.display = ''; // 조건에 맞는 행 표시
+                } else {
+                    row.style.display = 'none'; // 조건에 맞지 않는 행 숨김 
+                } 
+            });
+        });
+    });
+</script>
+</body>
+</html>

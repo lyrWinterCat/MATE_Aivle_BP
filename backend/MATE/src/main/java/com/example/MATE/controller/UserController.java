@@ -16,14 +16,29 @@ public class UserController {
 
     private final MeetingService meetingService;
 
-    @GetMapping("/dashboard")
-    public String dashboard(){
-        return "user/dashboard";
+    @GetMapping("/mypage/log/search")
+    public String userLogSearch(){
+        return "/user/mypage/usersearchlog";
     }
 
-    @GetMapping("/meeting")
-    public String meeting() {
-        return "user/meeting";
+    @GetMapping("/mypage/log")
+    public String userLog() {
+        return "/user/mypage/userlog";
+    }
+
+    @GetMapping("/query/search")
+    public String userQuerySearch(){
+        return "user/userquery/usersearchquery";
+    }
+
+    @GetMapping("/query/write")
+    public String userQueryWrite(){
+        return "user/userquery/userquerywrite";
+    }
+
+    @GetMapping("/dashboard")
+    public String userDashboard(){
+        return "user/userdashboard";
     }
 
     @MessageMapping("/screen-data")
