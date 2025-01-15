@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/user")
 public class UserController {
 
-    private final MeetingService meetingService;
-
     @GetMapping("/mypage/log/search")
     public String userLogSearch(){
         return "/user/mypage/usersearchlog";
@@ -41,9 +39,4 @@ public class UserController {
         return "user/userdashboard";
     }
 
-    @MessageMapping("/screen-data")
-    @SendTo("/topic/screen-data")
-    public ScreenData handleScreenData(ScreenData screenData) {
-        return meetingService.processScreenData(screenData);
-    }
 }
