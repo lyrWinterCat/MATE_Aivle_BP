@@ -27,6 +27,12 @@ public class MeetingController {
         return "meeting/usermeeting";
     }
 
+
+    @GetMapping("/view")
+    public String meetingView(){
+        return "meeting/view";
+    }
+
     @MessageMapping("/screen-data")
     @SendTo("/topic/screen-data")
     public ScreenData handleScreenData(ScreenData screenData) {
