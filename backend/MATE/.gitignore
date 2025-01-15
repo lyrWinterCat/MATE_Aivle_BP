@@ -39,3 +39,6 @@ out/
 
 ### properties
 src/main/resources/env.properties
+
+### docker ###
+Dockerfile
