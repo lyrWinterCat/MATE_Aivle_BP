@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>정정게시판</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #FFF;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 헤더 영역 */
+        header {
+            background-color: #FFCC00;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        .header-left img {
+            width: 50px;
+            height: 50px;
+            margin-right: 20px;
+        }
+        .header-left h1 {
+            font-size: 50px;
+            color: #fff;
+            margin: 0;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .header-right span {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        .header-right button {
+            background-color: #fff;
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .header-right button:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* 검색 영역 */
+        .search-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 40px;
+            gap: 10px;
+        }
+        .search-bar label {
+            font-weight: bold;
+        }
+        .search-bar input, .search-bar select {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .search-bar button {
+            background-color: #FFCC00;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .search-bar button:hover {
+            background-color: #FFBB00;
+        }
+
+        /* 테이블 컨테이너 */
+        .table-container {
+            padding: 20px 40px;
+        }
+        .table-scroll {
+            max-height: calc(100vh - 350px);
+            overflow-y: auto;
+            border: 1px solid #ccc;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+        }
+        table th, table td {
+            border: 1px solid #ccc;
+            text-align: center;
+            padding: 10px;
+        }
+        table th {
+            background-color: #FFCC00;
+            color: #fff;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        /* 상태 스타일 */
+        .status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-align: center;
+            display: inline-block;
+            min-width: 60px;
+        }
+        .status-approved {
+            background-color: #e6f3ff;
+            color: #0066cc;
+        }
+        .status-pending {
+            background-color: #fff3e6;
+            color: #cc6600;
+        }
+        .status-rejected {
+            background-color: #ffe6e6;
+            color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="header-left">
+        <img src="file:///C:\Users\User\Desktop\MATE_Aivle_BP-main\screenshare_java\src\main\resources\static\img/logo.png" alt="Mate Logo">
+        <h1>정정게시판</h1>
+    </div>
+    <div class="header-right">
+        <span>안지홍님 반갑습니다.</span>
+        <button>Mypage</button>
+        <button>정정게시판</button>
+        <button>로그아웃</button>
+    </div>
+</header>
+
+<!-- 검색 영역 -->
+<div class="search-bar">
+    <label for="date-range">기간</label>
+    <input id="date-range" type="date">
+
+    <label for="status-select">상태</label>
+    <select id="status-select" onchange="filterTable()">
+        <option value="">전체</option>
+        <option value="승인">승인</option>
+        <option value="신청">신청</option>
+        <option value="반려">반려</option>
+    </select>
+</div>
+
+<!-- 테이블 -->
+<div class="table-container">
+    <div class="table-scroll">
+        <table>
+            <thead>
+            <tr>
+                <th>제목</th>
+                <th>접수번호</th>
+                <th>게시시간</th>
+                <th>상태</th>
+            </tr>
+            </thead>
+            <tbody id="table-body">
+            <tr>
+                <td>왜 독성발언으로 분류되는지 확인 부탁드립니다.1111</td>
+                <td>A01</td>
+                <td>2025.01.01</td>
+                <td><div class="status status-approved">승인</div></td>
+            </tr>
+            <tr>
+                <td>왜 독성발언으로 분류되는지 확인 부탁드립니다.2222</td>
+                <td>A02</td>
+                <td>2025.01.02</td>
+                <td><div class="status status-approved">승인</div></td>
+            </tr>
+            <tr>
+                <td>왜 독성발언으로 분류되는지 확인 부탁드립니다.3333</td>
+                <td>A03</td>
+                <td>2025.01.03</td>
+                <td><div class="status status-pending">신청</div></td>
+            </tr>
+            <tr>
+                <td>왜 독성발언으로 분류되는지 확인 부탁드립니다.4444</td>
+                <td>A04</td>
+                <td>2025.01.04</td>
+                <td><div class="status status-approved">승인</div></td>
+            </tr>
+            <tr>
+                <td>왜 독성발언으로 분류되는지 확인 부탁드립니다.5555</td>
+                <td>A05</td>
+                <td>2025.01.05</td>
+                <td><div class="status status-approved">승인</div></td>
+            </tr>
+            <tr>
+                <td>왜 독성발언으로 분류되는지 확인 부탁드립니다.6666</td>
+                <td>A06</td>
+                <td>2025.01.06</td>
+                <td><div class="status status-approved">승인</div></td>
+            </tr>
+            <tr>
+                <td>왜 독성발언으로 분류되는지 확인 부탁드립니다.7777</td>
+                <td>A07</td>
+                <td>2025.01.07</td>
+                <td><div class="status status-rejected">반려</div></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // 테이블 필터링 함수
+    function filterTable() {
+        const statusFilter = document.getElementById('status-select').value; // 선택된 상태
+        const rows = document.querySelectorAll('#table-body tr'); // 모든 행
+
+        rows.forEach(row => {
+            const status = row.querySelector('.status').textContent.trim(); // 상태 텍스트
+            if (!statusFilter || status === statusFilter) {
+                row.style.display = ''; // 보이기
+            } else {
+                row.style.display = 'none'; // 숨기기
+            }
+        });
+    }
+</script>
+</body>
+</html>

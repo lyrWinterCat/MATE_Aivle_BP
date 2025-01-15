@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ko"> <!-- 문서의 언어를 한국어로 설정 -->
+<head>
+    <meta charset="UTF-8"> <!-- 문자 인코딩을 UTF-8로 설정 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 반응형 웹 디자인을 위한 뷰포트 설정 -->
+    <title>정정게시판</title> <!-- 문서 제목 설정 -->
+    <style>
+        /* 기본 설정 */
+        body {
+            font-family: Arial, sans-serif; /* 기본 글꼴 설정 */
+            background-color: #FFF; /* 흰색 배경 */
+            margin: 0; /* 기본 여백 제거 */
+            padding: 0; /* 문서 전체 여백 */
+
+        }
+
+        /* 상단 헤더 디자인 */
+        header {
+            background-color: #FFCC00; /* 헤더 배경색 */
+            display: flex; /* 플렉스 박스를 사용해 내부 요소 배치 */
+            justify-content: space-between; /* 요소를 양쪽 끝으로 배치 */
+            align-items: center; /* 요소 세로 중앙 정렬 */
+            padding: 20px 40px; /* 안쪽 여백 설정 */
+            margin-bottom: 30px; /* 헤더와 아래 컨텐츠 사이 간격 */
+        }
+
+        /* 헤더 왼쪽 (로고와 제목) */
+        .header-left {
+            display: flex; /* 플렉스 박스를 사용해 내부 요소 정렬 */
+            align-items: center; /* 세로 중앙 정렬 */
+        }
+        .header-left img {
+            width: 50px; /* 로고 너비 */
+            height: 50px; /* 로고 높이 */
+            margin-right: 20px; /* 제목과의 간격 */
+        }
+        .header-left h1 {
+            font-size: 50px; /* 제목 글씨 크기 */
+            color: #FFF; /* 글자 색상 */
+            margin: 0; /* 기본 여백 제거 */
+        }
+
+        /* 헤더 오른쪽 (환영 메시지와 버튼) */
+        .header-right {
+            display: flex; /* 플렉스 박스를 사용해 버튼 배치 */
+            align-items: center; /* 세로 중앙 정렬 */
+            gap: 20px; /* 버튼 간격 */
+        }
+        .header-right span {
+            font-size: 20px; /* 환영 메시지 글씨 크기 */
+            font-weight: bold; /* 굵은 글씨 */
+            color: #333; /* 글자 색상 */
+        }
+        .header-right button {
+            background-color: white; /* 버튼 배경색 */
+            color: #333; /* 버튼 글자 색상 */
+            font-size: 16px; /* 버튼 글씨 크기 */
+            font-weight: bold; /* 굵은 글씨 */
+            border: 1px solid #333; /* 테두리 설정 */
+            border-radius: 6px; /* 모서리 둥글게 설정 */
+            padding: 10px 20px; /* 버튼 안쪽 여백 */
+            cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+        }
+        .header-right button:hover {
+            background-color: #f1f1f1; /* 마우스 오버 시 배경색 변경 */
+        }
+
+        /* 메인 컨테이너 */
+        .container {
+            background-color: #FFF; /* 배경 흰색 */
+            padding: 60px 40px; /* 내부 여백 */
+            box-shadow: none; /* 그림자 제거 */
+            max-width: 1000px; /* 최대 너비 */
+            height: calc(100vh - 100px); /* 화면 높이에 따라 컨테이너 높이 설정 */
+            margin: 0 auto; /* 가운데 정렬 */
+            position: relative; /* 상태 박스 배치를 위한 기준 */
+        }
+
+        /* 폼 그룹 (라벨과 입력 필드 배치) */
+        .form-group {
+            display: flex; /* 플렉스 박스를 사용해 배치 */
+            align-items: center; /* 세로 중앙 정렬 */
+            margin-bottom: 30px; /* 요소 간 간격 */
+        }
+        .form-group label {
+            font-size: 20px; /* 라벨 글씨 크기 */
+            font-weight: bold; /* 굵은 글씨 */
+            margin-right: 30px; /* 입력 필드와의 간격 */
+            width: 180px; /* 라벨 고정 너비 */
+            text-align: right; /* 라벨 텍스트 오른쪽 정렬 */
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            flex: 1; /* 입력 필드가 가능한 공간을 채우도록 설정 */
+            padding: 15px; /* 내부 여백 */
+            font-size: 18px; /* 글씨 크기 */
+            border: 1px solid #ccc; /* 테두리 설정 */
+            border-radius: 6px; /* 모서리 둥글게 설정 */
+        }
+
+        /* 첨부 파일 입력 */
+        #attachment {
+            border: 2px dashed #ccc; /* 점선 테두리 */
+            padding: 10px; /* 내부 여백 */
+            border-radius: 6px; /* 모서리 둥글게 설정 */
+            font-size: 16px; /* 글씨 크기 */
+            width: 100%; /* 부모 너비에 맞춤 */
+            box-sizing: border-box; /* 테두리를 포함해 너비 계산 */
+        }
+
+        /* 텍스트 영역 */
+        textarea {
+            resize: vertical; /* 세로 크기만 조정 가능 */
+        }
+
+        /* 제출 버튼 */
+        .submit-btn {
+            background-color: #FFCC00; /* 버튼 배경색 */
+            color: #FFF; /* 글씨 색상 */
+            font-size: 24px; /* 글씨 크기 */
+            font-weight: bold; /* 굵은 글씨 */
+            border: none; /* 테두리 제거 */
+            padding: 15px 30px; /* 버튼 안쪽 여백 */
+            border-radius: 6px; /* 모서리 둥글게 설정 */
+            cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+            display: block; /* 블록 요소 */
+            margin: 40px auto 0; /* 버튼 간격 및 중앙 정렬 */
+        }
+        .submit-btn:hover {
+            background-color: #FFBB00; /* 마우스 오버 시 배경색 변경 */
+        }
+
+        /* 상태 박스 */
+        .status-box {
+            position: absolute; /* 컨테이너를 기준으로 위치 설정 */
+            top: 20%; /* 위쪽 간격 */
+            right: -220px; /* 오른쪽 간격 : 어떻게 해도 입력 박스들과 겹치길래 하드코딩으로 떨어뜨려 놨습니다...*/
+            background-color: #FFF; /* 배경 흰색 */
+            border: 2px solid #FFCC00; /* 테두리 색상 */
+            border-radius: 8px; /* 모서리 둥글게 설정 */
+            padding: 20px; /* 내부 여백 */
+            text-align: left; /* 텍스트 왼쪽 정렬 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+        }
+        .status-box h3 {
+            margin: 0 0 15px 0; /* 아래 간격 */
+            font-size: 18px; /* 글씨 크기 */
+            font-weight: bold; /* 굵은 글씨 */
+            color: #333; /* 글씨 색상 */
+        }
+        .status-box label {
+            display: block; /* 블록 요소로 설정 */
+            font-size: 16px; /* 글씨 크기 */
+            font-weight: bold; /* 굵은 글씨 */
+            color: #333; /* 글씨 색상 */
+            margin-bottom: 10px; /* 아래 간격 */
+        }
+        .status-box input {
+            margin-right: 10px; /* 라디오 버튼과 텍스트 간 간격 */
+        }
+
+        /* 텍스트 가운데 정렬 */
+        #title, #user-info, #reference {
+            text-align: center; /* 텍스트를 가로 중앙 정렬 */
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="header-left">
+
+        <img src="file:///C:\Users\User\Desktop\MATE_Aivle_BP-main\screenshare_java\src\main\resources\static\img/logo.png" alt="Mate Logo">
+
+        <h1>정정게시판</h1>
+    </div>
+    <div class="header-right">
+        <span>관리자님 반갑습니다.</span> <!-- 추후 템플릿 엔진(머스타치, 타임리프)이나 javascript 로 이름 삽입하는 식으로 변경 필요합니다-->
+        <button>로그조회</button>
+        <button>로그아웃</button>
+    </div>
+</header>
+<div class="container">
+    <form>
+        <div class="form-group">
+            <label for="title">제목</label>
+            <input type="text" id="title" placeholder="제목을 입력하세요">
+        </div>
+        <div class="form-group">
+            <label for="user-info">사원정보</label>
+            <input type="text" id="user-info" placeholder="사원정보 자동입력">
+        </div>
+        <div class="form-group">
+            <label for="reference">독성발언조회</label>
+            <input type="text" id="reference" placeholder="독성발언코드 자동입력">
+        </div>
+        <div class="form-group">
+            <label for="attachment">첨부 파일</label>
+            <input type="file" id="attachment">
+        </div>
+        <div class="form-group">
+            <label for="content">내용</label>
+            <textarea id="content" rows="8" placeholder="내용을 입력하세요"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="response">답변</label>
+            <textarea id="response" rows="8" placeholder="답변을 입력하세요"></textarea>
+        </div>
+        <button type="submit" class="submit-btn">제출하기</button>
+    </form>
+    <div class="status-box">
+        <h3>상태</h3>
+        <label><input type="radio" name="status" value="approved"> 승인</label>
+        <label><input type="radio" name="status" value="rejected"> 반려</label>
+    </div>
+</div>
+</body>
+</html>
