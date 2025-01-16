@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mate Signup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F7C600;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            height: 100vh;
+            margin: 0;
+            padding: 50px 8%;
+        }
+        .left-container {
+            text-align: left;
+            max-width: 50%;
+        }
+        .left-container img {
+            width: 100px;
+            height: auto;
+            vertical-align: middle;
+        }
+        .left-container h1 {
+            font-size: 80px;
+            margin: 0 0 10px 20px;
+            color: #fff;
+            font-weight: bold;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .left-container p {
+            font-size: 40px;
+            margin: 20px 0;
+            color: #fff;
+            font-weight: bold;
+        }
+        .left-container .image {
+            margin-top: 0;
+            text-align: center;
+        }
+        .left-container .image img {
+            width: 110%;
+            max-width: 600px;
+            height: auto;
+        }
+        .signup-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            width: 400px;
+            margin-top: 60px;
+        }
+        .signup-container h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: bold;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+        .form-group label {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        .form-inline-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .form-inline-group label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        .form-inline-group input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .form-inline-group button {
+            padding: 5px 10px;
+            font-size: 14px;
+            background-color: #F7C600;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-inline-group button:hover {
+            background-color: #e0ab00;
+        }
+        .signup-container button[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .signup-container button[type="submit"]:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+<div class="left-container">
+    <img src="file:///C:\Users\User\Desktop\MATE_Aivle_BP-main\screenshare_java\src\main\resources\static\img/logo.png" alt="Mate Logo">
+    <h1>Mate</h1>
+    <p>쉽고 빠른 협업의 시작, Mate!</p>
+    <div class="image">
+        <img src="file:///C:/Users/User/Desktop/src/main/resources/static/image/login.png" alt="Collaboration">
+    </div>
+</div>
+<div class="signup-container">
+    <h2>회원가입</h2>
+    <form action="/signup" method="post">
+        <!-- 1. 이름 입력 -->
+        <div class="form-group">
+            <label for="name">이름</label>
+            <input type="text" id="name" name="name" placeholder="안지홍" required>
+        </div>
+        <!-- 2. 이메일 입력 -->
+        <div class="form-group">
+            <label for="email">이메일 주소</label>
+            <input type="email" id="email" name="email" placeholder="구글 이메일 주소" required>
+        </div>
+        <!-- 3. 부서명 입력 -->
+        <div class="form-group">
+            <label for="department">부서명</label>
+            <input type="text" id="department" name="department" placeholder="부서를 입력하세요" required>
+        </div>
+        <!-- 4. 체크박스: 인증 약관 동의 -->
+        <div class="form-inline-group">
+            <label>
+                <input type="checkbox" id="terms" name="terms" required>
+                [필수] 인증 약관 전체 동의
+            </label>
+            <button type="button" onclick="alert('안내문입니다');">전체 보기</button>
+        </div>
+        <!-- 5. 체크박스: 발언 독성 탐지 동의 -->
+        <div class="form-inline-group">
+            <label>
+                <input type="checkbox" id="toxicity" name="toxicity" required>
+                [필수] 발언 독성 탐지 전체 동의
+            </label>
+            <button type="button" onclick="alert('안내문입니다');">전체 보기</button>
+        </div>
+        <!-- 6. 회원가입 버튼 -->
+        <button type="submit">회원가입</button>
+    </form>
+</div>
+</body>
+</html>
