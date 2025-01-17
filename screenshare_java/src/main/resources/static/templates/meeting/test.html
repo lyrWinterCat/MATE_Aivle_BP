@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Mate Recorder</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <header>
+        <div class="logo">
+            <img src="/img/mate-icon.png" alt="Mate Icon">
+            <h1>Mate</h1>
+        </div>
+        <h1 class="title">Recorder</h1>
+    </header>
+
+    <div class="timer-banner">
+        <p>3초 이후에 기록을 시작하겠습니다. / 연어독성이 탐지되었습니다.</p>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="meeting-info">
+            <div class="meeting-time">
+                <p>2025-01-10</p>
+                <p>9:00AM 회의시작</p>
+            </div>
+
+            <div class="participants">
+                <h2>회의인원 : 4</h2>
+                <p class="names">윤찬혁, 고수현, 박언용,<br> 이승은</p>
+            </div>
+
+            <div class="control-buttons">
+                <button class="control-btn" id="startButton">기록하기</button>
+                <button class="control-btn" id="stopButton">중지하기</button>
+                <button class="control-btn">피로도 on/off</button>
+            </div>
+        </div>
+
+        <div class="screen-container">
+            <video id="localVideo" autoplay muted></video>
+            <video id="remoteVideo" autoplay></video>
+        </div>
+    </div>
+</div>
+<script src="/js/main_fixing.js"></script>
+</body>
+</html>
