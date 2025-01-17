@@ -41,4 +41,10 @@ public class AdminFeedback {
     public enum FeedbackStatus {
         신청, 반려, 승인
     }
+
+    // created_at 컬럼의 default 는 현재시간으로 설정
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 }
