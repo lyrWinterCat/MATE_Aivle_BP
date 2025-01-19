@@ -152,6 +152,7 @@
                     <th>시간</th>
                     <th>최종결과</th>
                     <th>내용</th>
+                    <th>답변</th>
                 </tr>
             </thead>
             
@@ -163,6 +164,11 @@
                     <td>{{createdAt}}</td>
                     <td>{{status}}</td>
                     <td>{{content}}</td>
+                    <td>
+                        <button onclick="location.href='/admin/query/answer?feedbackId={{feedbackId}}'">
+                            답변하기
+                        </button>
+                    </td>
                 </tr>
                 {{/feedbackList}}
             </tbody>

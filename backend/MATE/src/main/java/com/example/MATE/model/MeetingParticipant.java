@@ -20,4 +20,7 @@ public class MeetingParticipant {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Column(name = "is_recording", nullable = false, columnDefinition = "TinyInt DEFAULT 0")
+    private boolean isRecording;
 }
