@@ -129,6 +129,36 @@ async function onMessageReceived(payload) {
 }
 
 // 화면 캡쳐 시작
+//function startScreenCapture() {
+//    const video = document.getElementById('localVideo');
+//    const canvas = document.createElement('canvas');
+//    const context = canvas.getContext('2d');
+//
+//    captureInterval = setInterval(() => {
+//        if (video.videoWidth === 0 || video.videoHeight === 0) return;
+//
+//        canvas.width = video.videoWidth;
+//        canvas.height = video.videoHeight;
+//        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+//
+//        canvas.toBlob((blob) => {
+//            const url = URL.createObjectURL(blob);
+//            const a = document.createElement('a');
+//            a.style.display = 'none';
+//            a.href = url;
+//            a.download = `screenshot-${new Date().toISOString()}.png`;
+//            document.body.appendChild(a);
+//            a.click();
+//            setTimeout(() => {
+//                document.body.removeChild(a);
+//                window.URL.revokeObjectURL(url);
+//            }, 100);
+//        }, 'image/png');
+//    }, 30000);
+//}
+
+// 화면 캡쳐 코드 fastAPI로 전송
+// 화면 캡쳐 시작 함수 수정
 function startScreenCapture() {
     const video = document.getElementById('localVideo');
     const canvas = document.createElement('canvas');
@@ -141,21 +171,29 @@ function startScreenCapture() {
         canvas.height = video.videoHeight;
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        canvas.toBlob((blob) => {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            a.download = `screenshot-${new Date().toISOString()}.png`;
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(() => {
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-            }, 100);
+        // 캡쳐된 이미지를 서버로 전송
+        canvas.toBlob(async (blob) => {
+            const formData = new FormData();
+            formData.append('image', blob, `screenshot-${new Date().toISOString()}.png`);
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/post_image', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    console.log('이미지 업로드 성공');
+                } else {
+                    console.error('이미지 업로드 실패');
+                }
+            } catch (error) {
+                console.error('이미지 전송 중 오류:', error);
+            }
         }, 'image/png');
     }, 30000);
 }
+
 
 // 오디오 녹음 시작
 function startAudioRecording() {
@@ -243,6 +281,51 @@ function writeString(view, offset, string) {
 }
 
 // 오디오 WAV 파일 저장
+//async function saveAudioToWav(chunks) {
+//    if (!chunks || chunks.length === 0) {
+//        console.log('저장할 오디오 데이터가 없습니다.');
+//        return;
+//    }
+//
+//    try {
+//        const blob = new Blob(chunks, { type: 'audio/webm' });
+//
+//        if (blob.size === 0) {
+//            console.log('빈 오디오 데이터입니다.');
+//            return;
+//        }
+//
+//        const arrayBuffer = await blob.arrayBuffer();
+//        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+//
+//        try {
+//            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+//            const wavBlob = await convertToWav(audioBuffer);
+//
+//            const url = URL.createObjectURL(wavBlob);
+//            const a = document.createElement('a');
+//            a.style.display = 'none';
+//            a.href = url;
+//            a.download = `audio-${new Date().toISOString()}.wav`;
+//            document.body.appendChild(a);
+//            a.click();
+//            setTimeout(() => {
+//                document.body.removeChild(a);
+//                window.URL.revokeObjectURL(url);
+//            }, 100);
+//
+//            console.log('오디오 파일이 저장되었습니다.');
+//        } catch (decodeError) {
+//            console.error('오디오 디코딩 중 오류 발생:', decodeError);
+//            throw decodeError;
+//        }
+//    } catch (error) {
+//        console.error('오디오 저장 중 오류 발생:', error);
+//        throw error;
+//    }
+//}
+
+// 오디오 WAV 파일 저장 코드 fastAPI로 전송
 async function saveAudioToWav(chunks) {
     if (!chunks || chunks.length === 0) {
         console.log('저장할 오디오 데이터가 없습니다.');
@@ -264,17 +347,20 @@ async function saveAudioToWav(chunks) {
             const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
             const wavBlob = await convertToWav(audioBuffer);
 
-            const url = URL.createObjectURL(wavBlob);
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            a.download = `audio-${new Date().toISOString()}.wav`;
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(() => {
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-            }, 100);
+            // WAV 파일을 서버로 전송
+            const formData = new FormData();
+            formData.append('audio', wavBlob, `audio-${new Date().toISOString()}.wav`);
+
+            const response = await fetch('http://127.0.0.1:8000/post_audio', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                console.log('오디오 업로드 성공');
+            } else {
+                console.error('오디오 업로드 실패');
+            }
 
             console.log('오디오 파일이 저장되었습니다.');
         } catch (decodeError) {
@@ -286,6 +372,7 @@ async function saveAudioToWav(chunks) {
         throw error;
     }
 }
+
 
 // 캡처 중지
 function stopCapture() {
