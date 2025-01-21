@@ -18,8 +18,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/screen-share")
-                .setAllowedOrigins("*")
+        registry.addEndpoint("/ws-endpoint")
+                .setAllowedOrigins("http://localhost:8282")
                 .withSockJS();
     }
 
