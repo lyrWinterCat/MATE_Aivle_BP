@@ -6,7 +6,7 @@ app = FastAPI()
 # CORS 미들웨어 설정 추가
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 보안을 위해 실제 운영 환경에서는 특정 도메인을 지정하세요
+    allow_origins=["http://localhost:8181"],  # 보안을 위해 실제 운영 환경에서는 특정 도메인을 지정하세요
     allow_credentials=True,
     allow_methods=["*"],  # 허용할 HTTP 메서드 지정
     allow_headers=["*"],  # 허용할 HTTP 헤더 지정
