@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Mate Viewer</title>
+    <link rel="stylesheet" href="/css/meeting_style.css">
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <header>
+        <div class="logo">
+            <img src="/img/mate-icon.png" alt="Mate Icon">
+            <h1>Mate</h1>
+        </div>
+        <h1 class="title">Viewer</h1>
+    </header>
+
+    <div class="content-wrapper">
+        <div class="screen-container">
+            <video id="remoteVideo" autoplay playsinline muted></video>
+        </div>
+    </div>
+</div>
+<script src="/js/client.js"></script>
+</body>
+</html>
