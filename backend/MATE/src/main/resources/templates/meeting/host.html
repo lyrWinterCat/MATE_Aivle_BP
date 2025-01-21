@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Mate Recorder</title>
-    <link rel="stylesheet" href="/css/meeting_style.css"> <!-- 정적 자원 경로 -->
-    <script src="/webjars/sockjs-client/1.5.1/sockjs.min.js"></script>
-    <script src="/webjars/stomp-websocket/2.3.4/stomp.min.js"></script>
-    <script src="/js/meeting.js"></script> <!-- 정적 자원 경로 -->
+    <link rel="stylesheet" href="/css/meeting_style.css">
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
 </head>
 <body>
 <div class="container">
     <header>
         <div class="logo">
-            <img src="/img/mate-icon.png" alt="Mate Icon"> <!-- 정적 자원 경로 -->
+            <img src="/img/mate-icon.png" alt="Mate Icon">
             <h1>Mate</h1>
         </div>
         <h1 class="title">Recorder</h1>
@@ -42,11 +41,11 @@
         </div>
 
         <div class="screen-container">
-            <video id="localVideo" autoplay muted></video>
+            <video id="localVideo" autoplay muted playsinline></video>
             <video id="remoteVideo" autoplay></video>
         </div>
     </div>
 </div>
-
+<script src="/js/host.js"></script>
 </body>
 </html>
