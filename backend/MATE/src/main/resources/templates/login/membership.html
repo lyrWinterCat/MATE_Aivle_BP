@@ -138,7 +138,7 @@
 </div>
 <div class="signup-container">
     <h2>회원가입</h2>
-    <form action="/signup" method="post">
+    <form action="/signUp" method="post">
         <!-- 1. 이름 입력 -->
         <div class="form-group">
             <label for="name">이름</label>
@@ -152,7 +152,12 @@
         <!-- 3. 부서명 입력 -->
         <div class="form-group">
             <label for="department">부서명</label>
-            <input type="text" id="department" name="department" placeholder="부서를 입력하세요" required>
+            <input type="text" id="department" name="departmentName" placeholder="부서를 입력하세요" required>
+        </div>
+        <!--비번없어서 임시로 만들었습니다-->
+        <div class="form-group">
+            <label for="password">패스워드</label>
+            <input type="text" id="password" name="password" placeholder="비밀번호" required>
         </div>
         <!-- 4. 체크박스: 인증 약관 동의 -->
         <div class="form-inline-group">

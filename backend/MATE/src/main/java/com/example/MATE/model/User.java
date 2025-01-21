@@ -1,12 +1,17 @@
 package com.example.MATE.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Data
 @Entity
 @Table(name = "User")
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -28,7 +33,7 @@ public class User {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false, columnDefinition = "ENUM('user', 'admin') DEFAULT 'user'")
+    @Column(name = "role", nullable = false, columnDefinition = "ENUM('USER', 'ADMIN') DEFAULT 'USER'")
     private Role role;
 
     @Column(name = "created_at", nullable = false)
@@ -38,12 +43,12 @@ public class User {
     private LocalDateTime updatedAt;
 
     @Column(name = "is_social", nullable = false, columnDefinition = "TINYINT DEFAULT 0")
-    private boolean isSocial;
+    private boolean isSocial=false;
 
     @Column(name = "authorized", nullable = false, columnDefinition = "TINYINT DEFAULT 0")
-    private boolean authorized;
+    private boolean authorized=false;
 
     public enum Role {
-        user, admin
+        USER, ADMIN
     }
 }
