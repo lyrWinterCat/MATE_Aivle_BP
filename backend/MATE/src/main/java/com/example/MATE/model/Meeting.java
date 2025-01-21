@@ -28,4 +28,10 @@ public class Meeting {
 
     @Column(name = "url", nullable = false, columnDefinition = "TEXT")
     private String url;
+
+    @Column(name = "filepath", nullable = false, columnDefinition = "TEXT")
+    private String filepath;
+
+    @Column(name = "last_break_time")
+    private LocalDateTime lastBreakTime;
 }

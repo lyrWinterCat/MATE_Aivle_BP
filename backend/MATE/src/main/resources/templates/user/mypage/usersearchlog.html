@@ -165,13 +165,13 @@
             </tr>
             </thead>
             <tbody>
-            <tr><td>20241103<br>17:03</td><td>1주차</td><td>윤찬혁, 고수현, 박언용, 이승은</td></tr>
-            <tr><td>20241104<br>17:03</td><td>2주차</td><td>윤찬혁, 고수현, 박언용, 이승은</td></tr>
-            <tr><td>20241105<br>17:03</td><td>3주차</td><td>윤찬혁, 고수현, 박언용, 이승은</td></tr>
-            <tr><td>20241106<br>17:03</td><td>4주차</td><td>윤찬혁, 고수현, 박언용, 이승은</td></tr>
-            <tr><td>20241107<br>17:03</td><td>5주차</td><td>윤찬혁, 고수현, 박언용, 이승은</td></tr>
-            <tr><td>20241108<br>17:03</td><td>6주차</td><td>윤찬혁, 고수현, 박언용, 이승은</td></tr>
-            <tr><td>20241109<br>17:03</td><td>발표</td><td>윤찬혁, 고수현, 박언용, 이승은</td></tr>
+            {{#meetingLogs}}
+            <tr>
+                <td>{{meetingTime}}</td>
+                <td>{{meetingName}}</td>
+                <td>{{participants}}</td>
+            </tr>
+            {{/meetingLogs}}
             </tbody>
         </table>
     </div>

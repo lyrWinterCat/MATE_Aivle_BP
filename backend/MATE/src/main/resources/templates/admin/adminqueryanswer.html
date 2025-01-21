@@ -182,15 +182,15 @@
     <form>
         <div class="form-group">
             <label for="title">제목</label>
-            <input type="text" id="title" placeholder="제목을 입력하세요">
+            <input type="text" id="title" value="{{title}}" readonly>
         </div>
         <div class="form-group">
             <label for="user-info">사원정보</label>
-            <input type="text" id="user-info" placeholder="사원정보 자동입력">
+            <input type="text" id="user-info" value="{{userName}}" readonly>
         </div>
         <div class="form-group">
             <label for="reference">독성발언조회</label>
-            <input type="text" id="reference" placeholder="독성발언코드 자동입력">
+            <input type="text" id="reference" value="{{toxicityId}}" readonly>
         </div>
         <div class="form-group">
             <label for="attachment">첨부 파일</label>
@@ -198,7 +198,7 @@
         </div>
         <div class="form-group">
             <label for="content">내용</label>
-            <textarea id="content" rows="8" placeholder="내용을 입력하세요"></textarea>
+            <textarea id="content" rows="8" readonly>{{content}}</textarea>
         </div>
         <div class="form-group">
             <label for="response">답변</label>
