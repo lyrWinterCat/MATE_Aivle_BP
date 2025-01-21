@@ -22,25 +22,26 @@ public class AdminController {
 
     private final AdminService adminService;
 
-    @GetMapping("/dashboard")
-    public String adminDashboard() {
-        return "admin/admindashboard";
+    @GetMapping("/adminMain")
+    public String adminMain() {
+        return "admin/adminMain";
     }
 
-    @GetMapping("/query/answer")
-    public String adminQueryAnswer(@RequestParam("feedbackId") Integer feedbackId, Model model) {
+
+    @GetMapping("/adminFix/detail")
+    public String detail(@RequestParam("feedbackId") Integer feedbackId, Model model) {
         AdminFeedback feedback = adminService.getFeedbackById(feedbackId);
         model.addAttribute("title", feedback.getTitle());
         model.addAttribute("userName", feedback.getUser().getName());
         model.addAttribute("toxicityId", feedback.getToxicityLog().getToxicityId());
         model.addAttribute("content", feedback.getContent());
-        return "admin/adminqueryanswer";
+        return "admin/detail";
     }
 
-    @GetMapping("/query/search")
-    public String adminQuerySearch(Model model) {
+    @GetMapping("/adminFix")
+    public String adminFix(Model model) {
         List<AdminFeedback> feedbackList = adminService.getFeedbackList();
         model.addAttribute("feedbackList", feedbackList);
-        return "admin/adminquerysearch";
+        return "admin/adminFix";
     }
 }
