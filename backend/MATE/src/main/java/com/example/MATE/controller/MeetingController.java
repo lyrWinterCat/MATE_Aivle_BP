@@ -17,14 +17,14 @@ public class MeetingController {
 
     private final MeetingService meetingService;
 
-    @GetMapping("/recorder")
+    @GetMapping("/host")
     public String meetingRecorder(){
-        return "meeting/recordermeeting";
+        return "meeting/host";
     }
 
-    @GetMapping("/user")
+    @GetMapping("/client")
     public String meetingUser(){
-        return "meeting/usermeeting";
+        return "meeting/client";
     }
 
 
@@ -33,10 +33,15 @@ public class MeetingController {
         return "meeting/view";
     }
 
-    @MessageMapping("/screen-data")
-    @SendTo("/topic/screen-data")
-    public ScreenData handleScreenData(ScreenData screenData) {
-        return meetingService.processScreenData(screenData);
+    @MessageMapping("/signal")
+    @SendTo("/topic/public")
+    public ScreenData handleSignal(ScreenData signal) {
+        return signal;
     }
 
+    @MessageMapping("/ice-candidate")
+    @SendTo("/topic/public")
+    public ScreenData handleIceCandidate(ScreenData candidate) {
+        return candidate;
+    }
 }
