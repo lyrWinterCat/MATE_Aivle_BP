@@ -1,18 +1,13 @@
 package com.example.MATE.service;
 
 import com.example.MATE.dto.MeetingLogDto;
-import com.example.MATE.dto.UserDto;
 import com.example.MATE.model.Meeting;
 import com.example.MATE.model.User;
 import com.example.MATE.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

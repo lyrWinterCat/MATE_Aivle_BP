@@ -16,9 +16,6 @@ public class Department {
     @Column(name = "department_name", nullable = false)
     private String departmentName;
 
-    @Column(name = "team_name", nullable = false)
-    private String teamName;
-
     @Column(name = "description")
     private String description;
 }

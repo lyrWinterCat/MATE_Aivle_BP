@@ -1,16 +1,25 @@
 package com.example.MATE.config;
 
-
+import com.example.MATE.Handler.LoginAuthenticationFailureHandler;
+import com.example.MATE.Handler.LoginAuthenticationSuccessHandler;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import java.util.Collection;
 
 // Spring Security 설정
 // spring security 기본 로그인 창이 뜨는 게 싫어서 임시적으로 모두에게 permit 해준거임
@@ -18,7 +27,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    
+
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         //security를 적용하지 않을 리소스 추가(error, icon, css, img, js)
@@ -30,22 +39,104 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         //인증제외URL설정
         http.csrf(csrf -> csrf
-                .ignoringRequestMatchers("/signIn","/signUp","/signOut","/oauth2/authorization/**")
+                .ignoringRequestMatchers("/signIn**","/login","/signUp**","/signOut","/oauth2/authorization/**")
         );
         //공통인증
         http.authorizeHttpRequests(auth -> auth
                 //.requestMatchers("/**").permitAll() //테스트용 모든 URL 권한 오픈
-                .requestMatchers("/signIn","/signUp","/signOut","/error/**","/*.css","/*.img","/*.js").permitAll()
+                .requestMatchers("/signIn","/signUp","/signOut","/error/**").permitAll()
                 //.requestMatchers("/user/**").hasAuthority("USER")
                 //.requestMatchers("/admin/**").hasAuthority("ADMIN")
-                //.anyRequest().authenticated()
+                .anyRequest().authenticated()
         );
+        //일반로그인 인증
+        http.formLogin(form -> form
+                .loginPage("/signIn") //로그인 페이지
+                .loginProcessingUrl("/login") //로그인 프로세스 : UserSecurityDetailsService 에서 처리, 로그인폼 action과 동일해야함
+                .usernameParameter("email")
+                .passwordParameter("password")
+                .failureUrl("/signIn?error=true")
+                .successHandler(authenticationSuccessHandler())
+                .failureHandler(authenticationFailureHandler())
+                .permitAll()
+        );
+        //로그아웃
+        http.logout(logout -> logout
+                .logoutUrl("/signOut")
+                .logoutSuccessUrl("/signIn")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+                .clearAuthentication(true)
+                .permitAll()
+        );
+        //세션관리
+        http.sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                .invalidSessionUrl("/signIn")
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(false)
+                .expiredUrl("/signIn?error=session_expired")
+        );
+        //SpringSecurity exception 잡기
+        http.exceptionHandling(exception -> exception
+                .accessDeniedHandler(ExceptionAccessDeniedHandler())
+        );
+
         return http.build();
     }
 
+    //SpringSecurity Exception 잡기
+    @Bean
+    public AccessDeniedHandler ExceptionAccessDeniedHandler(){
+        return (request, response,
+        accessDeniedException) -> {
+            System.out.println(">>> [SecurityConfig] 403 Forbidden 접근 거부됨  : "+request.getRequestURI());
+            HttpSession session = request.getSession();
+            //현재 인증자 정보
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            if(authentication != null && authentication.isAuthenticated()) {
+                Object pricipal = authentication.getPrincipal();
+                System.out.println(">>> [SecurityConfig] 현재 로그인된 사용자 : " + authentication.getName());
+
+                //사용자 권한 확인
+                Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+
+                for (GrantedAuthority authority : authorities) {
+                    System.out.println(">>> [SecurityConfig] 현재 사용자권한 : " + authority.getAuthority());
+                }
+
+                session.setAttribute("errorMessage", "접근 권한이 없습니다.");
+                System.out.println(">>> [SecurityConfig] 현재 사용자는 접근권한이 없습니다.");
+
+                //권한에 따른 페이지 리다이렉트
+                if (authorities.stream().anyMatch(auth -> auth.getAuthority().equals("admin"))) {
+                    //관리자인 경우
+                    response.sendRedirect("/error/403");
+                } else {
+                    //유저인 경우
+                    response.sendRedirect("/error/403");
+                }
+            }else{
+                session.setAttribute("errorMessage","로그인이 필요합니다.");
+                response.sendRedirect("/signIn?error=access_denied");
+            }
+        };
+    }
+    //로그인 성공
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler(){
+        return new LoginAuthenticationSuccessHandler();
+    }
+    //로그인 실패
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler(){
+        return new LoginAuthenticationFailureHandler();
+    }
     //보안설정
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }
