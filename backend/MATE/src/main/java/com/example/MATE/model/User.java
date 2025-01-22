@@ -33,7 +33,7 @@ public class User {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false, columnDefinition = "ENUM('USER', 'ADMIN') DEFAULT 'USER'")
+    @Column(name = "role", nullable = false, columnDefinition = "ENUM('user', 'admin') DEFAULT 'user'")
     private Role role;
 
     @Column(name = "created_at", nullable = false)
