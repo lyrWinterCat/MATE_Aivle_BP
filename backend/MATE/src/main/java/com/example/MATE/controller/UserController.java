@@ -35,17 +35,6 @@ public class UserController {
             session.removeAttribute("errorMessage");
         }
 
-        //세션에서 사용자 정보 가져오기
-        String email = (String) session.getAttribute("userEmail");
-        String userName = (String) session.getAttribute("userName");
-        String userRole = (String) session.getAttribute("userRole");
-
-        //로그인 여부 확인
-        if(email == null){
-            System.out.println(">>> 세션에 이메일 없음. 로그인페이지로 이동");
-            model.addAttribute("errorMessage","로그인이 필요합니다.");
-            return "/signIn";
-        }
         System.out.println(">>> 유저 메인 페이지 로드 완료!");
         return "user/userMain";
     }
