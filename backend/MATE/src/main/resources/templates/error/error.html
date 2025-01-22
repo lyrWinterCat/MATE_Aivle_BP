@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>에러페이지</title>
+</head>
+<body>
+{{#error}}
+<p style="color: red;">{{error}}</p>
+{{/error}}
+{{#errorMessage}}
+<div class="alert alert-danger">
+  {{errorMessage}}
+</div>
+{{/errorMessage}}
+</body>
+</html>
