@@ -36,33 +36,50 @@ public class UserController {
         }
 
         System.out.println(">>> 유저 메인 페이지 로드 완료!");
+
+        // 세션의 userName 을 model 에 전달
+        String userName = (String) session.getAttribute("userName");
+        model.addAttribute("userName", userName);
+
         return "user/userMain";
     }
 
     @GetMapping("/meetingList")
-    public String meetingList(Model model){
-        List<MeetingLogDto> meetingLogs = userService.getMeeetingLogs();
+    public String meetingList(Model model, HttpSession session){
+        List<MeetingLogDto> meetingLogs = userService.getMeetingLogs();
         model.addAttribute("meetingLogs", meetingLogs);
+
+        // 세션의 userName 을 model 에 전달
+        String userName = (String) session.getAttribute("userName");
+        model.addAttribute("userName", userName);
+
         return "user/meetingList";
     }
 
     @GetMapping("/speechLog")
-    public String speechLog() {
+    public String speechLog(Model model, HttpSession session) {
+        String userName = (String) session.getAttribute("userName");
+        model.addAttribute("userName", userName);
         return "/user/speechLog";
     }
 
     @GetMapping("/userFix")
-    public String userFix(){
+    public String userFix(Model model, HttpSession session){
+        String userName = (String) session.getAttribute("userName");
+        model.addAttribute("userName", userName);
         return "user/userFix";
     }
 
     // userFix 페이지에서 "새 글 작성"이라든지 버튼 누르면 userFix/write 주소로 이동
     @GetMapping("/userFix/write")
-    public String userFixWrite(){
+    public String userFixWrite(Model model, HttpSession session){
+        String userName = (String) session.getAttribute("userName");
+        model.addAttribute("userName", userName);
         return "user/write";
     }
 
-    @GetMapping("/screenShare")
-    public String screenShare(){ return "user/screenShare"; }
+    // 더이상 사용하지 않는 엔드포인트입니다. 확인 후 삭제해주시면 감사하겠습니다.
+    // @GetMapping("/screenShare")
+    // public String screenShare(){ return "user/screenShare"; }
 
 }

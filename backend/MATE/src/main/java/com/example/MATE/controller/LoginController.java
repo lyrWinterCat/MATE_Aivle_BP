@@ -98,6 +98,7 @@ public class LoginController {
 
         //SpringSecurity 인증정보 제거
         SecurityContextHolder.clearContext();
+
         return "/signIn";
     }
 }

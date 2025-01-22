@@ -135,12 +135,14 @@
 <header>
     <div class="header-left">
         <img src="file:///C:\Users\User\Desktop\MATE_Aivle_BP-main\screenshare_java\src\main\resources\static\img/logo.png" alt="Mate Logo">
-        <h1>정정게시판</h1>
+        <h1>Mypage</h1>
     </div>
     <div class="header-right">
-        <span>관리자님 반갑습니다.</span>
+        <span>{{userName}}님 반갑습니다.</span>
         <button>로그조회</button>
-        <button>로그아웃</button>
+        <form action="/signOut" method="post" style="display:inline;">
+            <button type="submit" class="nav-button">로그아웃</button>
+        </form>
     </div>
 </header>
 

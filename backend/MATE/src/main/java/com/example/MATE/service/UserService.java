@@ -36,8 +36,10 @@ public class UserService {
         return passwordEncoder.matches(rawPassword, user.getPassword());
     }
 
-    //??
-    public List<MeetingLogDto> getMeeetingLogs() {
+    // 각 미팅의 미팅명, 시작시간, 참여자 목록을 담은 List 를 반환
+    // user/meetingList 페이지에서 사용
+    // 그런데 현재 로그인한 사람이 참여한 미팅에 대해서만 작업을 하도록 수정 필요
+    public List<MeetingLogDto> getMeetingLogs() {
         List<Meeting> meetings = meetingService.getAllMeetings();
         List<MeetingLogDto> meetingLogs = new ArrayList<>();
 

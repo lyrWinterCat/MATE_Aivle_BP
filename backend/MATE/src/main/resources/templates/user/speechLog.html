@@ -224,10 +224,12 @@
         <h1>Mypage</h1>
     </div>
     <div class="header-right">
-        <span>안지홍님 반갑습니다.</span>
+        <span>{{userName}}님 반갑습니다.</span>
         <button onclick="window.location.href='mypage.html'">Mypage</button>
         <button onclick="window.location.href='correction.html'">정정게시판</button>
-        <button onclick="window.location.href='logout.html'">로그아웃</button>
+        <form action="/signOut" method="post" style="display:inline;">
+            <button type="submit" class="nav-button">로그아웃</button>
+        </form>
     </div>
 </header>
 <div class="content">
