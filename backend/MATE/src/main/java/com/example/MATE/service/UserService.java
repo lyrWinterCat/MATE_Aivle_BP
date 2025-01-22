@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +25,7 @@ public class UserService {
 
     //회원조회
     public Optional<User> findByEmail(String email){
-        System.out.println(">>> 회원 조회[UserService]");
+        System.out.println(">>> [UserService] 회원 조회 : "+email);
         return userRepository.findByEmail(email);
     }
 

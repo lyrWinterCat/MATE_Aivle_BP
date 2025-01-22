@@ -4,7 +4,6 @@ import com.example.MATE.model.User;
 import com.example.MATE.model.UserSecurityDetails;
 import com.example.MATE.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,14 +25,10 @@ public class UserSecurityDetailsService implements UserDetailsService {
         System.out.println(">>> [UserSecurityDetailsService] 조회할 계정 메일 : "+username);
 
         //이메일을 이용한 사용자 조회
-        Optional<User> userOptional = userRepository.findByEmail(username);
-        if(userOptional.isEmpty()){
-            System.out.println(">>> [UserSecurityDetailsService] 미등록 계정임 : "+username);
-            throw new BadCredentialsException("미등록계정/사용자가 존재하지 않음 : "+username);
-        }
+        User foundUser = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("미등록 계정입니다: " + username));
 
-        User foundUser = userOptional.get();
-        System.out.println(">>> 계정 조회 성공"+foundUser.getEmail());
+        System.out.println(">>> [UserSecurityDetailsService] 계정 조회 성공"+foundUser.getEmail());
 
         UserSecurityDetails userSecurityDetails = new UserSecurityDetails(
                 foundUser.getEmail(),

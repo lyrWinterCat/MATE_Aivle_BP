@@ -142,12 +142,12 @@
         <!-- 1. 이름 입력 -->
         <div class="form-group">
             <label for="name">이름</label>
-            <input type="text" id="name" name="name" placeholder="안지홍" required>
+            <input type="text" id="name" name="name" value="{{#signupName}}{{signupName}}{{/signupName}}" placeholder="안지홍" required>
         </div>
         <!-- 2. 이메일 입력 -->
         <div class="form-group">
             <label for="email">이메일 주소</label>
-            <input type="email" id="email" name="email" placeholder="구글 이메일 주소" required>
+            <input type="email" id="email" name="email" value="{{#signupEmail}}{{signupEmail}}{{/signupEmail}}" placeholder="구글 이메일 주소" required>
         </div>
         <!-- 3. 부서명 입력 -->
         <div class="form-group">

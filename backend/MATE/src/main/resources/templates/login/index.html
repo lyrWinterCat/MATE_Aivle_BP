@@ -111,6 +111,30 @@
         }
     </style>
 </head>
+<script>
+    //구글 로그 버튼
+    function google_login() {
+        // Create a form dynamically to send a POST request
+        const form = document.createElement("form");
+        form.method = "post";
+        form.action = "/oauth2/authorization/google";
+        document.body.appendChild(form);
+        form.submit();
+    }
+    //에러메세지
+    document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(() => {
+            const errorMessageContainer = document.getElementById("errorMessageContainer");
+            if (errorMessageContainer) {
+                const errorMessage = errorMessageContainer.textContent.trim();
+                console.log("Error Message:", errorMessage);
+                if (errorMessage) {
+                    alert(errorMessage);
+                }
+            }
+        }, 200);
+    });
+</script>
 <body>
 <div class="left-container">
     <img src="file:///C:\Users\User\Desktop\MATE_Aivle_BP-main\screenshare_java\src\main\resources\static\img/logo.png" alt="Mate Logo">
@@ -119,6 +143,9 @@
     <div class="image">
         <img src="file:///C:\Users\User\Desktop\MATE_Aivle_BP-main\screenshare_java\src\main\resources\static\img/login.png" alt="Collaboration">
     </div>
+</div>
+<div id="errorMessageContainer" style="display:none;">
+    {{#errorMessage}}{{errorMessage}}{{/errorMessage}}
 </div>
 <div class="login-container">
     <h1>Mate 로그인</h1>
@@ -134,7 +161,7 @@
         <button type="submit">로그인하기</button>
     </form>
     <button onclick="window.location.href='signUp'">회원가입</button>
-    <button class="google-btn" onclick="window.location.href='mypage'">
+    <button class="google-btn" onclick="google_login()">
         <img src="file:///C:\Users\User\Desktop\MATE_Aivle_BP-main\screenshare_java\src\main\resources\static\img/google.png" alt="Google Logo">
         
         구글 계정으로 시작하기
