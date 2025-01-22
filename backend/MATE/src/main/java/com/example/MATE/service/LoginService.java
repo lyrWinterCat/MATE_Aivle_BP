@@ -30,11 +30,11 @@ public class LoginService {
     //회원가입
     @Transactional
     public void signup(UserDto userDto){
-        System.out.println(">>> 회원 가입[LoginService]");
+        System.out.println(">>> [LoginService] 회원 가입");
 
         try {
             //유효 부서명 확인
-            System.out.println(">>> 회원 가입[LoginService] 유효부서명? :"+userDto.getDepartmentName()+":");
+            System.out.println(">>> [LoginService] 회원 가입 유효부서명? :"+userDto.getDepartmentName()+":");
             Department department = departmentRepository.findByDepartmentName(userDto.getDepartmentName())
                     .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 부서명입니다."+userDto.getDepartmentName()));
 

@@ -1,14 +1,10 @@
 package com.example.MATE.Handler;
 
-import com.example.MATE.model.UserSecurityDetails;
-import com.example.MATE.repository.UserRepository;
-import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
@@ -25,15 +21,19 @@ public class LoginAuthenticationFailureHandler implements AuthenticationFailureH
                                         HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException
     {
-        System.out.println(">>> [LoginAuthenticationFailureHandler] 로그인 실패 : "+exception.getMessage());
         String errorMessage = exception.getMessage();
-
-        //요청에 실패 메세지 추가
-        request.setAttribute("error",errorMessage);
+        System.out.println(errorMessage);
+        if(exception instanceof BadCredentialsException){
+            errorMessage = "아이디 또는 비밀번호가 잘못되었습니다.";
+        }
+        System.out.println(">>> [LoginAuthenticationFailureHandler] 로그인 실패 : "+errorMessage);
         String encodeErrorMessage = URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
 
-        //로그인 페이지로 리다이렉션
-        response.sendRedirect("/signIn?error="+encodeErrorMessage);
+        //세션에 에러 메세지 저장(URL에 미표시)
+        HttpSession session = request.getSession();
+        session.setAttribute("errorMessage", encodeErrorMessage);
+
+        response.sendRedirect("/signIn");
     }
 
 }

@@ -2,6 +2,7 @@ package com.example.MATE.config;
 
 import com.example.MATE.Handler.LoginAuthenticationFailureHandler;
 import com.example.MATE.Handler.LoginAuthenticationSuccessHandler;
+import com.example.MATE.service.GoogleOAuth2UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -45,8 +49,8 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                 //.requestMatchers("/**").permitAll() //테스트용 모든 URL 권한 오픈
                 .requestMatchers("/signIn","/signUp","/signOut","/error/**").permitAll()
-                //.requestMatchers("/user/**").hasAuthority("USER")
-                //.requestMatchers("/admin/**").hasAuthority("ADMIN")
+                .requestMatchers("/user/**").hasAuthority("USER")
+                .requestMatchers("/admin/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
         );
         //일반로그인 인증
@@ -59,6 +63,15 @@ public class SecurityConfig {
                 .successHandler(authenticationSuccessHandler())
                 .failureHandler(authenticationFailureHandler())
                 .permitAll()
+        );
+        //구글로그인 인증
+        http.oauth2Login(auth -> auth
+                .loginPage("/signIn")
+                .userInfoEndpoint(userInfo -> userInfo
+                        .userService(oAuth2UserService())
+                )
+                .successHandler(authenticationSuccessHandler())
+                .failureHandler(authenticationFailureHandler())
         );
         //로그아웃
         http.logout(logout -> logout
@@ -122,6 +135,11 @@ public class SecurityConfig {
                 response.sendRedirect("/signIn?error=access_denied");
             }
         };
+    }
+    //구글로그인 성공
+    @Bean
+    public OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService(){
+        return new GoogleOAuth2UserService();
     }
     //로그인 성공
     @Bean
