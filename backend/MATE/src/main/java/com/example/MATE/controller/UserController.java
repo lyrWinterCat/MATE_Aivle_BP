@@ -43,13 +43,20 @@ public class UserController {
 
         return "user/userMain";
     }
-
+    
+    // 현재 로그인한 유저가 참여한 모든 회의를 보여주는 페이지
     @GetMapping("/meetingList")
     public String meetingList(Model model, HttpSession session){
-        List<MeetingLogDto> meetingLogs = userService.getMeetingLogs();
+
+        // 세션에서 user 객체 받아온 후 userId 추출
+        User user = (User) session.getAttribute("user");
+        Integer userId = user.getUserId();
+
+        // 로그인한 유저가 참여한 모든 미팅을 가져옴
+        List<MeetingLogDto> meetingLogs = userService.getMeetingLogs(userId);
         model.addAttribute("meetingLogs", meetingLogs);
 
-        // 세션의 userName 을 model 에 전달
+        // 세션의 userName 을 model 에 전달 (페이지 상단에 사용자 이름 표시를 위함임)
         String userName = (String) session.getAttribute("userName");
         model.addAttribute("userName", userName);
 
@@ -70,16 +77,12 @@ public class UserController {
         return "user/userFix";
     }
 
-    // userFix 페이지에서 "새 글 작성"이라든지 버튼 누르면 userFix/write 주소로 이동
+    // userFix 페이지에서 "정정 요청"이라든지 버튼 누르면 userFix/write 주소로 이동
+    // "정정 요청" 과 같은 버튼이 필요합니다.
     @GetMapping("/userFix/write")
     public String userFixWrite(Model model, HttpSession session){
         String userName = (String) session.getAttribute("userName");
         model.addAttribute("userName", userName);
         return "user/write";
     }
-
-    // 더이상 사용하지 않는 엔드포인트입니다. 확인 후 삭제해주시면 감사하겠습니다.
-    // @GetMapping("/screenShare")
-    // public String screenShare(){ return "user/screenShare"; }
-
 }

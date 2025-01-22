@@ -36,15 +36,16 @@ public class UserService {
         return passwordEncoder.matches(rawPassword, user.getPassword());
     }
 
-    // 각 미팅의 미팅명, 시작시간, 참여자 목록을 담은 List 를 반환
+    // 현재 로그인한 유저가 참여한 미팅들의 미팅명, 시작시간, 참여자 목록을 담은 List 를 반환
     // user/meetingList 페이지에서 사용
-    // 그런데 현재 로그인한 사람이 참여한 미팅에 대해서만 작업을 하도록 수정 필요
-    public List<MeetingLogDto> getMeetingLogs() {
-        List<Meeting> meetings = meetingService.getAllMeetings();
-        List<MeetingLogDto> meetingLogs = new ArrayList<>();
+    public List<MeetingLogDto> getMeetingLogs(Integer userId) {
+        List<Integer> meetingIds = meetingService.getMeetingIdsByUserId(userId); // 현재 로그인한 유저가 참여한 미팅 ID 목록
+        List<MeetingLogDto> meetingLogs = new ArrayList<>(); // 미팅명, 시작시간, 참여자 목록을 담을 List
 
-        for (Meeting meeting : meetings) {
-            List<User> participants = meetingParticipantService.getParticipantsByMeetingId(meeting.getMeetingId());
+        // 미팅 ID 목록을 순회하며 각 미팅의 정보를 추출, 그 후 meetingLogs 에 추가
+        for (Integer meetingId : meetingIds) {
+            Meeting meeting = meetingService.getMeetingByMeetingId(meetingId);
+            List<User> participants = meetingParticipantService.getParticipantsByMeetingId(meetingId);
             String participantNames = participants.stream()
                                                   .map(User::getName)
                                                   .collect(Collectors.joining(", "));

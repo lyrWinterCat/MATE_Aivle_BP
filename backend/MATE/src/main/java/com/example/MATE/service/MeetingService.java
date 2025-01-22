@@ -27,4 +27,14 @@ public class MeetingService {
     public List<Meeting> getAllMeetings() {
         return meetingRepository.findAllMeetings();
     }
+
+    // 유저 ID 를 받아 해당 유저가 참여한 모든 미팅 ID 를 반환
+    public List<Integer> getMeetingIdsByUserId(Integer userId) {
+        return meetingRepository.findMeetingIdsByUserId(userId);
+    }
+
+    // 미팅 ID 를 받아 해당 미팅의 정보를 반환
+    public Meeting getMeetingByMeetingId(Integer meetingId) {
+        return meetingRepository.findByMeetingId(meetingId);
+    }
 }
