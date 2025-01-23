@@ -34,9 +34,7 @@ public class LoginController {
 
     //메인페이지(로그인페이지)이동
     @GetMapping("/")
-    public String index(){
-        return "login/index";
-    }
+     public String index(){ return "login/index"; }
 
     //로그인 페이지이동
     @GetMapping("/signIn")

@@ -36,19 +36,56 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         //security를 적용하지 않을 리소스 추가(error, icon, css, img, js)
         return web -> web.ignoring()
-                .requestMatchers("/","/error","/favicon.ico","/*.css","/*.img","/*.js");
+             // .requestMatchers("/","/error","/favicon.ico","/*.css","/*.img","/*.js");
+
+                // 로그인 안해도 이미지, css, js 가 적용되도록 수정
+                .requestMatchers(
+                        "/",
+                        "/error",
+                        "/favicon.ico",
+                        "/css/**",
+                        "/js/**",
+                        "/img/**",  // 이미지 경로 추가
+                        "/static/**"  // static 리소스 전체 추가
+                );
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         //인증제외URL설정
         http.csrf(csrf -> csrf
-                .ignoringRequestMatchers("/signIn**","/login","/signUp**","/signOut","/oauth2/authorization/**")
+               // .ignoringRequestMatchers("/signIn**","/login","/signUp**","/signOut","/oauth2/authorization/**")
+
+               // 로그인 안해도 이미지, css, js 가 적용되도록 수정
+                .ignoringRequestMatchers(
+                        "/signIn**",
+                        "/login",
+                        "/signUp**",
+                        "/signOut",
+                        "/oauth2/authorization/**",
+                        "/css/**",
+                        "/js/**",
+                        "/img/**",  // 이미지 경로 추가
+                        "/static/**"  // static 리소스 전체 추가
+                )
         );
         //공통인증
         http.authorizeHttpRequests(auth -> auth
                 //.requestMatchers("/**").permitAll() //테스트용 모든 URL 권한 오픈
-                .requestMatchers("/signIn","/signUp","/signOut","/error/**").permitAll()
+                //.requestMatchers("/signIn","/signUp","/signOut","/error/**").permitAll()
+
+
+                // 로그인 안해도 이미지, css, js 가 적용되도록 수정
+                .requestMatchers(
+                        "/signIn",
+                        "/signUp",
+                        "/signOut",
+                        "/error/**",
+                        "/css/**",
+                        "/js/**",
+                        "/img/**",  // 이미지 경로 추가
+                        "/static/**"  // static 리소스 전체 추가
+                ).permitAll()
                 .requestMatchers("/user/**").hasAuthority("USER")
                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()

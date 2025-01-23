@@ -21,7 +21,16 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**")
-                .addResourceLocations("classpath:/static/");
+                //.addResourceLocations("classpath:/static/");
+
+                // 로그인 안해도 이미지, css, js 가 적용되도록 수정
+                .addResourceLocations(
+                        "classpath:/static/",
+                        "classpath:/public/",
+                        "classpath:/resources/",
+                        "classpath:/META-INF/resources/"
+                );
+
     }
 
     @Override
