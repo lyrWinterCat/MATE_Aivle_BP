@@ -11,4 +11,7 @@ import java.util.List;
 public interface AdminRepository extends JpaRepository<AdminFeedback, Long> {
     @Query(value = "select * from admin_feedback", nativeQuery = true)
     List<AdminFeedback> findFeedbacks();
+
+    // 한 유저의 정정 요청을 모두 가져옴
+    List<AdminFeedback> findAllByUser_UserId(Integer userId);
 }

@@ -183,48 +183,14 @@
             </tr>
             </thead>
             <tbody id="table-body">
+            {{#userFixes}}
             <tr>
-                <td>왜 독성발언으로 분류되는지 확인 부탁드립니다.1111</td>
-                <td>A01</td>
-                <td>2025.01.01</td>
-                <td><div class="status status-approved">승인</div></td>
+                <td>{{title}}</td>
+                <td>{{feedbackId}}</td>
+                <td>{{createdAt}}</td>
+                <td>{{status}}</td>
             </tr>
-            <tr>
-                <td>왜 독성발언으로 분류되는지 확인 부탁드립니다.2222</td>
-                <td>A02</td>
-                <td>2025.01.02</td>
-                <td><div class="status status-approved">승인</div></td>
-            </tr>
-            <tr>
-                <td>왜 독성발언으로 분류되는지 확인 부탁드립니다.3333</td>
-                <td>A03</td>
-                <td>2025.01.03</td>
-                <td><div class="status status-pending">신청</div></td>
-            </tr>
-            <tr>
-                <td>왜 독성발언으로 분류되는지 확인 부탁드립니다.4444</td>
-                <td>A04</td>
-                <td>2025.01.04</td>
-                <td><div class="status status-approved">승인</div></td>
-            </tr>
-            <tr>
-                <td>왜 독성발언으로 분류되는지 확인 부탁드립니다.5555</td>
-                <td>A05</td>
-                <td>2025.01.05</td>
-                <td><div class="status status-approved">승인</div></td>
-            </tr>
-            <tr>
-                <td>왜 독성발언으로 분류되는지 확인 부탁드립니다.6666</td>
-                <td>A06</td>
-                <td>2025.01.06</td>
-                <td><div class="status status-approved">승인</div></td>
-            </tr>
-            <tr>
-                <td>왜 독성발언으로 분류되는지 확인 부탁드립니다.7777</td>
-                <td>A07</td>
-                <td>2025.01.07</td>
-                <td><div class="status status-rejected">반려</div></td>
-            </tr>
+            {{/userFixes}}
             </tbody>
         </table>
     </div>
@@ -245,6 +211,25 @@
             }
         });
     }
+
+    // 상태에 따라서 다른 CSS 를 적용하기 위한 이벤트리스너
+    document.addEventListener("DOMContentLoaded", () => {
+        // 모든 테이블 행의 상태 셀을 가져옵니다.
+        const statusCells = document.querySelectorAll('#table-body td:last-child');
+
+        statusCells.forEach(cell => {
+            const status = cell.textContent.trim(); // 셀의 텍스트(상태값) 가져오기
+
+            // 상태값에 따라 적절한 클래스와 스타일 추가
+            if (status === '승인') {
+                cell.innerHTML = `<div class="status status-approved">${status}</div>`;
+            } else if (status === '신청') {
+                cell.innerHTML = `<div class="status status-pending">${status}</div>`;
+            } else if (status === '반려') {
+                cell.innerHTML = `<div class="status status-rejected">${status}</div>`;
+            }
+        });
+    });
 </script>
 </body>
 </html>

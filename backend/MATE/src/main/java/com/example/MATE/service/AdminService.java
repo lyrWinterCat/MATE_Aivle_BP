@@ -30,4 +30,9 @@ public class AdminService {
         return adminRepository.findById(Long.valueOf(feedbackId))
                 .orElseThrow(() -> new IllegalArgumentException("해당 피드백을 찾을 수 없습니다: " + feedbackId));
     }
+
+    // 한 유저의 정정 요청을 모두 가져옴
+    public List<AdminFeedback> getFeedbackByUserId(Integer userId) {
+        return adminRepository.findAllByUser_UserId(userId);
+    }
 }

@@ -2,10 +2,12 @@ package com.example.MATE.controller;
 
 import com.example.MATE.dto.MeetingLogDto;
 import com.example.MATE.dto.SpeechLogDto;
+import com.example.MATE.model.AdminFeedback;
 import com.example.MATE.model.GoogleOAuth2User;
 import com.example.MATE.model.User;
 import com.example.MATE.model.UserSecurityDetails;
 import com.example.MATE.repository.UserRepository;
+import com.example.MATE.service.AdminService;
 import com.example.MATE.service.UserService;
 import com.example.MATE.utils.SecurityUtils;
 import jakarta.servlet.http.HttpSession;
@@ -29,6 +31,7 @@ public class UserController {
 
     private final UserService userService;
     private final UserRepository userRepository;
+    private final AdminService adminService;
 
     //유저메인페이지
     @GetMapping("/userMain")
@@ -109,8 +112,22 @@ public class UserController {
 
     @GetMapping("/userFix")
     public String userFix(Model model, HttpSession session){
-        String userName = (String) session.getAttribute("userName");
-        model.addAttribute("userName", userName);
+
+        String email = SecurityUtils.getCurrentUserEmail();
+        if (email != null) {
+            Optional<User> userOptional = userService.findByEmail(email);
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                Integer userId = user.getUserId();
+
+                model.addAttribute("userName", user.getName());
+
+                // 추후에 Admin 모델을 UserFix 로 변경해야 할 것 같습니다.
+                List<AdminFeedback> userFixes = adminService.getFeedbackByUserId(userId);
+                model.addAttribute("userFixes", userFixes);
+
+            }
+        }
         return "user/userFix";
     }
 
