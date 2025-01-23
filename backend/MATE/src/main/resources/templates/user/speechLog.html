@@ -251,36 +251,14 @@
         </tr>
         </thead>
         <tbody>
+        {{#speechLogs}}
         <tr>
-            <td>20241103 15:22:43</td>
-            <td class="type">독성</td>
-            <td>안지홍</td>
-            <td>네가 하는 말은 항상 한심해</td>
+            <td>{{timestamp}}</td>
+            <td class="type">{{speechType}}</td>
+            <td>{{userName}}</td>
+            <td>{{content}}</td>
         </tr>
-        <tr>
-            <td>20241103 15:23:04</td>
-            <td class="type">업무외발언</td>
-            <td>안지홍</td>
-            <td>배고프니 회의 얼른 끝내시죠</td>
-        </tr>
-        <tr>
-            <td>20241103 15:24:04</td>
-            <td class="type">독성</td>
-            <td>안지홍</td>
-            <td>나 배고프다고, 얼른 회의 안 끝내? 새끼야?</td>
-        </tr>
-        <tr>
-            <td>20241103 15:27:10</td>
-            <td class="type">업무외발언</td>
-            <td>안지홍</td>
-            <td>카페가서 커피 마시러 갈까?</td>
-        </tr>
-        <tr>
-            <td>20241103 15:29:10</td>
-            <td class="type">일반</td>
-            <td>안지홍</td>
-            <td>다들 수고하셨습니다.</td>
-        </tr>
+        {{/speechLogs}}
         </tbody>
     </table>
 </div>

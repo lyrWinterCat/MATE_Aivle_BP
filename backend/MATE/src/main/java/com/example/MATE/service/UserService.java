@@ -1,8 +1,11 @@
 package com.example.MATE.service;
 
 import com.example.MATE.dto.MeetingLogDto;
+import com.example.MATE.dto.SpeechLogDto;
 import com.example.MATE.model.Meeting;
+import com.example.MATE.model.SpeechLog;
 import com.example.MATE.model.User;
+import com.example.MATE.repository.ToxicityLogRepository;
 import com.example.MATE.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,6 +25,7 @@ public class UserService {
     private final MeetingParticipantService meetingParticipantService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ToxicityLogRepository toxicityLogRepository;
 
     //회원조회
     public Optional<User> findByEmail(String email){
@@ -60,5 +64,31 @@ public class UserService {
         }
 
         return meetingLogs;
+    }
+
+    public List<SpeechLogDto> getSpeechLogsByUserId(Integer userId) {
+        List<SpeechLog> speechLogs = userRepository.findSpeechLogsByUserId(userId);
+
+        return speechLogs.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    // SpeechLog 객체를 받아서 SpeechLogDto 객체로 변환
+    public SpeechLogDto convertToDto(SpeechLog speechLog) {
+        SpeechLogDto speechLogDto = new SpeechLogDto();
+
+        // 발화시간, 발화내용, 발화자를 가져올거임
+        speechLogDto.setTimestamp(speechLog.getTimestamp());
+        speechLogDto.setContent(speechLog.getContent());
+        speechLogDto.setUserName(speechLog.getUser().getName());
+
+        // 독성인지 아닌지 판단
+        // toxicity_log 테이블에 있으면 독성, 없으면 일반
+        boolean isToxic = toxicityLogRepository.existsBySpeechLog_LogId(speechLog.getLogId());
+        speechLogDto.setSpeechType(isToxic ? "독성" : "일반");
+
+        return speechLogDto;
+
     }
 }

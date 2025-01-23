@@ -1,6 +1,7 @@
 package com.example.MATE.controller;
 
 import com.example.MATE.dto.MeetingLogDto;
+import com.example.MATE.dto.SpeechLogDto;
 import com.example.MATE.model.GoogleOAuth2User;
 import com.example.MATE.model.User;
 import com.example.MATE.model.UserSecurityDetails;
@@ -85,10 +86,25 @@ public class UserController {
     }
 
     @GetMapping("/speechLog")
+    @PreAuthorize("hasAuthority('USER')")
     public String speechLog(Model model, HttpSession session) {
-        String userName = (String) session.getAttribute("userName");
-        model.addAttribute("userName", userName);
-        return "/user/speechLog";
+
+        String email = SecurityUtils.getCurrentUserEmail();
+        if (email != null) {
+            Optional<User> userOptional = userService.findByEmail(email);
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                Integer userId = user.getUserId();
+
+                model.addAttribute("userName", user.getName());
+
+                // 유저 ID 를 받아 해당 유저가 발화한 모든 발화 로그를 반환
+                List<SpeechLogDto> speechLogs = userService.getSpeechLogsByUserId(userId);
+                model.addAttribute("speechLogs", speechLogs);
+            }
+        }
+
+        return "user/speechLog";
     }
 
     @GetMapping("/userFix")
