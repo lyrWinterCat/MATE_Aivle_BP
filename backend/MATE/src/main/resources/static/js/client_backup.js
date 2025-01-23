@@ -54,72 +54,39 @@ function onError(error) {
     }, 3000);
 }
 
-//function initializePeerConnection() {
-//    console.log('PeerConnection 초기화 시작');
-//    if (peerConnection) {
-//        peerConnection.close();
-//    }
-//    peerConnection = new RTCPeerConnection(configuration);
-//
-//    peerConnection.ontrack = (event) => {
-//        console.log('트랙 수신됨:', event);
-//        if (event.streams && event.streams[0]) {
-//            console.log('비디오 스트림 설정');
-//            remoteVideo.srcObject = event.streams[0];
-//            remoteVideo.play().catch(e => console.error('비디오 재생 실패:', e));
-//        }
-//    };
-//
-//    peerConnection.onicecandidate = (event) => {
-//        if (event.candidate) {
-//            console.log('ICE candidate 전송:', event.candidate);
-//            stompClient.send("/app/ice-candidate", {}, JSON.stringify(event.candidate));
-//        }
-//    };
-//
-//    peerConnection.onconnectionstatechange = () => {
-//        console.log('Connection state 변경:', peerConnection.connectionState);
-//        if (peerConnection.connectionState === 'failed') {
-//            console.log('연결 실패, 재시도...');
-//            initializePeerConnection();
-//        }
-//    };
-//
-//    peerConnection.oniceconnectionstatechange = () => {
-//        console.log('ICE connection state 변경:', peerConnection.iceConnectionState);
-//    };
-//
-//    console.log('PeerConnection 초기화 완료');
-//}
-
 function initializePeerConnection() {
+    console.log('PeerConnection 초기화 시작');
+    if (peerConnection) {
+        peerConnection.close();
+    }
     peerConnection = new RTCPeerConnection(configuration);
 
-    // ICE Candidate 처리 (3번 수정사항)
-    peerConnection.onicecandidate = (event) => {
-        if (event.candidate) {
-            console.log('Sending ICE candidate:', event.candidate);
-            stompClient.send("/app/ice-candidate",
-                {},
-                JSON.stringify({
-                    type: 'ice-candidate',
-                    payload: event.candidate
-                })
-            );
+    peerConnection.ontrack = (event) => {
+        console.log('트랙 수신됨:', event);
+        if (event.streams && event.streams[0]) {
+            console.log('비디오 스트림 설정');
+            remoteVideo.srcObject = event.streams[0];
+            remoteVideo.play().catch(e => console.error('비디오 재생 실패:', e));
         }
     };
 
-    // 연결 상태 모니터링 (4번 수정사항)
+    peerConnection.onicecandidate = (event) => {
+        if (event.candidate) {
+            console.log('ICE candidate 전송:', event.candidate);
+            stompClient.send("/app/ice-candidate", {}, JSON.stringify(event.candidate));
+        }
+    };
+
     peerConnection.onconnectionstatechange = () => {
-        console.log('Connection State:', peerConnection.connectionState);
+        console.log('Connection state 변경:', peerConnection.connectionState);
         if (peerConnection.connectionState === 'failed') {
-            console.error('Connection failed - reinitializing');
-            initializePeerConnection(); // 재연결 시도
+            console.log('연결 실패, 재시도...');
+            initializePeerConnection();
         }
     };
 
     peerConnection.oniceconnectionstatechange = () => {
-        console.log('ICE Connection State:', peerConnection.iceConnectionState);
+        console.log('ICE connection state 변경:', peerConnection.iceConnectionState);
     };
 
     console.log('PeerConnection 초기화 완료');

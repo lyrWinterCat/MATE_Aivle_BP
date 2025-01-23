@@ -50,39 +50,15 @@ async function startCapture() {
 }
 
 // WebRTC 연결 초기화
-//function initializePeerConnection() {
-//    peerConnection = new RTCPeerConnection(configuration);
-//
-//    localStream.getTracks().forEach(track => {
-//        peerConnection.addTrack(track, localStream);
-//    });
-//
-//    peerConnection.onicecandidate = (event) => {
-//        if (event.candidate) {
-//            stompClient.send("/app/ice-candidate",
-//                {},
-//                JSON.stringify({
-//                    type: 'ice-candidate',
-//                    payload: event.candidate
-//                })
-//            );
-//        }
-//    };
-//
-//    peerConnection.onconnectionstatechange = () => {
-//        console.log('Connection state:', peerConnection.connectionState);
-//    };
-//
-//    createAndSendOffer();
-//}
-
 function initializePeerConnection() {
     peerConnection = new RTCPeerConnection(configuration);
 
-    // ICE Candidate 처리 (3번 수정사항)
+    localStream.getTracks().forEach(track => {
+        peerConnection.addTrack(track, localStream);
+    });
+
     peerConnection.onicecandidate = (event) => {
         if (event.candidate) {
-            console.log('Sending ICE candidate:', event.candidate);
             stompClient.send("/app/ice-candidate",
                 {},
                 JSON.stringify({
@@ -93,17 +69,8 @@ function initializePeerConnection() {
         }
     };
 
-    // 연결 상태 모니터링 (4번 수정사항)
     peerConnection.onconnectionstatechange = () => {
-        console.log('Connection State:', peerConnection.connectionState);
-        if (peerConnection.connectionState === 'failed') {
-            console.error('Connection failed - reinitializing');
-            // 재연결 로직 구현
-        }
-    };
-
-    peerConnection.oniceconnectionstatechange = () => {
-        console.log('ICE Connection State:', peerConnection.iceConnectionState);
+        console.log('Connection state:', peerConnection.connectionState);
     };
 
     createAndSendOffer();
