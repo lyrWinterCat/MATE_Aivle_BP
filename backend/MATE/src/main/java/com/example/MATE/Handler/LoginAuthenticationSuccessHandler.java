@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -53,8 +54,9 @@ public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessH
                 System.out.println(">>> [LoginAuthenticationSuccessHandler]구글 API 인증 성공 :"+email);
                 //구글 로그인 계정(이메일)의 DB 존재여부 확인
                 if(userRepository.findByEmail(email).isEmpty()){
-                    //신규 : 회원가입 페이지로 이동
+                    //세션 초기화&인증정보 강제 제거
                     request.getSession().invalidate();
+                    //신규 : 회원가입 페이지로 이동
                     request.setAttribute("signupEmail",email);
                     request.setAttribute("signupName",googleUser.getUserName());
                     request.getRequestDispatcher("/signUp").forward(request, response);
@@ -75,11 +77,7 @@ public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessH
             Optional<User> userOptional = userRepository.findByEmail(email);
             if(userOptional.isPresent()){
                 User user = userOptional.get();
-                //SecurityContextHolder에서 직접 센션관리함
-//                session.setAttribute("user",user); //세션에 정보 저장
-//                session.setAttribute("userEmail",user.getEmail());
-//                session.setAttribute("userName",user.getName());
-//                session.setAttribute("userRole",user.getRole().name());
+
                 System.out.println(">>> [LoginAuthenticationSuccessHandler] 세션 설정 완료 : "+user.getEmail()+"/"+user.getRole().name());
 
                 //role에 따른 다른 페이지 이동
