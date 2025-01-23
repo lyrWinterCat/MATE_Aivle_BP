@@ -10,6 +10,9 @@ let isCaptureStopping = false;
 const configuration = {
     iceServers: [
         { urls: 'stun:stun.l.google.com:19302' }
+//                {
+//                    urls: 'turn:turn.jitsi.net:443'
+//                }
     ]
 };
 
