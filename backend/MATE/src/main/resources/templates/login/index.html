@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mate - 서비스 소개</title>
+    <style>
+        body {
+            background: linear-gradient(90deg, #5b5fc7, #6B2399);
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 30px;
+        }
+        .header {
+            position: absolute;
+            top: 20px;
+            right: 120px;
+            display: flex;
+            gap: 30px;
+        }
+
+        .header a {
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 300;
+            color: white;
+        }
+
+        .header a:hover {
+            text-decoration: underline;
+        }
+        h1 {
+            margin-top:0;
+            font-size: 100px;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        p {
+            margin-top:10px;
+            font-size: 30px;
+            color: #fff;
+            margin-bottom: -10px;
+            text-align: left;
+        }
+        .feature {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 60px;
+            margin-bottom: 50px;
+        }
+        .feature-item {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 25px;
+            flex: 1;
+            margin: 0 15px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .feature-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .feature-item .icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .feature-item h2 {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #333;
+        }
+        .feature-item p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 0;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 13px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        .footer-item {
+            margin: 0 10px;
+        }
+        .footer-separator {
+            color: #F7C600;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="header">
+        <a href="file:///C:/Users/User/MATE_Aivle_BP-main/backend/MATE/src/main/resources/templates/login/aboutus.html">About us</a>
+        <a href="file:///C:/Users/User/MATE_Aivle_BP-main/backend/MATE/src/main/resources/templates/login/login.html">Sign Up</a>
+    </div>
+    
+    <div class="container">
+        <h1>Mate</h1>
+        <p>Meeting Assistant for team efficiency</p>
+        <p>스마트한 협업을 위한 AI 기반 화상회의 어시스턴트, Mate와 함께하세요</p>
+
+        <div class="feature">
+            <div class="feature-item">
+                <div class="icon">📝</div>
+                <h2>회의 요약</h2>
+                <p>AI가 자동으로 회의 내용을 분석하여 핵심 내용을 요약합니다.</p>
+            </div>
+            <div class="feature-item">
+                <div class="icon">📂</div>
+                <h2>회의 기록 저장</h2>
+                <p>회의 로그를 저장하여 언제든지 다시 확인할 수 있습니다.</p>
+            </div>
+            <div class="feature-item">
+                <div class="icon">✅</div>
+                <h2>To-Do List 관리</h2>
+                <p>회의 내용을 분석하여 사용자에게 알맞은 To-Do List를 추천합니다.</p>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <span class="footer-item">©copyright Aivle06기 빅프로젝트 07조</span>
+        <span class="footer-separator">|</span>
+        <span class="footer-item">Contact : 010-5256-5459</span>
+        <span class="footer-separator">|</span>
+        <span class="footer-item">Address : 성남시 분당구 불정로 90 (정자동)</span>
+    </div>
+</body>
+</html>
