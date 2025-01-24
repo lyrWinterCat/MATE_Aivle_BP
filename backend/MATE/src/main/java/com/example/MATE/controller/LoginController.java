@@ -84,7 +84,7 @@ public class LoginController {
             model.addAttribute("signupName",signupName);
         }
 
-        return "/login/membership";
+        return "/login/membershipgeneral";
     }
 
     //회원가입
