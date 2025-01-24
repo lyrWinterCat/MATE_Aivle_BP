@@ -93,6 +93,10 @@ def capture_owner_images(num_images):
             cv2.imwrite(original_file, frame_ori)
 
             img_count += 1
+
+        # 아래 코드 없으면 화면에 표시가 안됨
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
     
     cap.release()
     cv2.destroyAllWindows()
