@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 def call_args():
     parser = argparse.ArgumentParser(description="WebCam Image auto saving")
-    parser.add_argument('--fp', help='file path', default='../data/custom')
+    parser.add_argument('--fp', help='file path', default='./data/custom')
     parser.add_argument('--name', help='Input your name', default='yun')
     parser.add_argument('--num', help='maximum number of images to extract', type=int, default=1000)
     parser.add_argument('--mode', help='both: create&delete, del: delete only, other: preprocess', default='both', choices=['create', 'both', 'del', 'merge'])
