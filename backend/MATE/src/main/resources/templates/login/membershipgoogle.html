@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mate Signup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(90deg, #5b5fc7, #6B2399);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            height: 100vh;
+            margin: 0;
+            padding: 50px 8%;
+        }
+        .left-container {
+            text-align: left;
+            max-width: 50%;
+        }
+
+        .left-container img {
+            width: 100px;
+            height: auto;
+            vertical-align: middle;
+        }
+
+        .left-container h1 {
+            font-size: 80px;
+            margin: 0 0 10px 20px;
+            color: #fff;
+            font-weight: bold;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .left-container p {
+            font-size: 40px;
+            margin: 20px 0;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .left-container .image {
+            margin-top: 20px;
+        }
+
+        .left-container .image img {
+            width: 110%;
+            max-width: 600px;
+            height: auto;
+        }
+        
+        .signup-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            width: 400px;
+            margin-top: 20px;
+        }
+        .signup-container h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: bold;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+        .form-group label {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        .form-inline-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .form-inline-group label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        .form-inline-group input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .form-inline-group button {
+            padding: 5px 10px;
+            font-size: 14px;
+            background-color: #F5E6FF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-inline-group button:hover {
+            background-color:  #F5E6FF;
+        }
+        .signup-container button[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .signup-container button[type="submit"]:hover {
+            background-color: #555;
+        }
+        .modal-overlay {
+            
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal {
+            overflow-y: auto;
+            background: white;
+            max-height: 80vh;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            text-align: left;
+        }
+        .modal h2, .modal h3 {
+            color: #333;
+        }
+        .close-btn {
+            display: block;
+            margin-top: 20px;
+            padding: 10px;
+            background-color:  #F5E6FF;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 13px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .footer-item {
+            margin: 0 10px;
+        }
+
+        .footer-separator {
+            color:  #F5E6FF;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="left-container">
+
+
+    <img src="file:///C:\Users\User\MATE_Aivle_BP-main\backend\MATE\src\main\resources\static\img/logo.png" alt="Mate Logo">
+    <h1>Mate</h1>
+    <p>쉽고 빠른 협업의 시작, Mate!</p>
+    <div class="image">
+        <img src="file:///C:\Users\User\MATE_Aivle_BP-main\backend\MATE\src\main\resources\static\img/login.png" alt="Collaboration">
+    </div>
+</div>
+<div class="signup-container">
+    <h2>회원가입</h2>
+    <form action="/signUp" method="post">
+        <!-- 1. 이름 입력 -->
+        <div class="form-group">
+            <label for="name">이름</label>
+            <input type="text" id="name" name="name" value="{{#signupName}}{{signupName}}{{/signupName}}" placeholder="안지홍" required>
+        </div>
+        <!-- 2. 이메일 입력 -->
+        <div class="form-group">
+            <label for="email">이메일 주소</label>
+            <input type="email" id="email" name="email" value="{{#signupEmail}}{{signupEmail}}{{/signupEmail}}" placeholder="구글 이메일 주소" required>
+        </div>
+        <!-- 3. 부서명 입력 -->
+        <div class="form-group">
+            <label for="department">부서명</label>
+            <input type="text" id="department" name="departmentName" placeholder="부서를 입력하세요" required>
+        </div>
+        <!--비번없어서 임시로 만들었습니다-->
+        <div class="form-group">
+            <label for="password">패스워드</label>
+            <input type="text" id="password" name="password" placeholder="비밀번호" required>
+        </div>
+        <!-- 4. 체크박스: 인증 약관 동의 -->
+        <div class="form-inline-group">
+            <label>
+                <input type="checkbox" id="terms" name="terms" required>
+                [필수] 인증 약관 전체 동의
+            </label>
+            <button type="button" onclick="openModal()">전체 보기</button>
+        </div>
+        <div class="form-inline-group">
+            <label>
+                <input type="checkbox" id="toxicity" name="toxicity" required>
+                [필수] 발언 독성 탐지 전체 동의
+            </label>
+            <button type="button" onclick="openModal2()">전체 보기</button>
+        </div>
+        <button type="submit">회원가입</button>
+    </form>
+</div>
+
+<!-- 인증 약관 모달 -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <h2>MATE 인증 약관 동의</h2>
+        <p>개인정보보호법에 따라 MATE에 회원가입을 신청하시는 분께 아래와 같은 내용을 안내드립니다. 개인정보의 수집 및 이용목적, 보유 및 이용기간, 동의 거부 시 불이익에 대해 자세히 읽고 동의해 주시기 바랍니다.</p>
+        <h3>1. 수집하는 개인정보</h3>
+        <p>MATE는 서비스 제공 및 회원 관리 등을 위해 아래와 같은 개인정보를 수집합니다:</p>
+        <ul>
+            <li>(1) 회원가입 시 수집 항목</li>
+            <li>필수항목: 아이디, 비밀번호, 이름, 생년월일, 성별, 휴대전화번호</li>
+            <li>선택항목: 본인 확인 이메일주소</li>
+            <li>법정대리인 동의 시: 법정대리인의 이름, DI(중복가입확인정보), 휴대전화번호 또는 아이핀번호</li>
+        </ul>
+        <ul>
+            <li>(2) 서비스 이용 중 자동 수집 항목</li>
+            <li>IP 주소, 쿠키, 서비스 이용 기록, 기기 정보, 위치 정보</li>
+            <li>이미지 및 음성 검색 서비스 이용 시 이미지와 음성 데이터</li>
+        </ul>
+        <h3>2. 개인정보의 이용 목적</h3>
+        <p>MATE는 수집한 개인정보를 다음의 목적으로 이용합니다:</p>
+        <ul>
+            <li>회원 관리: 가입 의사 확인, 본인 및 연령 확인, 회원 탈퇴 의사 확인 등</li>
+            <li>서비스 제공: 맞춤형 콘텐츠 및 서비스 제공, 신규 서비스 개발, 기존 서비스 개선</li>
+            <li>안전한 환경 제공: 부정 이용 방지, 계정 보호, 보안 강화</li>
+            <li>마케팅 및 프로모션: 이벤트 정보 제공 및 참여 기회 제공</li>
+            <li>통계 분석: 서비스 이용 기록 및 접속 빈도 분석, 맞춤형 서비스 제공</li>
+        </ul>
+        <h3>3. 개인정보의 보유 및 이용 기간</h3>
+        <p>MATE는 원칙적으로 회원 탈퇴 시 수집한 개인정보를 지체 없이 파기합니다. 다만, 관련 법령에 따라 일정 기간 보관해야 하는 정보는 아래와 같이 보관됩니다:</p>
+        <ul>
+            <li>계약 및 청약철회 관련 기록: 5년</li>
+            <li>대금결제 및 재화 공급 관련 기록: 5년</li>
+            <li>소비자 불만 및 분쟁처리 관련 기록: 3년</li>
+            <li>로그인 기록: 3개월</li>
+        </ul>
+        <h3>4. 개인정보 수집 및 이용 동의 거부 권리</h3>
+        <p>이용자는 개인정보 수집 및 이용 동의를 거부할 권리가 있습니다. 그러나 필수 항목에 대한 동의를 거부할 경우, 회원가입 및 서비스 이용이 제한될 수 있습니다.</p>
+        <h3>5. 쿠키 사용 안내</h3>
+        <p>MATE는 쿠키를 통해 이용자의 서비스 환경을 최적화하고 맞춤형 서비스를 제공합니다. 쿠키 설정은 브라우저에서 변경할 수 있으며, 쿠키를 차단할 경우 일부 서비스 이용에 불편이 있을 수 있습니다.</p>
+        <p>쿠키 설정 방법:</p>
+        <ul>
+            <li>PC 브라우저: [설정] → [개인정보 및 보안] → [쿠키 설정]</li>
+            <li>모바일 브라우저: [설정] → [개인정보 보호] → [쿠키 설정]</li>
+        </ul>
+        <button class="close-btn" onclick="closeModal()">닫기</button>
+    </div>
+</div>
+<div class="modal-overlay" id="modalOverlay2">
+    <div class="modal">
+        <h2>MATE 발언 독성 탐지 서비스 이용 약관 동의</h2>
+        <p>
+            MATE 발언 독성 탐지 서비스를 이용하시기 전에, 아래의 내용을 자세히 읽고 동의해 주시기 바랍니다.
+            본 약관은 서비스 제공을 위한 정보 수집 및 이용 목적, 보유 기간, 동의 거부 시의 제한 사항 등을 포함합니다.
+        </p>
+        <h3>1. 수집하는 정보</h3>
+        <p>MATE 발언 독성 탐지 서비스는 서비스 이용을 위해 아래의 정보를 수집합니다:</p>
+        <ul>
+            <li>(1) 사용자 제공 정보</li>
+            <li>텍스트 입력 데이터(발언 내용)</li>
+            <li>선택적으로 제공된 사용자 정보(예: 닉네임, 이메일)</li>
+            <li>(2) 자동 수집 정보</li>
+            <li>서비스 이용 과정에서 발생하는 IP 주소, 기기 정보, 이용 기록 등</li>
+        </ul>
+        <h3>2. 정보의 이용 목적</h3>
+        <p>MATE는 수집한 정보를 다음의 목적으로 사용합니다:</p>
+        <ul>
+            <li>독성 발언 탐지 결과 제공 및 경고 알림</li>
+            <li>데이터 분석을 통한 서비스 개선 및 최적화</li>
+            <li>서비스 이용 기록 분석 및 맞춤형 기능 제공</li>
+            <li>부정 사용 방지 및 보안 강화</li>
+        </ul>
+        <h3>3. 정보의 보관 및 이용 기간</h3>
+        <p>MATE는 수집된 정보를 원칙적으로 목적 달성 후 지체 없이 파기합니다. 단, 법령에서 정한 경우 및 이용자의 동의가 있는 경우에는 일정 기간 보관합니다:</p>
+        <ul>
+            <li>탐지 기록 데이터: 3개월 동안 보관 후 익명화 처리</li>
+            <li>서비스 이용 기록: 분석 및 개선 목적으로 6개월 보관 후 파기</li>
+        </ul>
+        <h3>4. 동의 거부권 및 제한 사항</h3>
+        <p>
+            이용자는 개인정보 수집 및 이용에 대해 동의를 거부할 권리가 있습니다. 그러나 필수 정보 제공에 동의하지 않을 경우, 서비스 이용이 제한될 수 있습니다.
+        </p>
+        <h3>5. 서비스의 책임 및 이용 제한</h3>
+        <p>
+            MATE 발언 독성 탐지 서비스는 자동화된 시스템에 의해 제공되는 결과로, 실제 상황과 차이가 있을 수 있습니다.
+            본 서비스는 참고용으로만 제공되며, 특정 결정에 대한 법적 책임을 지지 않습니다.
+        </p>
+        <button class="close-btn" onclick="closeModal2()">닫기</button>
+    </div>
+
+</div>
+
+<script>
+    function openModal() { document.getElementById('modalOverlay').style.display = 'flex'; }
+    function closeModal() { document.getElementById('modalOverlay').style.display = 'none'; }
+    function openModal2() { document.getElementById('modalOverlay2').style.display = 'flex'; }
+    function closeModal2() { document.getElementById('modalOverlay2').style.display = 'none'; }
+
+    async function checkEmailDuplicate() {
+        const email = document.getElementById('email').value;
+
+        // 이메일 형식 검사
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email) {
+            alert('이메일을 입력해주세요.');
+            return;
+        }
+        if (!emailRegex.test(email)) {
+            alert('올바른 이메일 형식이 아닙니다.');
+            return;
+        }
+
+        try {
+            // 서버로 이메일 중복 확인 요청
+            const response = await fetch('/api/check-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: email })
+            });
+
+            if (!response.ok) {
+                throw new Error('서버 응답 오류');
+            }
+
+            const data = await response.json();
+
+            if (data.isDuplicate) {
+                alert('이미 사용 중인 이메일입니다.');
+            } else {
+                alert('사용 가능한 이메일입니다.');
+            }
+        } catch (error) {
+            console.error('이메일 중복 확인 중 오류 발생:', error);
+            alert('이메일 중복 확인 중 오류가 발생했습니다.');
+        }
+    }
+</script>
+</body>
+</html>

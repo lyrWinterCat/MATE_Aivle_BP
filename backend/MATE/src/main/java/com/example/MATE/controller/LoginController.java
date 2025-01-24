@@ -36,6 +36,14 @@ public class LoginController {
     @GetMapping("/")
      public String index(){ return "login/index"; }
 
+    //조원 소개페이지
+    @GetMapping("/aboutus")
+    public String aboutus(){
+        System.out.println(">>> [LoginController] /aboutus 요청 처리");
+        return "login/aboutus"; }
+
+//    @GetMapping("/contact")
+
     //로그인 페이지이동
     @GetMapping("/signIn")
     public String login(HttpSession session, Model model){
@@ -54,7 +62,7 @@ public class LoginController {
             model.addAttribute("errorMessage", errorMessage);
             session.removeAttribute("errorMessage");
         }
-        return "login/index";
+        return "login/singIn";
     }
 
     //회원가입 페이지이동

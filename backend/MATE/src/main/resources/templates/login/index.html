@@ -1,171 +1,147 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mate Login</title>
+    <title>Mate - 서비스 소개</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #F7C600;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            height: 100vh;
+            background: linear-gradient(90deg, #5b5fc7, #6B2399);
+            font-family: 'Arial', sans-serif;
             margin: 0;
-            padding: 50px 8%; /* 왼쪽 여백을 8%로 설정하여 흰색 박스 이동 */
+            padding: 0;
         }
-        .left-container {
-            text-align: left;
-            max-width: 50%;
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 30px;
         }
-        .left-container img {
-            width: 100px;
-            height: auto;
-            vertical-align: middle;
-        }
-        .left-container h1 {
-            font-size: 80px;
-            margin: 0 0 10px 20px;
-            color: #fff;
-            font-weight: bold;
-            display: inline-block;
-            vertical-align: middle;
-        }
-        .left-container p {
-            font-size: 40px;
-            margin: 20px 0;
-            color: #fff;
-            font-weight: bold;
-        }
-        .left-container .image {
-            margin-top: 20px;
-        }
-        .left-container .image img {
-            width: 110%;
-            max-width: 600px;
-            height: auto;
-        }
-        .login-container {
-            background-color: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-            text-align: center;
-            width: 400px;
-            margin-top: 120px; /* 위쪽 여백을 줄여 박스를 위로 이동 */
-        }
-        .login-container h1 {
-            font-size: 36px;
-            margin-top:1px;
-            margin-bottom: 20px;
-            color: #333;
-            font-weight: bold;
-        }
-        .form-group {
+        .header {
+            position: absolute;
+            top: 20px;
+            right: 120px;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 15px;
+            gap: 30px;
         }
-        .form-group label {
+
+        .header a {
+            text-decoration: none;
             font-size: 18px;
+            font-weight: 300;
+            color: white;
+        }
+
+        .header a:hover {
+            text-decoration: underline;
+        }
+        h1 {
+            margin-top:0;
+            font-size: 100px;
             font-weight: bold;
-            color: #333;
-            margin-right: 10px;
+            color: #fff;
+            margin-bottom: 30px;
+            text-align: left;
         }
-        .form-group input {
+        p {
+            margin-top:10px;
+            font-size: 30px;
+            color: #fff;
+            margin-bottom: -10px;
+            text-align: left;
+        }
+        .feature {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 60px;
+            margin-bottom: 50px;
+        }
+        .feature-item {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 25px;
             flex: 1;
-            padding: 12px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
+            margin: 0 15px;
+            transition: transform 0.3s ease-in-out;
         }
-        .login-container button, .google-btn {
+        .feature-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .feature-item .icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .feature-item h2 {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #333;
+        }
+        .feature-item p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 0;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
             width: 100%;
-            padding: 14px;
-            margin: 10px 0;
             background-color: #333;
             color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        .google-btn {
+            padding: 13px;
             display: flex;
-            align-items: center;
             justify-content: center;
-            background-color: #fff;
-            color: #333;
-            border: 1px solid #ccc;
+            align-items: center;
+            font-size: 14px;
+            white-space: nowrap;
         }
-        .google-btn img {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
+        .footer-item {
+            margin: 0 10px;
         }
-        .google-btn:hover {
-            background-color: #f1f1f1;
+        .footer-separator {
+            color: #F7C600;
+            margin: 0 5px;
         }
     </style>
 </head>
-<script>
-    //구글 로그 버튼
-    function google_login() {
-        // Create a form dynamically to send a POST request
-        const form = document.createElement("form");
-        form.method = "post";
-        form.action = "/oauth2/authorization/google";
-        document.body.appendChild(form);
-        form.submit();
-    }
-    //에러메세지
-    document.addEventListener("DOMContentLoaded", function () {
-        setTimeout(() => {
-            const errorMessageContainer = document.getElementById("errorMessageContainer");
-            if (errorMessageContainer) {
-                const errorMessage = errorMessageContainer.textContent.trim();
-                console.log("Error Message:", errorMessage);
-                if (errorMessage) {
-                    alert(errorMessage);
-                }
-            }
-        }, 200);
-    });
-</script>
 <body>
-<div class="left-container">
-    <img src="/img/mate-icon.png" alt="Mate Logo">
+
+<div class="header">
+    <a href="/aboutus">About us</a>
+    <a href="/login">Sign In</a>
+</div>
+
+<div class="container">
     <h1>Mate</h1>
-    <p>쉽고 빠른 협업의 시작, Mate!</p>
-    <div class="image">
-        <img src="/img/login.png" alt="Collaboration">
+    <p>Meeting Assistant for team efficiency</p>
+    <p>스마트한 협업을 위한 AI 기반 화상회의 어시스턴트, Mate와 함께하세요</p>
+
+    <div class="feature">
+        <div class="feature-item">
+            <div class="icon">📝</div>
+            <h2>회의 요약</h2>
+            <p>AI가 자동으로 회의 내용을 분석하여 핵심 내용을 요약합니다.</p>
+        </div>
+        <div class="feature-item">
+            <div class="icon">📂</div>
+            <h2>회의 기록 저장</h2>
+            <p>회의 로그를 저장하여 언제든지 다시 확인할 수 있습니다.</p>
+        </div>
+        <div class="feature-item">
+            <div class="icon">✅</div>
+            <h2>To-Do List 관리</h2>
+            <p>회의 내용을 분석하여 사용자에게 알맞은 To-Do List를 추천합니다.</p>
+        </div>
     </div>
 </div>
-<div id="errorMessageContainer" style="display:none;">
-    {{#errorMessage}}{{errorMessage}}{{/errorMessage}}
-</div>
-<div class="login-container">
-    <h1>Mate 로그인</h1>
-    <form action="/login" method="post">
-        <div class="form-group">
-            <label for="email">ID</label>
-            <input type="text" id="email" name="email" placeholder="ID를 입력해주세요" required>
-        </div>
-        <div class="form-group">
-            <label for="password">PW</label>
-            <input type="password" id="password" name="password" placeholder="PW를 입력해주세요" required>
-        </div>
-        <button type="submit">로그인하기</button>
-    </form>
-    <button onclick="window.location.href='signUp'">회원가입</button>
-    <button class="google-btn" onclick="google_login()">
-        <img src="/img/google.png" alt="Google Logo">
-        
-        구글 계정으로 시작하기
-    </button>
+<div class="footer">
+    <span class="footer-item">©copyright Aivle06기 빅프로젝트 07조</span>
+    <span class="footer-separator">|</span>
+    <span class="footer-item">Contact : 010-5256-5459</span>
+    <span class="footer-separator">|</span>
+    <span class="footer-item">Address : 성남시 분당구 불정로 90 (정자동)</span>
 </div>
 </body>
 </html>

@@ -45,7 +45,8 @@ public class SecurityConfig {
                         "/css/**",
                         "/js/**",
                         "/img/**",  // 이미지 경로 추가
-                        "/static/**"  // static 리소스 전체 추가
+                        "/static/**",  // static 리소스 전체 추가
+                        "/aboutus"
                 );
     }
 
@@ -64,7 +65,8 @@ public class SecurityConfig {
                         "/css/**",
                         "/js/**",
                         "/img/**",  // 이미지 경로 추가
-                        "/static/**"  // static 리소스 전체 추가
+                        "/static/**",  // static 리소스 전체 추가
+                        "/aboutus"
                 )
         );
         //공통인증
@@ -79,7 +81,8 @@ public class SecurityConfig {
                         "/css/**",
                         "/js/**",
                         "/img/**",  // 이미지 경로 추가
-                        "/static/**"  // static 리소스 전체 추가
+                        "/static/**",  // static 리소스 전체 추가
+                        "/aboutus"
                 ).permitAll()
                 .requestMatchers("/user/**").hasAuthority("USER")
                 .requestMatchers("/admin/**").hasAuthority("ADMIN")

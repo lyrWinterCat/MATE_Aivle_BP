@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mate - About Us</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(90deg, #5b5fc7, #6B2399);
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            margin: 0;
+            padding-bottom: 60px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.175);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .about-us {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .about-us h1 {
+            font-size: 56px;
+            font-weight: bold;
+            color: #fff;
+        }
+        .team {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            width: 100%;
+        }
+        .team-member {
+            display: flex;
+            align-items: center;
+            color: #fff;
+            transition: transform 0.3s ease-in-out;
+        }
+        .team-member:hover {
+            transform: translateY(-10px);
+        }
+        .team-member img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+            padding: 10px;
+            margin-right: 20px;
+        }
+        .team-member p {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            white-space: nowrap;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .footer-item {
+            margin: 0 10px;
+        }
+        .footer-separator {
+            color: #F7C600;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="about-us">
+        <h1>About us</h1>
+    </div>
+    <div class="team">
+        <div class="team-member">
+            <img src="/img/1.jpg" alt="이예림">
+            <p>이예림(조장)</p>
+        </div>
+        <div class="team-member">
+            <img src="/img/2.jpg" alt="안지홍">
+            <p>안지홍(FE)</p>
+        </div>
+        <div class="team-member">
+            <img src="/img/3.jpg" alt="이승은">
+            <p>이승은(SE)</p>
+        </div>
+        <div class="team-member">
+            <img src="/img/4.jpg" alt="고수현">
+            <p>고수현(DB)</p>
+        </div>
+        <div class="team-member">
+            <img src="/img/5.jpg" alt="윤찬혁">
+            <p>윤찬혁(AI)</p>
+        </div>
+        <div class="team-member">
+            <img src="/img/6.jpg" alt="박언용">
+            <p>박언용(BE)</p>
+        </div>
+    </div>
+</div>
+<div class="footer">
+    <span class="footer-item">©copyright Aivle06기 빅프로젝트 07조</span>
+    <span class="footer-separator">|</span>
+    <span class="footer-item">Contact : 010-5256-5459</span>
+    <span class="footer-separator">|</span>
+    <span class="footer-item">Address : 성남시 분당구 불정로 90 (정자동)</span>
+</div>
+</body>
+</html>

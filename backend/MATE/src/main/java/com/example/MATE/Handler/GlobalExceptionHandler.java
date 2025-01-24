@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
     }
     //runtime
     @ExceptionHandler(RuntimeException.class)
-    public RedirectView handlerRuntimeException(RuntimeException ex, RedirectAttributes redirectAttributes){
+    public RedirectView handlerRuntimeException(RuntimeException ex, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("errorMessage",ex.getMessage());
         return new RedirectView("/signIn");
     }
