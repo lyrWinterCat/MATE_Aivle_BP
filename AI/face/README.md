@@ -1,3 +1,25 @@
 ## 얼굴 피곤 탐지 커스텀 데이터 생성
 
-작성중
+원버튼 딸깍 실행파일 만들고 싶었으나 잘 안돼서 그냥 가이드라인 제작합니다.
+
+CMD에서 실행하시는 것을 추천드립니다.
+
+1. 가상환경 생성
+
+| conda create -y -n face python=3.12.3
+
+2. 가상환경 실행
+
+| conda activate face
+
+3. Face Recognition 라이브러리 설치를 위한 dlib 설치
+
+| conda install -c conda-forge dlib
+
+4. 라이브러리 설치
+
+| pip install -r requirements.txt
+
+5. 파일 실행
+
+| python mk_faceDataset.py --name "저장될 파일에 들어갈 여러분 이름; e.g., yun" --num "저장할 데이터 수; default=1000"
