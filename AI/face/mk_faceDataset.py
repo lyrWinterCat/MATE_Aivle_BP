@@ -69,7 +69,7 @@ def capture_owner_images(num_images):
 
             ### 얼굴 영역 표시
             cv2.rectangle(frame, (left,top), (right, bottom), color, 2)
-        cv2.imshow('Captured Face', frame)
+            cv2.imshow('Captured Face', frame)
 
 
         # 바운딩박스 정보 텍스트화
@@ -82,7 +82,7 @@ def capture_owner_images(num_images):
         # 얼굴 영역의 바운딩박스가 하나만 존재할 경우, 얼굴 영역 표시된 이미지 저장
         if len(x_) == 1:
             ## 몇장 저장되는지 카운트
-            img_count += 1
+            
             captured_file = f"{args.fp}/bboxed/{args.name}_{img_count + last_num + 1}.jpg"
             cv2.imwrite(captured_file, frame)
             with open(f'{args.fp}/annot/{args.name}_{img_count + last_num + 1}.txt', 'w+') as f:
@@ -91,6 +91,8 @@ def capture_owner_images(num_images):
             ## 원본 및 Bounding-box 정보, 결과물 저장
             original_file = f'{args.fp}/ori/{args.name}_{img_count + last_num + 1}.jpg'
             cv2.imwrite(original_file, frame_ori)
+
+            img_count += 1
     
     cap.release()
     cv2.destroyAllWindows()
