@@ -31,7 +31,7 @@ CMD에서 실행하시는 것을 추천드립니다.
 
 ## 결과물 확인 후 원하는 파일 세트로 삭제하는 방법
 
-1. ../data/custom/bboxed/ 경로에서 지울 파일을 삭제한다.
+1. ../data/custom/bboxed/ 경로에서 지울 이미지를 골라 삭제한다.
 
 2. python mk_faceDataset.py --mode del 실행
 
