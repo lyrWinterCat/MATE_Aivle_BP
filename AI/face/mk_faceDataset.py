@@ -65,7 +65,7 @@ def capture_owner_images(num_images):
             x_.append( f'{( (left+right)/2/frame_w ):.8f}' )
             y_.append( f'{( (top+bottom)/2/frame_h ):.8f}' )
             w_.append( f'{( (right-left)/frame_w ):.8f}')
-            h_.append( f'{( (top-bottom)/frame_h ):.8f}')
+            h_.append( f'{( (bottom-top)/frame_h ):.8f}')
 
             ### 얼굴 영역 표시
             cv2.rectangle(frame, (left,top), (right, bottom), color, 2)
