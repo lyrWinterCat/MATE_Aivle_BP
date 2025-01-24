@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 def call_args():
     parser = argparse.ArgumentParser(description="WebCam Image auto saving")
-    parser.add_argument('--fp', help='file path', default='./data/custom')
+    parser.add_argument('--fp', help='file path', default='../data/custom')
     parser.add_argument('--name', help='Input your name', default='yun')
     parser.add_argument('--num', help='maximum number of images to extract', type=int, default=1000)
     parser.add_argument('--mode', help='both: create&delete, del: delete only, other: preprocess', default='both', choices=['create', 'both', 'del', 'merge'])
@@ -62,8 +62,8 @@ def capture_owner_images(num_images):
         ## 탐지된 얼굴(들)의 좌표를 가져오는 반복문
         ### x_, y_: 바운딩박스의 중심점 좌표, w_, h_: 너비와 높이
         for (top, right, bottom, left) in faces:
-            x_.append( f'{( (left+right/2)/frame_w ):.8f}' )
-            y_.append( f'{( (top+bottom/2)/frame_h ):.8f}' )
+            x_.append( f'{( (left+right)/2/frame_w ):.8f}' )
+            y_.append( f'{( (top+bottom)/2/frame_h ):.8f}' )
             w_.append( f'{( (right-left)/frame_w ):.8f}')
             h_.append( f'{( (top-bottom)/frame_h ):.8f}')
 
