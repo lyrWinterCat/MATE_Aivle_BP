@@ -22,4 +22,4 @@ CMD에서 실행하시는 것을 추천드립니다.
 
 5. 파일 실행
 
-| python mk_faceDataset.py --name "저장될 파일에 들어갈 여러분 이름; e.g., yun" --num "저장할 데이터 수; default=1000"
+| python mk_faceDataset.py --name [저장될 파일에 들어갈 여러분 이름; e.g., yun] --num [저장할 데이터 수; default=1000]
