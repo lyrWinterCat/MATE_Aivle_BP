@@ -23,3 +23,15 @@ CMD에서 실행하시는 것을 추천드립니다.
 5. 파일 실행
 
 | python mk_faceDataset.py --name [저장될 파일에 들어갈 여러분 이름; e.g., yun] --num [저장할 데이터 수; default=1000]
+
+
+<br/>
+
+<br/>
+
+## 결과물 확인 후 원하는 파일 세트로 삭제하는 방법
+
+1. ../data/custom/bboxed/ 경로에서 지울 파일을 삭제한다.
+
+2. python mk_faceDataset.py --mode del 실행
+
