@@ -160,7 +160,7 @@
             <tbody>
                 {{#feedbackList}}
                 <tr>
-                    <td>{{user.name}}</td>
+                    <td>{{userName}}</td> <!-- 기존에는 user.userName 이렇게 user 테이블을 참조했지만 현재는 Dto 사용중이라 그 과정이 필요없어짐 -->
                     <td>{{createdAt}}</td>
                     <td>{{status}}</td>
                     <td>{{content}}</td>
@@ -183,17 +183,6 @@
         const dateInput = document.getElementById('date-range'); // 날짜 입력 필드를 가져옴
         const nameInput = document.getElementById('employee-name'); // 사원명 입력 필드를 가져옴
 
-        tableRows.forEach(row => {
-            const resultCell = row.cells[2]; // '최종결과' 셀
-
-            // 독성 발언 강조 표시
-            if (resultCell.textContent.trim() === '독성') {
-                Array.from(row.cells).forEach(cell => { // 각 셀에 대해 반복
-                    cell.style.color = 'red'; // 글자색을 빨간색으로 변경   
-                    cell.style.fontWeight = 'bold'; // 글자 굵기를 두꺼운체로 변경
-                });
-            }
-        });
 
         // 필터링 기능
         filterButton.addEventListener('click', () => { // 조회 버튼 클릭 이벤트 리스너

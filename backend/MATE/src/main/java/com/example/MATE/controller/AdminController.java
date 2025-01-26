@@ -1,5 +1,6 @@
 package com.example.MATE.controller;
 
+import com.example.MATE.dto.AdminFeedbackDto;
 import com.example.MATE.dto.RequestDto;
 import com.example.MATE.model.AdminFeedback;
 import com.example.MATE.service.AdminService;
@@ -42,7 +43,7 @@ public class AdminController {
 
     @GetMapping("/adminFix")
     public String adminFix(Model model) {
-        List<AdminFeedback> feedbackList = adminService.getFeedbackList();
+        List<AdminFeedbackDto> feedbackList = adminService.getFeedbackList();
         model.addAttribute("feedbackList", feedbackList);
         return "admin/adminFix";
     }
