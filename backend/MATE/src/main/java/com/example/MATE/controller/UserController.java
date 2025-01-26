@@ -1,5 +1,6 @@
 package com.example.MATE.controller;
 
+import com.example.MATE.dto.AdminFeedbackDto;
 import com.example.MATE.dto.MeetingLogDto;
 import com.example.MATE.dto.SpeechLogDto;
 import com.example.MATE.model.AdminFeedback;
@@ -123,7 +124,7 @@ public class UserController {
                 model.addAttribute("userName", user.getName());
 
                 // 추후에 Admin 모델을 UserFix 로 변경해야 할 것 같습니다.
-                List<AdminFeedback> userFixes = adminService.getFeedbackByUserId(userId);
+                List<AdminFeedbackDto> userFixes = adminService.getFeedbackByUserId(userId);
                 model.addAttribute("userFixes", userFixes);
 
             }

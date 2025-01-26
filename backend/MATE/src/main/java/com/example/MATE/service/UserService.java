@@ -47,24 +47,30 @@ public class UserService {
     // user/meetingList 페이지에서 사용
     public List<MeetingLogDto> getMeetingLogs(Integer userId) {
         List<Integer> meetingIds = meetingService.getMeetingIdsByUserId(userId); // 현재 로그인한 유저가 참여한 미팅 ID 목록
-        List<MeetingLogDto> meetingLogs = new ArrayList<>(); // 미팅명, 시작시간, 참여자 목록을 담을 List
+//        List<MeetingLogDto> meetingLogs = new ArrayList<>(); // 미팅명, 시작시간, 참여자 목록을 담을 List
+//
+//        // 미팅 ID 목록을 순회하며 각 미팅의 정보를 추출, 그 후 meetingLogs 에 추가
+//        for (Integer meetingId : meetingIds) {
+//            Meeting meeting = meetingService.getMeetingByMeetingId(meetingId);
+//            List<User> participants = meetingParticipantService.getParticipantsByMeetingId(meetingId);
+//            String participantNames = participants.stream()
+//                                                  .map(User::getName)
+//                                                  .collect(Collectors.joining(", "));
+//
+//            meetingLogs.add(new MeetingLogDto(
+//                    meeting.getMeetingName(),
+//                    meeting.getStartTime().toString(),
+//                    participantNames
+//            ));
+//        }
+//
+//        return meetingLogs;
 
-        // 미팅 ID 목록을 순회하며 각 미팅의 정보를 추출, 그 후 meetingLogs 에 추가
-        for (Integer meetingId : meetingIds) {
-            Meeting meeting = meetingService.getMeetingByMeetingId(meetingId);
-            List<User> participants = meetingParticipantService.getParticipantsByMeetingId(meetingId);
-            String participantNames = participants.stream()
-                                                  .map(User::getName)
-                                                  .collect(Collectors.joining(", "));
-
-            meetingLogs.add(new MeetingLogDto(
-                    meeting.getMeetingName(),
-                    meeting.getStartTime().toString(),
-                    participantNames
-            ));
-        }
-
-        return meetingLogs;
+        return meetingIds.stream().map(meetingId -> {
+            Meeting meeting = meetingService.getMeetingByMeetingId(meetingId); // 하나의 회의 객체를 받아옴
+            List<User> participants = meetingParticipantService.getParticipantsByMeetingId(meetingId); // 하나의 회의에 참여한 사람들을 받아옴
+            return MeetingLogDto.fromEntity(meeting, participants); // 회의 정보와 참여자 정보를 이용해 MeetingLogDto 객체 생성
+        }).collect(Collectors.toList()); // 회의 정보를 담은 MeetingLogDto 객체들을 List 로 반환
     }
 
     public List<SpeechLogDto> getSpeechLogsByUserId(Integer userId) {

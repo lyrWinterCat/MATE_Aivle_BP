@@ -36,7 +36,9 @@ public class AdminService {
     }
 
     // 한 유저의 정정 요청을 모두 가져옴
-    public List<AdminFeedback> getFeedbackByUserId(Integer userId) {
-        return adminRepository.findAllByUser_UserId(userId);
+    public List<AdminFeedbackDto> getFeedbackByUserId(Integer userId) {
+        return adminRepository.findAllByUser_UserId(userId).stream()
+                .map(AdminFeedbackDto::fromEntity)
+                .collect(Collectors.toList());
     }
 }
