@@ -230,6 +230,27 @@
             }
         });
     });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const tableRows = document.querySelectorAll('tbody tr');
+        const dateInput = document.getElementById('date-range');
+
+        // 페이지 로드 후에도 날짜 변경 시마다 필터링을 재실행
+        dateInput.addEventListener('change', () => {
+            const selectedDate = dateInput.value; // 새로 선택된 날짜
+            tableRows.forEach(row => {
+                const timeCell = row.cells[2].textContent.trim(); // '게시시간' 셀이 2번째 인덱스이므로
+                const rowDate = timeCell.split(' ')[0]; // YYYY-MM-DD 추출
+
+                // 날짜가 없거나(전체 보기), 행의 날짜와 선택된 날짜가 동일하면 표시
+                if (!selectedDate || rowDate === selectedDate) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
 </script>
 </body>
 </html>
