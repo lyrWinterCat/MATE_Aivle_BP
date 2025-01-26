@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #FFCC00;
+            background: linear-gradient(90deg, #5b5fc7, #6B2399);
             margin: 0;
             padding: 0;
         }
@@ -17,7 +17,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 40px;
-            background-color: #FFCC00;
+            background: linear-gradient(90deg, #5b5fc7, #6B2399);
         }
 
         .logo-section {
@@ -146,7 +146,7 @@
 <body>
 <header>
     <div class="logo-section">
-        <img src="file:///C:\Users\User\Desktop\MATE_Aivle_BP-main\screenshare_java\src\main\resources\static\img/logo.png" alt="Mate Logo" class="logo-img">
+        <img src="/img/logo.png" alt="Mate Logo" class="logo-img">
         <span class="logo-text">DashBoard</span>
     </div>
     <div class="nav-section">
@@ -154,7 +154,9 @@
         <div class="nav-buttons">
             <button class="nav-button">로그조회</button>
             <button class="nav-button">정정게시판</button>
-            <button class="nav-button">로그아웃</button>
+            <form action="/signOut" method="post" style="display:inline;">
+                <button type="submit" class="nav-button">로그아웃</button>
+            </form>
         </div>
     </div>
 </header>
