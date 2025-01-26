@@ -2,8 +2,10 @@ package com.example.MATE.controller;
 
 import com.example.MATE.dto.AdminFeedbackDto;
 import com.example.MATE.dto.RequestDto;
+import com.example.MATE.dto.SpeechLogDto;
 import com.example.MATE.model.AdminFeedback;
 import com.example.MATE.service.AdminService;
+import com.example.MATE.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ import java.util.Optional;
 public class AdminController {
 
     private final AdminService adminService;
+    private final UserService userService;
 
     @GetMapping("/adminMain")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -46,5 +49,12 @@ public class AdminController {
         List<AdminFeedbackDto> feedbackList = adminService.getFeedbackList();
         model.addAttribute("feedbackList", feedbackList);
         return "admin/adminFix";
+    }
+
+    @GetMapping("/adminLog")
+    public String adminLog(Model model) {
+        List<SpeechLogDto> speechLogs = userService.getAllSpeechLogs();
+        model.addAttribute("speechLogs", speechLogs);
+        return "admin/adminLog";
     }
 }

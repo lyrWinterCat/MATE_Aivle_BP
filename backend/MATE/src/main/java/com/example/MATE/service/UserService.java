@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -74,12 +75,23 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    public List<SpeechLogDto> getAllSpeechLogs() {
+        List<SpeechLog> speechLogs = userRepository.findAllSpeechLogs();
+
+        return speechLogs.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
     // SpeechLog 객체를 받아서 SpeechLogDto 객체로 변환
     public SpeechLogDto convertToDto(SpeechLog speechLog) {
         SpeechLogDto speechLogDto = new SpeechLogDto();
 
+        // 날짜 포맷 정의 (yyyy-MM-dd HH:mm:ss)
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
         // 발화시간, 발화내용, 발화자를 가져올거임
-        speechLogDto.setTimestamp(speechLog.getTimestamp());
+        speechLogDto.setTimestamp(speechLog.getTimestamp().format(formatter));
         speechLogDto.setContent(speechLog.getContent());
         speechLogDto.setUserName(speechLog.getUser().getName());
 
