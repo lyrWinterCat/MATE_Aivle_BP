@@ -116,6 +116,29 @@
             font-weight: bold;
             margin-right: 5px;
         }
+
+        /* 상태 스타일 */
+        .status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-align: center;
+            display: inline-block;
+            min-width: 60px;
+        }
+
+        .status-approved {
+            background-color: #e6f3ff;
+            color: #0066cc;
+        }
+        .status-pending {
+            background-color: #fff3e6;
+            color: #cc6600;
+        }
+        .status-rejected {
+            background-color: #ffe6e6;
+            color: #cc0000;
+        }
     </style>
 </head>
 <body>
@@ -205,6 +228,26 @@
                     row.style.display = 'none'; // 조건에 맞지 않는 행 숨김 
                 } 
             });
+        });
+    });
+
+
+    // 상태에 따라서 다른 CSS 를 적용하기 위한 이벤트리스너
+    document.addEventListener("DOMContentLoaded", () => {
+        // 모든 테이블 행의 상태 셀을 가져옵니다.
+        const statusCells = document.querySelectorAll('tbody tr td:nth-child(3)');
+
+        statusCells.forEach(cell => {
+            const status = cell.textContent.trim(); // 셀의 텍스트(상태값) 가져오기
+
+            // 상태값에 따라 적절한 클래스와 스타일 추가
+            if (status === '승인') {
+                cell.innerHTML = `<div class="status status-approved">${status}</div>`;
+            } else if (status === '신청') {
+                cell.innerHTML = `<div class="status status-pending">${status}</div>`;
+            } else if (status === '반려') {
+                cell.innerHTML = `<div class="status status-rejected">${status}</div>`;
+            }
         });
     });
 </script>
