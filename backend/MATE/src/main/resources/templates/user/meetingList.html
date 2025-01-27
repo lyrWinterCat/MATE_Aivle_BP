@@ -139,7 +139,9 @@
     </div>
     <div class="header-right">
         <span>{{userName}}님 반갑습니다.</span>
-        <button>로그조회</button>
+        <form action="/user/speechLog" method="get" style="display:inline;">
+            <button type="submit">로그조회</button>
+        </form>
         <form action="/signOut" method="post" style="display:inline;">
             <button type="submit" class="nav-button">로그아웃</button>
         </form>

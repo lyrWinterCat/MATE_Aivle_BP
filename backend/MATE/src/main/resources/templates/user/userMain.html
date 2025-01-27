@@ -140,8 +140,12 @@
     <div class="nav-section">
         <span class="welcome-text">{{#userName}}{{userName}}{{/userName}}님 반갑습니다.</span>
         <div class="nav-buttons">
-            <button class="nav-button">Mypage</button>
-            <button class="nav-button">정책게시판</button>
+            <form action="/user/meetingList" method="get" style="display:inline;">
+                <button type="submit" class="nav-button">Mypage</button>
+            </form>
+            <form action="/user/userFix" method="get" style="display:inline;">
+                <button type="submit" class="nav-button">정정게시판</button>
+            </form>
             <form action="/signOut" method="post" style="display:inline;">
                 <button type="submit" class="nav-button">로그아웃</button>
             </form>

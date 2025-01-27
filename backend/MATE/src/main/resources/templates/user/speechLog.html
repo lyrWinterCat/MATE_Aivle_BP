@@ -189,6 +189,25 @@
         .close-button:hover {
             background-color: #555;
         }
+
+        /* 상태 스타일 */
+        .status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-align: center;
+            display: inline-block;
+            min-width: 60px;
+        }
+
+        .status-normal {
+            background-color: #e6f3ff;
+            color: #0066cc;
+        }
+        .status-toxic {
+            background-color: #ffe6e6;
+            color: #cc0000;
+        }
     </style>
     <script>
         function filterTable(category, button) {
@@ -226,8 +245,12 @@
     </div>
     <div class="header-right">
         <span>{{userName}}님 반갑습니다.</span>
-        <button onclick="window.location.href='mypage.html'">Mypage</button>
-        <button onclick="window.location.href='correction.html'">정정게시판</button>
+        <form action="/user/meetingList" method="get" style="display:inline;">
+            <button type="submit">Mypage</button>
+        </form>
+        <form action="/user/userFix" method="get" style="display:inline;">
+            <button type="submit">정정게시판</button>
+        </form>
         <form action="/signOut" method="post" style="display:inline;">
             <button type="submit" class="nav-button">로그아웃</button>
         </form>
@@ -273,5 +296,23 @@
         <button class="close-button" onclick="closeModal()">닫기</button>
     </div>
 </div>
+<script>
+    // 상태에 따라서 다른 CSS 를 적용하기 위한 이벤트리스너
+    document.addEventListener("DOMContentLoaded", () => {
+        // 모든 테이블 행의 상태 셀을 가져옵니다.
+        const statusCells = document.querySelectorAll('tbody tr td:nth-child(2)');
+
+        statusCells.forEach(cell => {
+            const status = cell.textContent.trim(); // 셀의 텍스트(상태값) 가져오기
+
+            // 상태값에 따라 적절한 클래스와 스타일 추가
+            if (status === '일반') {
+                cell.innerHTML = `<div class="status status-normal">${status}</div>`;
+            } else if (status === '독성') {
+                cell.innerHTML = `<div class="status status-toxic">${status}</div>`;
+            }
+        });
+    });
+</script>
 </body>
 </html>
