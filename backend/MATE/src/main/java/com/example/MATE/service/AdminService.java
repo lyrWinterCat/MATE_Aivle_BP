@@ -5,6 +5,8 @@ import com.example.MATE.dto.RequestDto;
 import com.example.MATE.model.AdminFeedback;
 import com.example.MATE.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,6 +30,11 @@ public class AdminService {
         return adminRepository.findFeedbacks().stream()
                 .map(AdminFeedbackDto::fromEntity) // 원래 AdminFeedback 타입이었던 원소들을 AdminFeedbackDto 타입으로 변환 (fromEntity 메소드를 사용해서)
                 .collect(Collectors.toList()); // List<AdminFeedback> -> List<AdminFeedbackDto>
+    }
+
+    public Page<AdminFeedbackDto> getFeedbackListWithPaging(Pageable pageable) {
+        Page<AdminFeedback> pagedFeedbacks = adminRepository.findAllFeedbacksWithPaging(pageable);
+        return pagedFeedbacks.map(AdminFeedbackDto::fromEntity);
     }
 
     public AdminFeedback getFeedbackById(Integer feedbackId) {

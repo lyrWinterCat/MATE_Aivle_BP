@@ -25,7 +25,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT s FROM SpeechLog s")
     List<SpeechLog> findAllSpeechLogs();
 
-    // 발화 로그를 pagenation 을 구현해서 가져옴
+    // pagination에 사용하기 위해 발화 로그를 가져옴
     @Query("SELECT s FROM SpeechLog s")
     Page<SpeechLog> findAllSpeechLogsWithPaging(Pageable pageable);
 }
