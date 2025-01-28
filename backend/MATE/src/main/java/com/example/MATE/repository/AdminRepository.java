@@ -1,6 +1,7 @@
 package com.example.MATE.repository;
 
 import com.example.MATE.model.AdminFeedback;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -14,4 +15,6 @@ public interface AdminRepository extends JpaRepository<AdminFeedback, Long> {
 
     // 한 유저의 정정 요청을 모두 가져옴
     List<AdminFeedback> findAllByUser_UserId(Integer userId);
+
+
 }

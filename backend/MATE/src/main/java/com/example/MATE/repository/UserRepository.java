@@ -2,6 +2,8 @@ package com.example.MATE.repository;
 
 import com.example.MATE.model.SpeechLog;
 import com.example.MATE.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -22,4 +24,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // 모든 발화 로그를 반환
     @Query("SELECT s FROM SpeechLog s")
     List<SpeechLog> findAllSpeechLogs();
+
+    // 발화 로그를 pagenation 을 구현해서 가져옴
+    @Query("SELECT s FROM SpeechLog s")
+    Page<SpeechLog> findAllSpeechLogsWithPaging(Pageable pageable);
 }
