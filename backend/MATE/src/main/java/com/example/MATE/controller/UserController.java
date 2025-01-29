@@ -122,7 +122,7 @@ public class UserController {
     }
 
     @GetMapping("/userFix")
-    public String userFix(Model model, HttpSession session){
+    public String userFix(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page){
 
         String email = SecurityUtils.getCurrentUserEmail();
         if (email != null) {
@@ -134,8 +134,10 @@ public class UserController {
                 model.addAttribute("userName", user.getName());
 
                 // 추후에 Admin 모델을 UserFix 로 변경해야 할 것 같습니다.
-                List<AdminFeedbackDto> userFixes = adminService.getFeedbackByUserId(userId);
+                Page<AdminFeedbackDto> userFixes = adminService.getFeedbackByUserId(userId, PageRequest.of(page, 10));
                 model.addAttribute("userFixes", userFixes);
+
+                PaginationUtils.addPaginationAttributes(model, userFixes, page);
 
             }
         }
