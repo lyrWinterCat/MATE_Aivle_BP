@@ -208,6 +208,35 @@
             background-color: #ffe6e6;
             color: #cc0000;
         }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .pagination a {
+            display: inline-block;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        .pagination a:hover {
+            background-color: #e0e0e0;
+        }
+
+        .pagination .current {
+            background-color: #5b5fc7;
+            color: #fff;
+            border-color: #5b5fc7;
+        }
     </style>
     <script>
         function filterTable(category, button) {
@@ -285,6 +314,25 @@
         {{/speechLogs}}
         </tbody>
     </table>
+    <div class="pagination">
+        <!-- 이전 페이지가 존재하면 이전 버튼을 생성 -->
+        {{#speechLogs.hasPrevious}}
+        <a href="/user/speechLog?page={{previousPage}}">이전</a>
+        {{/speechLogs.hasPrevious}}
+
+        <!-- 페이지 번호 버튼들 -->
+        <!-- 만약 현재 페이지라면 current 클래스를 붙여서 강조해준다 -->
+        {{#pageNumbers}}
+        <a href="/user/speechLog?page={{pageIndex}}">
+            {{displayIndex}}
+        </a>
+        {{/pageNumbers}}
+
+        <!-- 다음 페이지가 존재하면 다음 버튼을 생성 -->
+        {{#speechLogs.hasNext}}
+        <a href="/user/speechLog?page={{nextPage}}">다음</a>
+        {{/speechLogs.hasNext}}
+    </div>
 </div>
 <div class="modal">
     <div class="modal-content">
@@ -310,6 +358,23 @@
                 cell.innerHTML = `<div class="status status-normal">${status}</div>`;
             } else if (status === '독성') {
                 cell.innerHTML = `<div class="status status-toxic">${status}</div>`;
+            }
+        });
+    });
+
+    // 현재 페이지 버튼에 current 클래스를 부착하기 위한 이벤트리스너
+    document.addEventListener("DOMContentLoaded", () => {
+        // 현재 URL의 page 파라미터를 가져옴
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentPage = urlParams.get("page") || "0"; // 페이지가 없으면 기본값 0
+
+        // 모든 페이지네이션 링크를 가져옴
+        const pageLinks = document.querySelectorAll(".pagination a");
+
+        pageLinks.forEach(link => {
+            const pageParam = new URL(link.href).searchParams.get("page");
+            if (pageParam === currentPage) {
+                link.classList.add("current"); // 현재 페이지에 'current' 클래스 추가
             }
         });
     });

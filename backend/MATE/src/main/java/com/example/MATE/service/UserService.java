@@ -65,12 +65,10 @@ public class UserService {
         });
     }
 
-    public List<SpeechLogDto> getSpeechLogsByUserId(Integer userId) {
-        List<SpeechLog> speechLogs = userRepository.findSpeechLogsByUserId(userId);
+    public Page<SpeechLogDto> getSpeechLogsByUserId(Integer userId, Pageable pageable) {
+        Page<SpeechLog> speechLogs = userRepository.findSpeechLogsByUserId(userId, pageable);
 
-        return speechLogs.stream()
-                .map(this::convertToSpeechLogDto)
-                .collect(Collectors.toList());
+        return speechLogs.map(this::convertToSpeechLogDto);
     }
 
     public List<SpeechLogDto> getAllSpeechLogs() {

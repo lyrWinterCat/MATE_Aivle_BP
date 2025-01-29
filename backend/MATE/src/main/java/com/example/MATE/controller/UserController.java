@@ -101,7 +101,7 @@ public class UserController {
 
     @GetMapping("/speechLog")
     @PreAuthorize("hasAuthority('USER')")
-    public String speechLog(Model model, HttpSession session) {
+    public String speechLog(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page) {
 
         String email = SecurityUtils.getCurrentUserEmail();
         if (email != null) {
@@ -113,8 +113,10 @@ public class UserController {
                 model.addAttribute("userName", user.getName());
 
                 // 유저 ID 를 받아 해당 유저가 발화한 모든 발화 로그를 반환
-                List<SpeechLogDto> speechLogs = userService.getSpeechLogsByUserId(userId);
+                Page<SpeechLogDto> speechLogs = userService.getSpeechLogsByUserId(userId, PageRequest.of(page, 10));
                 model.addAttribute("speechLogs", speechLogs);
+
+                PaginationUtils.addPaginationAttributes(model, speechLogs, page);
             }
         }
 
