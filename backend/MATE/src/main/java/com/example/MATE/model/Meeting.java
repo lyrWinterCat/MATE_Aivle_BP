@@ -3,6 +3,7 @@ package com.example.MATE.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -34,4 +35,11 @@ public class Meeting {
 
     @Column(name = "last_break_time")
     private LocalDateTime lastBreakTime;
+
+    // meeting -> meetingParticipant 로도 참조 가능하도록 등록 (기존에는 반대방향만 가능했음)
+    // FetchType.LAZY 설정을 통해, meeting 을 불러올때는 기본적으로 이 필드가 불려오지 않도록 함.
+    // mappaedBy = "meeting" 이라는 것은 MeetingParticipant.meeting 필드에서 관리된다는 뜻
+    @OneToMany(mappedBy = "meeting", fetch = FetchType.LAZY) 
+    private List<MeetingParticipant> meetingParticipants;
+
 }

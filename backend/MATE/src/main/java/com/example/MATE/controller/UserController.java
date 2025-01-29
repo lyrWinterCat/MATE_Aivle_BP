@@ -2,6 +2,7 @@ package com.example.MATE.controller;
 
 import com.example.MATE.dto.AdminFeedbackDto;
 import com.example.MATE.dto.MeetingLogDto;
+import com.example.MATE.dto.PageItemDto;
 import com.example.MATE.dto.SpeechLogDto;
 import com.example.MATE.model.AdminFeedback;
 import com.example.MATE.model.GoogleOAuth2User;
@@ -13,17 +14,22 @@ import com.example.MATE.service.UserService;
 import com.example.MATE.utils.SecurityUtils;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @RequiredArgsConstructor
@@ -66,7 +72,7 @@ public class UserController {
     // 현재 로그인한 유저가 참여한 모든 회의를 보여주는 페이지
     @GetMapping("/meetingList")
     @PreAuthorize("hasAuthority('USER')")
-    public String meetingList(Model model, HttpSession session){
+    public String meetingList(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page){
 
         //세션에서 사용자 메일가져오기
         String email = SecurityUtils.getCurrentUserEmail();
@@ -81,8 +87,28 @@ public class UserController {
                 model.addAttribute("userName", user.getName());
 
                 //참여 미팅 로그
-                List<MeetingLogDto> meetingLogs = userService.getMeetingLogs(userId);
+                // List<MeetingLogDto> meetingLogs = userService.getMeetingLogs(userId);
+                Page<MeetingLogDto> meetingLogs = userService.getMeetingLogsWithPaging(userId, PageRequest.of(page, 10));
                 model.addAttribute("meetingLogs", meetingLogs);
+
+                model.addAttribute("currentPage", page);
+
+                // 이전 페이지 존재 확인
+                if (meetingLogs.hasPrevious()) {
+                    model.addAttribute("previousPage", page - 1);
+                };
+
+                // 다음 페이지 존재 확인
+                if (meetingLogs.hasNext()) {
+                    model.addAttribute("nextPage", page + 1);
+                };
+
+                // 페이지 번호 리스트 생성
+                int totalPages = meetingLogs.getTotalPages();
+                List<PageItemDto> pageNumbers = IntStream.range(0, totalPages)
+                        .mapToObj(idx -> new PageItemDto(idx, idx + 1))
+                        .collect(Collectors.toList());
+                model.addAttribute("pageNumbers", pageNumbers);
             }
         }
 

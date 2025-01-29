@@ -8,6 +8,7 @@ import com.example.MATE.model.User;
 import com.example.MATE.repository.ToxicityLogRepository;
 import com.example.MATE.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.jdbc.Expectation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -53,6 +54,15 @@ public class UserService {
             List<User> participants = meetingParticipantService.getParticipantsByMeetingId(meetingId); // 하나의 회의에 참여한 사람들을 받아옴
             return MeetingLogDto.fromEntity(meeting, participants); // 회의 정보와 참여자 정보를 이용해 MeetingLogDto 객체 생성
         }).collect(Collectors.toList()); // 회의 정보를 담은 MeetingLogDto 객체들을 List 로 반환
+    }
+
+    public Page<MeetingLogDto> getMeetingLogsWithPaging(Integer userId, Pageable pageable) {
+        // 구현 필요
+        Page<Meeting> pagedMeetings = meetingService.getMeetingsByUserIdWithPaging(userId, pageable);
+        return pagedMeetings.map(meeting -> {
+            List<User> participants = meetingParticipantService.getParticipantsByMeetingId(meeting.getMeetingId());
+            return MeetingLogDto.fromEntity(meeting, participants);
+        });
     }
 
     public List<SpeechLogDto> getSpeechLogsByUserId(Integer userId) {
