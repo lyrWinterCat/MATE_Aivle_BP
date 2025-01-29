@@ -45,6 +45,7 @@
             color: #333;
         }
         .header-right button {
+            height : 100%;
             background-color: #fff;
             color: #333;
             font-size: 16px;
@@ -93,7 +94,14 @@
         .table-container {
             padding: 20px 40px;
         }
-
+        .table-header {
+            width:100%;
+            display: flex;
+            justify-content: end; /* 우측 정렬 */
+            align-items: center;
+            width: 100%;
+            margin-bottom: 15px;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -163,6 +171,24 @@
             color: #fff;
             border-color: #5b5fc7;
         }
+
+        .write-button {
+            background-color: #5b5fc7;
+            color: #fff;
+            border-color: #5b5fc7;
+            font-size: 20px;
+            border-radius: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .write-button:hover {
+            background-color: #3b3e8f;
+            color:#ffffff
+        }
     </style>
 </head>
 <body>
@@ -174,7 +200,7 @@
     <div class="header-right">
         <span>{{userName}}님 반갑습니다.</span>
         <form action="/user/meetingList" method="get" style="display:inline;">
-            <button type="submit" class="nav-button">Mypage</button>
+            <button type="submit" class="nav-button">마이페이지</button>
         </form>
         <button>정정게시판</button>
         <form action="/signOut" method="post" style="display:inline;">
@@ -198,7 +224,11 @@
 </div>
 
 <!-- 테이블 -->
+
 <div class="table-container">
+    <div class="table-header">
+        <button class="write-button" onclick="location.href='/user/userFix/write'">정정 요청하기</button>
+    </div>
     <div>
         <table>
             <thead>
@@ -243,30 +273,15 @@
 </div>
 
 <script>
-    // 테이블 필터링 함수
-    function filterTable() {
-        const statusFilter = document.getElementById('status-select').value; // 선택된 상태
-        const rows = document.querySelectorAll('#table-body tr'); // 모든 행
-
-        rows.forEach(row => {
-            const status = row.querySelector('.status').textContent.trim(); // 상태 텍스트
-            if (!statusFilter || status === statusFilter) {
-                row.style.display = ''; // 보이기
-            } else {
-                row.style.display = 'none'; // 숨기기
-            }
-        });
-    }
-
-    // 상태에 따라서 다른 CSS 를 적용하기 위한 이벤트리스너
     document.addEventListener("DOMContentLoaded", () => {
-        // 모든 테이블 행의 상태 셀을 가져옵니다.
-        const statusCells = document.querySelectorAll('#table-body td:last-child');
+        const tableRows = document.querySelectorAll('tbody tr');
+        const dateInput = document.getElementById('date-range');
+        const statusSelect = document.getElementById('status-select');
 
-        statusCells.forEach(cell => {
-            const status = cell.textContent.trim(); // 셀의 텍스트(상태값) 가져오기
+        // 모든 테이블 행의 상태 셀을 가져와 스타일 추가
+        document.querySelectorAll('#table-body td:last-child').forEach(cell => {
+            const status = cell.textContent.trim();
 
-            // 상태값에 따라 적절한 클래스와 스타일 추가
             if (status === '승인') {
                 cell.innerHTML = `<div class="status status-approved">${status}</div>`;
             } else if (status === '신청') {
@@ -275,27 +290,30 @@
                 cell.innerHTML = `<div class="status status-rejected">${status}</div>`;
             }
         });
-    });
 
-    document.addEventListener("DOMContentLoaded", () => {
-        const tableRows = document.querySelectorAll('tbody tr');
-        const dateInput = document.getElementById('date-range');
+        //상태와 날짜를 동시에 필터링하는 함수
+        function filterTable() {
+            const selectedDate = dateInput.value; // 선택된 날짜
+            const selectedStatus = statusSelect.value; // 선택된 상태
 
-        // 페이지 로드 후에도 날짜 변경 시마다 필터링을 재실행
-        dateInput.addEventListener('change', () => {
-            const selectedDate = dateInput.value; // 새로 선택된 날짜
             tableRows.forEach(row => {
-                const timeCell = row.cells[2].textContent.trim(); // '게시시간' 셀이 2번째 인덱스이므로
+                const timeCell = row.cells[2].textContent.trim(); // '게시시간' 셀
                 const rowDate = timeCell.split(' ')[0]; // YYYY-MM-DD 추출
+                const statusCell = row.cells[3].textContent.trim(); // 상태 셀 (4번째 열)
 
-                // 날짜가 없거나(전체 보기), 행의 날짜와 선택된 날짜가 동일하면 표시
-                if (!selectedDate || rowDate === selectedDate) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
+                // 조건 1: 날짜가 없거나, 선택된 날짜와 행의 날짜가 동일
+                const matchesDate = !selectedDate || rowDate === selectedDate;
+                // 조건 2: 상태가 없거나, 선택된 상태와 행의 상태가 동일
+                const matchesStatus = !selectedStatus || statusCell === selectedStatus;
+
+                // 두 조건을 모두 충족하는 경우 표시, 그렇지 않으면 숨김
+                row.style.display = (matchesDate && matchesStatus) ? '' : 'none';
             });
-        });
+        }
+
+        // 이벤트 리스너 추가
+        dateInput.addEventListener('change', filterTable);
+        statusSelect.addEventListener('change', filterTable);
     });
 
     // 현재 페이지 버튼에 current 클래스를 부착하기 위한 이벤트리스너

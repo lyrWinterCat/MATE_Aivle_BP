@@ -13,7 +13,7 @@
         }
 
         header {
-            background-color: #FFCC00;
+            background: linear-gradient(90deg, #5b5fc7, #6B2399);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -96,7 +96,7 @@
         }
 
         .form-group .search-btn {
-            background-color: #FFCC00;
+            background-color: #5b5fc7;
             color: #FFF;
             font-size: 16px;
             font-weight: bold;
@@ -108,7 +108,7 @@
         }
 
         .form-group .search-btn:hover {
-            background-color: #FFBB00;
+            background-color: #3b3e8f;
         }
 
         .file-upload {
@@ -138,7 +138,7 @@
         }
 
         .submit-btn {
-            background-color: #FFCC00;
+            background-color: #5b5fc7;
             color: #FFF;
             font-size: 16px;
             font-weight: bold;
@@ -151,7 +151,7 @@
         }
 
         .submit-btn:hover {
-            background-color: #FFBB00;
+            background-color: #3b3e8f;
         }
     </style>
 </head>
@@ -163,7 +163,7 @@
     </div>
     <div class="header-right">
         <span>{{userName}}님 반갑습니다.</span>
-        <button>Mypage</button>
+        <button>마이페이지</button>
         <button>정정게시판</button>
         <form action="/signOut" method="post" style="display:inline;">
             <button type="submit" class="nav-button">로그아웃</button>
@@ -175,11 +175,11 @@
         <div class="form-group">
             <label for="date-range">기간</label>
             <input id="date-range" type="date">
-            <button type="button" class="search-btn">조회</button>
         </div>
         <div class="form-group">
             <label for="query">독성발언 조회</label>
             <input type="text" id="query" placeholder="독성발언을 입력하세요">
+            <button type="button" class="search-btn">조회</button>
         </div>
         <div class="form-group">
             <label for="title">제목</label>

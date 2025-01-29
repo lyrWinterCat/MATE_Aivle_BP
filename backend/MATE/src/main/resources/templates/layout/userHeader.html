@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header class="header">
+    <div class="logo-section">
+        <img src="/img/mate-icon.png" alt="Mate Logo">
+        <span class="logo-text">Mate</span>
+    </div>
+    <div class="nav-section">
+        <span class="welcome-text">{{#userName}}{{userName}}{{/userName}}님 반갑습니다.</span>
+        <div class="nav-buttons">
+            <form action="/user/meetingList" method="get" style="display:inline;">
+                <button type="submit" class="nav-button">마이페이지</button>
+            </form>
+            <form action="/user/userFix" method="get" style="display:inline;">
+                <button type="submit" class="nav-button">정정게시판</button>
+            </form>
+            <form action="/signOut" method="post" style="display:inline;">
+                <button type="submit" class="nav-button">로그아웃</button>
+            </form>
+        </div>
+    </div>
+</header>
