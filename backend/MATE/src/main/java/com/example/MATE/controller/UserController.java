@@ -11,6 +11,7 @@ import com.example.MATE.model.UserSecurityDetails;
 import com.example.MATE.repository.UserRepository;
 import com.example.MATE.service.AdminService;
 import com.example.MATE.service.UserService;
+import com.example.MATE.utils.PaginationUtils;
 import com.example.MATE.utils.SecurityUtils;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -87,28 +88,11 @@ public class UserController {
                 model.addAttribute("userName", user.getName());
 
                 //참여 미팅 로그
-                // List<MeetingLogDto> meetingLogs = userService.getMeetingLogs(userId);
                 Page<MeetingLogDto> meetingLogs = userService.getMeetingLogsWithPaging(userId, PageRequest.of(page, 10));
                 model.addAttribute("meetingLogs", meetingLogs);
 
-                model.addAttribute("currentPage", page);
-
-                // 이전 페이지 존재 확인
-                if (meetingLogs.hasPrevious()) {
-                    model.addAttribute("previousPage", page - 1);
-                };
-
-                // 다음 페이지 존재 확인
-                if (meetingLogs.hasNext()) {
-                    model.addAttribute("nextPage", page + 1);
-                };
-
-                // 페이지 번호 리스트 생성
-                int totalPages = meetingLogs.getTotalPages();
-                List<PageItemDto> pageNumbers = IntStream.range(0, totalPages)
-                        .mapToObj(idx -> new PageItemDto(idx, idx + 1))
-                        .collect(Collectors.toList());
-                model.addAttribute("pageNumbers", pageNumbers);
+                // 이전페이지, 다음페이지, 페이지 번호 버튼 생성
+                PaginationUtils.addPaginationAttributes(model, meetingLogs, page);
             }
         }
 

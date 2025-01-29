@@ -9,6 +9,7 @@ import com.example.MATE.model.SpeechLog;
 import com.example.MATE.repository.UserRepository;
 import com.example.MATE.service.AdminService;
 import com.example.MATE.service.UserService;
+import com.example.MATE.utils.PaginationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -58,28 +59,11 @@ public class AdminController {
         // pagination
         int pageSize = 10; // 한 페이지에 보여줄 row 수
 
-
-//        List<AdminFeedbackDto> feedbackList = adminService.getFeedbackList();
         Page<AdminFeedbackDto> feedbackList = adminService.getFeedbackListWithPaging(PageRequest.of(page, pageSize));
         model.addAttribute("feedbackList", feedbackList);
 
-        // 이전 페이지 존재 확인
-        if (feedbackList.hasPrevious()) {
-            model.addAttribute("previousPage", page - 1);
-        };
-
-        // 다음 페이지 존재 확인
-        if (feedbackList.hasNext()) {
-            model.addAttribute("nextPage", page + 1);
-        };
-
-        // 페이지 번호 리스트 생성
-        int totalPages = feedbackList.getTotalPages();
-        List<PageItemDto> pageNumbers = IntStream.range(0, totalPages)
-                .mapToObj(idx -> new PageItemDto(idx, idx + 1))
-                .collect(Collectors.toList());
-        model.addAttribute("pageNumbers", pageNumbers);
-
+        // 이전페이지, 다음페이지, 페이지 번호 버튼 생성
+        PaginationUtils.addPaginationAttributes(model, feedbackList, page);
 
         return "admin/adminFix";
     }
@@ -91,24 +75,9 @@ public class AdminController {
 
         Page<SpeechLogDto> pagedSpeechLogs = userService.getPagedSpeechLogs(PageRequest.of(page, pageSize));
         model.addAttribute("pagedSpeechLogs", pagedSpeechLogs);
-        model.addAttribute("currentPage", page);
-
-        // 이전 페이지 존재 확인
-        if (pagedSpeechLogs.hasPrevious()) {
-            model.addAttribute("previousPage", page - 1);
-        };
-
-        // 다음 페이지 존재 확인
-        if (pagedSpeechLogs.hasNext()) {
-            model.addAttribute("nextPage", page + 1);
-        };
-
-        // 페이지 번호 리스트 생성
-        int totalPages = pagedSpeechLogs.getTotalPages();
-        List<PageItemDto> pageNumbers = IntStream.range(0, totalPages)
-                        .mapToObj(idx -> new PageItemDto(idx, idx + 1))
-                        .collect(Collectors.toList());
-        model.addAttribute("pageNumbers", pageNumbers);
+        
+        // 이전페이지, 다음페이지, 페이지 번호 버튼 생성
+        PaginationUtils.addPaginationAttributes(model, pagedSpeechLogs, page);
 
         return "admin/adminLog";
     }
