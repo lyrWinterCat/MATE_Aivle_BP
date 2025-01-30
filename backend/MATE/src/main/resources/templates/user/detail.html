@@ -97,11 +97,11 @@
         </div>
         <div class="read-group">
             <label for="dateInput">기간</label>
-            <input id="dateInput" type="text" value="{{createdAt}}" name="createdAt" readonly>
+            <input id="dateInput" type="text" value="{{createdAt_format}}" name="createdAt" readonly>
         </div>
         <div class="read-group">
             <label for="toxicitySpeechLog">독성발언 조회</label>
-            <input type="text" id="toxicitySpeechLog" name="toxicitySpeechLog" value="{{toxicitySpeechLog}}" readonly>
+            <input type="text" id="toxicitySpeechLog" name="toxicitySpeechLog" value="{{toxicitySpeechLog_time}} / {{toxicitySpeechLog}}" readonly>
         </div>
         <div class="read-file-upload">
             <label for="filepath_read">첨부 파일</label>
@@ -151,12 +151,6 @@
 <script>
     //userFix/detail js
     document.addEventListener("DOMContentLoaded", function() {
-        //날짜 값 형식 변경
-        const inputElement = document.getElementById("dateInput");
-        if (inputElement && inputElement.value) {
-            const formattedDate = inputElement.value.replace("T", " "); // "2025-01-30 16:23:38"
-            inputElement.value = formattedDate; // 변환된 값으로 설정
-        }
 
         //filepath빈값일 시 대체문구
         const filepath = document.getElementById("filepath_read");

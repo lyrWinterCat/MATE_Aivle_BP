@@ -85,7 +85,7 @@
         .search-bar button:hover {
             background-color: #FFBB00;
         }
-
+/*
         .table-container {
             padding: 20px 40px;
         }
@@ -163,7 +163,9 @@
             color: #fff;
             border-color: #5b5fc7;
         }
+        */
     </style>
+    <link rel="stylesheet" type="text/css" href="/css/board.css" />
 </head>
 <body>
 <header>
@@ -197,11 +199,11 @@
         <table>
             <thead>
                 <tr>
-                    <th>발언자</th>
-                    <th>시간</th>
-                    <th>최종결과</th>
-                    <th>내용</th>
-                    <th>답변</th>
+                    <th class="idCol">발언자</th>
+                    <th class="titleCol">제목</th>
+                    <th class="dateCol">요청시간</th>
+                    <th class="resultCol">최종결과</th>
+                    <th class="commentCol">답변</th>
                 </tr>
             </thead>
             
@@ -209,12 +211,12 @@
             <tbody>
                 {{#feedbackList}}
                 <tr>
-                    <td>{{userName}}</td> <!-- 기존에는 user.userName 이렇게 user 테이블을 참조했지만 현재는 Dto 사용중이라 그 과정이 필요없어짐 -->
-                    <td>{{createdAt}}</td>
-                    <td>{{status}}</td>
-                    <td>{{content}}</td>
-                    <td>
-                        <button onclick="location.href='/admin/adminFix/detail?feedbackId={{feedbackId}}'">
+                    <td class="idCol">{{userName}}</td> <!-- 기존에는 user.userName 이렇게 user 테이블을 참조했지만 현재는 Dto 사용중이라 그 과정이 필요없어짐 -->
+                    <td class="titleCol">{{content}}</td>
+                    <td class="dateCol">{{createdAt}}</td>
+                    <td class="resultCol">{{status}}</td>
+                    <td class="commentCol">
+                        <button class="commentBtn" onclick="location.href='/admin/adminFix/detail?feedbackId={{feedbackId}}'">
                             답변하기
                         </button>
                     </td>
@@ -280,7 +282,7 @@
     // 상태에 따라서 다른 CSS 를 적용하기 위한 이벤트리스너
     document.addEventListener("DOMContentLoaded", () => {
         // 모든 테이블 행의 상태 셀을 가져옵니다.
-        const statusCells = document.querySelectorAll('tbody tr td:nth-child(3)');
+        const statusCells = document.querySelectorAll('tbody tr td:nth-child(4)');
 
         statusCells.forEach(cell => {
             const status = cell.textContent.trim(); // 셀의 텍스트(상태값) 가져오기
