@@ -69,118 +69,8 @@
             margin: 0 auto;
             padding: 20px;
         }
-
-        .form-group {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            font-weight: bold;
-            margin-right: 20px;
-            width: 120px;
-            text-align: right;
-            color:#444;
-        }
-        .file-upload label {
-            font-weight: bold;
-            width: 120px;
-            text-align: right;
-            margin-right: 20px;
-            color:#444;
-        }
-        .form-group label::after,
-        .file-upload label::after {
-            content: " *";
-            color: red;
-            font-size: 16px;
-        }
-
-        .form-group input[type="text"],
-        .form-group textarea,
-        .form-group input[type="file"],
-        .form-group input[type="date"] {
-            flex: 1;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        .form-group .search-btn {
-            background-color: #5b5fc7;
-            color: #FFF;
-            font-size: 16px;
-            font-weight: bold;
-            border: none;
-            border-radius: 4px;
-            padding: 10px 20px;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-
-        .form-group .search-btn:hover {
-            transition: background-color 0.3s ease-in-out;
-            background-color: #3b3e8f;
-            color:#ffffff
-        }
-
-        .file-upload {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .file-upload input[type="file"] {
-            flex: 1;
-            padding: 10px;
-            font-size: 16px;
-            border: 2px dashed #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        /* detail 에서 적용 */
-        .file-upload input[type="text"] {
-            flex: 1;
-            padding: 10px;
-            font-size: 16px;
-            border: 2px dashed #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        .form-group textarea {
-            resize: none;
-        }
-
-        .btnArea {
-            display:flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .submit-btn {
-            background-color: #5b5fc7;
-            color: #FFF;
-            font-size: 16px;
-            font-weight: bold;
-            border: none;
-            border-radius: 4px;
-            padding: 10px 20px;
-            cursor: pointer;
-            display: block;
-            margin-right:5px;
-        }
-
-        .submit-btn:hover {
-            transition: background-color 0.3s ease-in-out;
-            background-color: #3b3e8f;
-            color:#ffffff
-        }
     </style>
+    <link rel="stylesheet" type="text/css" href="/css/boardDetail.css" />
 </head>
 <body>
 <header>
@@ -201,23 +91,23 @@
     {{#feedback}} <!-- /user/userFix/detail 시 보이는 form -->
     <form>
         <input type="hidden" name="userId" value="{{userId}}">
-        <div class="form-group">
+        <div class="read-group">
             <label for="title">제목</label>
             <input type="text" id="title" name="title" value="{{title}}" readonly>
         </div>
-        <div class="form-group">
+        <div class="read-group">
             <label for="dateInput">기간</label>
             <input id="dateInput" type="text" value="{{createdAt}}" name="createdAt" readonly>
         </div>
-        <div class="form-group">
+        <div class="read-group">
             <label for="toxicitySpeechLog">독성발언 조회</label>
             <input type="text" id="toxicitySpeechLog" name="toxicitySpeechLog" value="{{toxicitySpeechLog}}" readonly>
         </div>
-        <div class="file-upload">
-            <label for="filepath">첨부 파일</label>
-            <input type="text" id="filepath" name="filepath" value="{{filepath}}" readonly>
+        <div class="read-file-upload">
+            <label for="filepath_read">첨부 파일</label>
+            <input type="text" id="filepath_read" name="filepath_read" value="{{filepath}}" readonly>
         </div>
-        <div class="form-group">
+        <div class="read-group">
             <label for="content">내용</label>
             <textarea id="content" rows="6" name="content" readonly>{{content}}</textarea>
         </div>
@@ -263,15 +153,17 @@
     document.addEventListener("DOMContentLoaded", function() {
         //날짜 값 형식 변경
         const inputElement = document.getElementById("dateInput");
-        if (inputElement.value) {
-            const formattedDate = originalDate.replace("T", " "); // "2025-01-30 16:23:38"
+        if (inputElement && inputElement.value) {
+            const formattedDate = inputElement.value.replace("T", " "); // "2025-01-30 16:23:38"
             inputElement.value = formattedDate; // 변환된 값으로 설정
         }
 
         //filepath빈값일 시 대체문구
-        const filepath = document.getElementById("filepath");
-        if(filePath.value == ""){
-            filePath.value = "업로드된 첨부파일이 없음";
+        const filepath = document.getElementById("filepath_read");
+        if (filepath) {
+            if (filepath.value.trim() === "") {
+                filepath.value = "업로드된 첨부파일이 없음";
+            }
         }
     });
 

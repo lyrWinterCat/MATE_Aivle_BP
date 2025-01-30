@@ -1,0 +1,120 @@
+.form-group,
+.read-group{
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.form-group label,
+.read-group label {
+    font-weight: bold;
+    margin-right: 20px;
+    width: 120px;
+    text-align: right;
+    color:#444;
+}
+.file-upload label,
+.read-file-upload label{
+    font-weight: bold;
+    width: 120px;
+    text-align: right;
+    margin-right: 20px;
+    color:#444;
+}
+.form-group label::after,
+.file-upload label::after {
+    content: " *";
+    color: red;
+    font-size: 16px;
+}
+
+.form-group input[type="text"],
+.form-group textarea,
+.form-group input[type="file"],
+.form-group input[type="date"],
+.read-group input[type="text"],
+.read-group input[type="file"],
+.read-group input[type="date"],
+.read-group textarea {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-group .search-btn {
+    background-color: #5b5fc7;
+    color: #FFF;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.form-group .search-btn:hover {
+    transition: background-color 0.3s ease-in-out;
+    background-color: #3b3e8f;
+    color:#ffffff
+}
+
+.file-upload,
+.read-file-upload {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.file-upload input[type="file"] {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.read-file-upload input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color:#444;
+}
+
+.form-group textarea,
+.read-group textarea{
+    resize: none;
+}
+
+.btnArea {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.submit-btn {
+    background-color: #5b5fc7;
+    color: #FFF;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    display: block;
+    margin-right:5px;
+}
+
+.submit-btn:hover {
+    transition: background-color 0.3s ease-in-out;
+    background-color: #3b3e8f;
+    color:#ffffff
+}
