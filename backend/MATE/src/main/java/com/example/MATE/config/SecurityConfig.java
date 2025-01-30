@@ -66,7 +66,10 @@ public class SecurityConfig {
                         "/js/**",
                         "/img/**",  // 이미지 경로 추가
                         "/static/**",  // static 리소스 전체 추가
-                        "/aboutus"
+                        "/aboutus",
+                        "/admin/**",
+                        "/user/**"
+                        //공통인증에서 /user/**에 권한부여해도 CSRF가 설정되어있으면 접근이 안되어 일단 둘다 써둠
                 )
         );
         //공통인증
