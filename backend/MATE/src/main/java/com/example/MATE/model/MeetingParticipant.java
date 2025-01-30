@@ -2,6 +2,7 @@ package com.example.MATE.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -15,10 +16,12 @@ public class MeetingParticipant {
 
     @ManyToOne
     @JoinColumn(name = "meeting_id", nullable = false)
+    @ToString.Exclude //무한루프 에러 발생해서 방지코드 넣음-문제시 삭제!
     private Meeting meeting;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @ToString.Exclude //무한루프 에러 발생해서 방지코드 넣음-문제시 삭제!
     private User user;
 
     @Column(name = "is_recording", nullable = false, columnDefinition = "TinyInt DEFAULT 0")
