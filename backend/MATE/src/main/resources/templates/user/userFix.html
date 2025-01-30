@@ -94,6 +94,14 @@
         .table-container {
             padding: 20px 40px;
         }
+        .table-container a {
+            text-decoration:none;
+            color:#000000;
+            transition: color 0.3s ease-in-out;
+        }
+        .table-container a:hover {
+            color: #5b5fc7;
+        }
         .table-header {
             width:100%;
             display: flex;
@@ -176,9 +184,9 @@
             background-color: #5b5fc7;
             color: #fff;
             border-color: #5b5fc7;
-            font-size: 20px;
+            font-size: 16px;
             border-radius: 10px;
-            padding: 10px 20px;
+            padding: 10px 10px;
             cursor: pointer;
             font-weight: bold;
             text-align: center;
@@ -186,6 +194,7 @@
         }
 
         .write-button:hover {
+            transition: background-color 0.3s ease-in-out;
             background-color: #3b3e8f;
             color:#ffffff
         }
@@ -215,7 +224,7 @@
     <input id="date-range" type="date">
 
     <label for="status-select">상태</label>
-    <select id="status-select" onchange="filterTable()">
+    <select id="status-select" ><!--onchange="filterTable()" -->
         <option value="">전체</option>
         <option value="승인">승인</option>
         <option value="신청">신청</option>
@@ -233,23 +242,24 @@
         <table>
             <thead>
             <tr>
-                <th>제목</th>
                 <th>접수번호</th>
-                <th>게시시간</th>
+                <th>제목</th>
                 <th>상태</th>
+                <th>게시시간</th>
             </tr>
             </thead>
             <tbody id="table-body">
             {{#userFixes}}
             <tr>
-                <td>{{title}}</td>
                 <td>{{feedbackId}}</td>
-                <td>{{createdAt}}</td>
+                <td><a href="/user/userFix/detail/{{feedbackId}}">{{title}}</a></td>
                 <td>{{status}}</td>
+                <td>{{createdAt}}</td>
             </tr>
             {{/userFixes}}
             </tbody>
         </table>
+        <input type="hidden" name="userId" value="{{userId}}">
         <div class="pagination">
             <!-- 이전 페이지가 존재하면 이전 버튼을 생성 -->
             {{#userFixes.hasPrevious}}
@@ -274,12 +284,13 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
+        console.log(">>> 우옹");
         const tableRows = document.querySelectorAll('tbody tr');
         const dateInput = document.getElementById('date-range');
         const statusSelect = document.getElementById('status-select');
 
         // 모든 테이블 행의 상태 셀을 가져와 스타일 추가
-        document.querySelectorAll('#table-body td:last-child').forEach(cell => {
+        document.querySelectorAll('#table-body td:nth-child(3)').forEach(cell => {
             const status = cell.textContent.trim();
 
             if (status === '승인') {
@@ -299,7 +310,7 @@
             tableRows.forEach(row => {
                 const timeCell = row.cells[2].textContent.trim(); // '게시시간' 셀
                 const rowDate = timeCell.split(' ')[0]; // YYYY-MM-DD 추출
-                const statusCell = row.cells[3].textContent.trim(); // 상태 셀 (4번째 열)
+                const statusCell = row.cells[2].textContent.trim(); // 상태 셀 (3번째 열)
 
                 // 조건 1: 날짜가 없거나, 선택된 날짜와 행의 날짜가 동일
                 const matchesDate = !selectedDate || rowDate === selectedDate;
@@ -332,6 +343,7 @@
             }
         });
     });
+
 </script>
 </body>
 </html>

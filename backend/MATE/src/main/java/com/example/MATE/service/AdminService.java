@@ -6,7 +6,9 @@ import com.example.MATE.model.AdminFeedback;
 import com.example.MATE.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -44,7 +46,9 @@ public class AdminService {
 
     // 한 유저의 정정 요청을 모두 가져옴
     public Page<AdminFeedbackDto> getFeedbackByUserId(Integer userId, Pageable pageable) {
-        return adminRepository.findByUser_UserId(userId, pageable)
+        //최신순 조회
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdAt").descending());
+        return adminRepository.findByUser_UserId(userId, sortedPageable)
                 .map(AdminFeedbackDto::fromEntity);
     }
 }

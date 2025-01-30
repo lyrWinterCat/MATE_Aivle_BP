@@ -1,15 +1,20 @@
 package com.example.MATE.dto;
 
 import com.example.MATE.model.AdminFeedback;
+import com.example.MATE.model.ToxicityLog;
+import com.example.MATE.model.User;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 // 날짜 검색을 위해서 createdAt 컬럼에 포맷팅을 했습니다.
 // service 단에서 처리하면 코드가 복잡해지므로 dto 단에서 처리했습니다.
 @Data
 public class AdminFeedbackDto {
     private Integer feedbackId;
+    private Integer userId; //toentity에서 필요
     private String userName;
     private Integer toxicityId;
     private String title;
@@ -33,5 +38,18 @@ public class AdminFeedbackDto {
         adminFeedbackDto.setFilepath(adminFeedback.getFilepath());
 
         return adminFeedbackDto;
+    }
+    //DTO -> entity화
+    public AdminFeedback toEntity(User user, ToxicityLog toxicityLog){
+        AdminFeedback feedback = new AdminFeedback();
+        feedback.setUser(user);
+        feedback.setToxicityLog(toxicityLog);
+        feedback.setTitle(this.title);
+        feedback.setContent(this.content);
+        feedback.setStatus(AdminFeedback.FeedbackStatus.신청);
+        feedback.setCreatedAt(LocalDateTime.now());
+        feedback.setFilepath(this.filepath);
+
+        return feedback;
     }
 }

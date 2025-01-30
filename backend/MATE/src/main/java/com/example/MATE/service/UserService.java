@@ -1,10 +1,10 @@
 package com.example.MATE.service;
 
+import com.example.MATE.dto.AdminFeedbackDto;
 import com.example.MATE.dto.MeetingLogDto;
 import com.example.MATE.dto.SpeechLogDto;
-import com.example.MATE.model.Meeting;
-import com.example.MATE.model.SpeechLog;
-import com.example.MATE.model.User;
+import com.example.MATE.model.*;
+import com.example.MATE.repository.AdminRepository;
 import com.example.MATE.repository.ToxicityLogRepository;
 import com.example.MATE.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -28,6 +29,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ToxicityLogRepository toxicityLogRepository;
+    private final AdminRepository adminRepository;
+
 
     //회원조회
     public Optional<User> findByEmail(String email){
@@ -105,4 +108,28 @@ public class UserService {
         return speechLogDto;
 
     }
+
+    //정정게시글 등록
+    @Transactional
+    public AdminFeedbackDto writeFeedBack(AdminFeedbackDto adminFeedbackDto) {
+        //요청값 검증
+        if(adminFeedbackDto.getUserId()== null){
+            throw new IllegalArgumentException("userID가 없음");
+        }
+        if(adminFeedbackDto.getToxicityId()==null){
+            throw new IllegalArgumentException("toxicityId가 없음");
+        }
+        //현재 사용자 조회
+        User user = userRepository.findByUserId(adminFeedbackDto.getUserId())
+                .orElseThrow(()-> new IllegalArgumentException("유효하지 않은 사용자 ID : "+adminFeedbackDto.getUserId()));
+        //독성 로그 조회
+        ToxicityLog toxicityLog = toxicityLogRepository.findById(adminFeedbackDto.getToxicityId())
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 독성 ID: " + adminFeedbackDto.getToxicityId()));
+        //Dto -> entity
+        AdminFeedback adminFeedback = adminFeedbackDto.toEntity(user, toxicityLog);
+        AdminFeedback saveFeedback = adminRepository.save(adminFeedback);
+
+        return AdminFeedbackDto.fromEntity(saveFeedback);
+    }
+
 }

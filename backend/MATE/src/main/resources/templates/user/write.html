@@ -81,6 +81,20 @@
             margin-right: 20px;
             width: 120px;
             text-align: right;
+            color:#444;
+        }
+        .file-upload label {
+            font-weight: bold;
+            width: 120px;
+            text-align: right;
+            margin-right: 20px;
+            color:#444;
+        }
+        .form-group label::after,
+        .file-upload label::after {
+            content: " *";
+            color: red;
+            font-size: 16px;
         }
 
         .form-group input[type="text"],
@@ -108,7 +122,9 @@
         }
 
         .form-group .search-btn:hover {
+            transition: background-color 0.3s ease-in-out;
             background-color: #3b3e8f;
+            color:#ffffff
         }
 
         .file-upload {
@@ -117,14 +133,16 @@
             margin-bottom: 20px;
         }
 
-        .file-upload label {
-            font-weight: bold;
-            width: 120px;
-            text-align: right;
-            margin-right: 20px;
-        }
-
         .file-upload input[type="file"] {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        /* detail 에서 적용 */
+        .file-upload input[type="text"] {
             flex: 1;
             padding: 10px;
             font-size: 16px;
@@ -137,6 +155,13 @@
             resize: none;
         }
 
+        .btnArea {
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+        }
+
         .submit-btn {
             background-color: #5b5fc7;
             color: #FFF;
@@ -147,11 +172,13 @@
             padding: 10px 20px;
             cursor: pointer;
             display: block;
-            margin: 0 auto;
+            margin-right:5px;
         }
 
         .submit-btn:hover {
+            transition: background-color 0.3s ease-in-out;
             background-color: #3b3e8f;
+            color:#ffffff
         }
     </style>
 </head>
@@ -171,30 +198,85 @@
     </div>
 </header>
 <div class="container">
+    {{#feedback}} <!-- /user/userFix/detail 시 보이는 form -->
     <form>
-        <div class="form-group">
-            <label for="date-range">기간</label>
-            <input id="date-range" type="date">
-        </div>
-        <div class="form-group">
-            <label for="query">독성발언 조회</label>
-            <input type="text" id="query" placeholder="독성발언을 입력하세요">
-            <button type="button" class="search-btn">조회</button>
-        </div>
+        <input type="hidden" name="userId" value="{{userId}}">
         <div class="form-group">
             <label for="title">제목</label>
-            <input type="text" id="title" placeholder="제목을 입력하세요">
+            <input type="text" id="title" name="title" value="{{title}}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="dateInput">기간</label>
+            <input id="dateInput" type="text" value="{{createdAt}}" name="createdAt" readonly>
+        </div>
+        <div class="form-group">
+            <label for="toxicitySpeechLog">독성발언 조회</label>
+            <input type="text" id="toxicitySpeechLog" name="toxicitySpeechLog" value="{{toxicitySpeechLog}}" readonly>
         </div>
         <div class="file-upload">
-            <label for="attachment">첨부 파일</label>
-            <input type="file" id="attachment">
+            <label for="filepath">첨부 파일</label>
+            <input type="text" id="filepath" name="filepath" value="{{filepath}}" readonly>
         </div>
         <div class="form-group">
             <label for="content">내용</label>
-            <textarea id="content" rows="6" placeholder="내용을 입력하세요"></textarea>
+            <textarea id="content" rows="6" name="content" readonly>{{content}}</textarea>
         </div>
-        <button type="submit" class="submit-btn">제출하기</button>
+        <div class="btnArea">
+            <button onclick="goback()" id="backbtn" type="button" class="submit-btn">뒤로가기</button>
+        </div>
     </form>
+    {{/feedback}}
+    {{^feedback}} <!-- /user/userFix/write 시 보이는 form -->
+    <form action="../userFix/write" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="userId" value="{{userId}}">
+        <div class="form-group">
+            <label for="title">제목</label>
+            <input type="text" id="title" name="title" placeholder="제목을 입력하세요">
+        </div>
+        <div class="form-group">
+            <label for="date-range">기간</label>
+            <input id="date-range" type="date" name="createdAt">
+        </div>
+        <div class="form-group">
+            <label for="toxicityId">독성발언 조회</label>
+            <input type="text" id="toxicityId" name="toxicityId" placeholder="독성발언을 선택하세요">
+            <button type="button" class="search-btn">조회</button>
+        </div>
+        <div class="file-upload">
+            <label for="filepath">첨부 파일</label>
+            <input type="file" id="filepath" name="filepath">
+        </div>
+        <div class="form-group">
+            <label for="content">내용</label>
+            <textarea id="content" rows="6" name="content" placeholder="내용을 입력하세요"></textarea>
+        </div>
+        <div class="btnArea">
+            <button id="submitBtn" type="submit" class="submit-btn">제출하기</button>
+            <button id="backBtn" onclick="goback()" type="button" class="submit-btn">뒤로가기</button>
+        </div>
+    </form>
+    {{/feedback}}
 </div>
 </body>
+<script>
+    //userFix/detail js
+    document.addEventListener("DOMContentLoaded", function() {
+        //날짜 값 형식 변경
+        const inputElement = document.getElementById("dateInput");
+        if (inputElement.value) {
+            const formattedDate = originalDate.replace("T", " "); // "2025-01-30 16:23:38"
+            inputElement.value = formattedDate; // 변환된 값으로 설정
+        }
+
+        //filepath빈값일 시 대체문구
+        const filepath = document.getElementById("filepath");
+        if(filePath.value == ""){
+            filePath.value = "업로드된 첨부파일이 없음";
+        }
+    });
+
+    function goback(){
+        window.location.href = "/user/userFix";
+    }
+</script>
 </html>
