@@ -26,6 +26,6 @@ public class ErrorController {
         //springsecurity 인증정보 제거
         SecurityContextHolder.clearContext();
 
-        return "error/error"; //
+        return "error"; //
     }
 }

@@ -21,13 +21,13 @@ public class GlobalExceptionHandler {
                                               Model model){
         model.addAttribute("error", "403 권한 오류.");
         model.addAttribute("url", request.getRequestURI());
-        return "error/error";
+        return "error";
     }
     //401 자격증명실패
     @ExceptionHandler(AuthenticationException.class)
     public String handleAuthenticationException(AuthenticationException ex, Model model) {
         model.addAttribute("error", ex.getMessage());
-        return "error/error"; //에러 페이지의 뷰 이름
+        return "error"; //에러 페이지의 뷰 이름
     }
     //runtime
     @ExceptionHandler(RuntimeException.class)
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
     public String handle404(NoHandlerFoundException e, HttpServletRequest request, Model model) {
         model.addAttribute("error", "페이지를 찾을 수 없습니다.");
         model.addAttribute("url", request.getRequestURI());
-        return "error/error";
+        return "error";
     }
 
     //500처리
@@ -48,6 +48,14 @@ public class GlobalExceptionHandler {
     public String handle500(Exception e, HttpServletRequest request, Model model) {
         model.addAttribute("error", "서버에 오류가 발생했습니다.");
         model.addAttribute("message", e.getMessage());
-        return "error/error";
+        return "error";
+    }
+
+    //Error 클래스 잡아
+    @ExceptionHandler(Throwable.class)
+    public String handlerError(Throwable e, HttpServletRequest request, Model model){
+        model.addAttribute("error","심각한 서버 오류가 발생했습니다.");
+        model.addAttribute("message", e.getMessage());
+        return "error";
     }
 }
