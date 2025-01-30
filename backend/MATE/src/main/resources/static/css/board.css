@@ -39,13 +39,7 @@
     color:#000000;
     transition: color 0.3s ease-in-out;
 }
-/*제목 크기 고정*/
-.table-container td:nth-child(2) {
-    max-width:200px;
-    overflow:hidden;
-    white-space:nowarp;
-    text-overflow:ellipsis;
-}
+
 .table-container a:hover {
     color: #5b5fc7;
 }
@@ -75,7 +69,7 @@ table th {
     top: 0;
     z-index: 10;
 }
-/* 칼럼별 길이 고정 */
+/* 칼럼별 길이 고정(userFix) */
 .idCol {
     width:80px;
     min-width:70px;
@@ -85,6 +79,9 @@ table th {
     width:400px;
     min-width:200px;
     max-width:450px;
+    overflow:hidden;
+    white-space:nowarp;
+    text-overflow:ellipsis;
 }
 .statusCol {
     width:100px;
@@ -95,6 +92,25 @@ table th {
     width: 200px;
     min-width:180px;
     max-width:230px;
+}
+/* 칼럼별 길이 고정(adminFix) */
+.titleCol {
+    width:400px;
+    min-width:200px;
+    max-width:450px;
+    overflow:hidden;
+    white-space:nowarp;
+    text-overflow:ellipsis;
+}
+.resultCol {
+    width:100px;
+    min-width:70px;
+    max-width:100px;
+}
+.commentCol{
+    width:100px;
+    min-width:70px;
+    max-width:100px;
 }
 /* 상태 스타일 */
 .status {
@@ -146,22 +162,46 @@ table th {
     color: #fff;
     border-color: #5b5fc7;
 }
-
+.pagination .current:hover {
+    transition: background-color 0.3s ease-in-out;
+    background-color: #3b3e8f;
+    color: #fff;
+}
+/*userFix 정정 요청하기 버튼*/
 .write-button {
     background-color: #5b5fc7;
     color: #fff;
-    border-color: #5b5fc7;
     font-size: 16px;
-    border-radius: 10px;
+    border-radius: 4px;
     padding: 10px 10px;
     cursor: pointer;
     font-weight: bold;
     text-align: center;
     min-width: 60px;
+    border: none;
 }
 
 .write-button:hover {
     transition: background-color 0.3s ease-in-out;
     background-color: #3b3e8f;
     color:#ffffff
+}
+/*adminFix 답변하기 버튼*/
+.commentBtn {
+    background-color: #cfd0ff;
+    color:#444;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-align: center;
+    display: inline-block;
+    font-weight:bold;
+    width:100px;
+    min-width: 100px;
+    border: none;
+    font-size:16px;
+}
+.commentBtn:hover {
+    transition: background-color 0.3s ease-in-out;
+    background-color: #a4a5de;
+    color:#444;
 }

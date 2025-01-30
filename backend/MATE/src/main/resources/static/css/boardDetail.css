@@ -35,7 +35,8 @@
 .read-group input[type="text"],
 .read-group input[type="file"],
 .read-group input[type="date"],
-.read-group textarea {
+.read-group textarea,
+.read-group .status-options{
     flex: 1;
     padding: 10px;
     font-size: 16px;
@@ -117,4 +118,52 @@
     transition: background-color 0.3s ease-in-out;
     background-color: #3b3e8f;
     color:#ffffff
+}
+
+/*admin detail 라디오버튼*/
+.read-group .status-options{
+    display: flex;
+    border:none;
+}
+.status-options input[type="radio"] {
+    display: none;
+}
+.read-group .status-label {
+    display: inline-block;
+    padding: 12px 25px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align:center;
+    transition: background-color 0.3s ease-in-out, border 0.3s ease-in-out;
+}
+/* 승인 버튼 */
+.status-label.approved {
+    background-color: #e6f3ff;
+    color: #0066cc;
+    border: 2px solid #0066cc;
+    width:50%;
+}
+/* 반려 버튼 */
+.status-label.rejected {
+    background-color: #ffe6e6;
+    color: #cc0000;
+    border: 2px solid #cc0000;
+    width:50%;
+}
+/* 승인 선택 시 스타일 변경 */
+.status-options input[type="radio"]:checked#approved + .status-label.approved {
+    background-color: #0066cc;
+    color: white;
+    border-color: #004999;
+    box-shadow: 0 0 10px rgba(0, 102, 204, 0.5);
+}
+
+/* 반려 선택 시 스타일 변경 */
+.status-options input[type="radio"]:checked#rejected + .status-label.rejected {
+    background-color: #cc0000;
+    color: white;
+    border-color: #990000;
+    box-shadow: 0 0 10px rgba(204, 0, 0, 0.5);
 }

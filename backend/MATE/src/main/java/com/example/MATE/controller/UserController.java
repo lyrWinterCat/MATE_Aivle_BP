@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Controller
@@ -161,7 +162,7 @@ public class UserController {
             }
         }
 
-        return "user/write";
+        return "user/detail";
     }
 
     //정정게시판 -  정정 요청하기 글 제출(DB저장)
@@ -196,9 +197,9 @@ public class UserController {
     }
 
     //정정게시글 1개 조회
-    @GetMapping("/userFix/detail/{feedbackId}")
+    @GetMapping("/userFix/detail")
     @PreAuthorize("hasAuthority('USER')")
-    public String readFeedBack(@PathVariable("feedbackId") Integer feedbackId, Model model){
+    public String readFeedBack(@RequestParam("feedbackId") Integer feedbackId, Model model){
 
         String email = SecurityUtils.getCurrentUserEmail();
         //DB에서 사용자 정보 조회-이름과 롤 가져오기 위함
@@ -220,10 +221,17 @@ public class UserController {
         SpeechLog speechLog = toxicityLog.getSpeechLog();
         model.addAttribute("toxicitySpeechLog", speechLog.getContent());
 
+        //날짜데이터 포맷
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        String toxicitySpeechLog_time = speechLog.getTimestamp().format(formatter);
+        String createdAt = adminFeedback.getCreatedAt().format(formatter);
+        model.addAttribute("toxicitySpeechLog_time", toxicitySpeechLog_time);
+        model.addAttribute("createdAt_format", createdAt);
+
         if (adminFeedback.getFilepath() == null) {
             adminFeedback.setFilepath("");  // 빈 문자열로 설정하여 Mustache 오류 방지
         }
         model.addAttribute("feedback", adminFeedback);
-        return "user/write";
+        return "user/detail";
     }
 }

@@ -132,4 +132,9 @@ public class UserService {
         return AdminFeedbackDto.fromEntity(saveFeedback);
     }
 
+    //정정게시글 상태 수정
+    @Transactional
+    public void updateFeedback(AdminFeedback feedback) {
+        adminRepository.save(feedback);
+    }
 }
