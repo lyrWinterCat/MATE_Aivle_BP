@@ -148,9 +148,17 @@
         //feedbackId 세팅
         const urlParams = new URLSearchParams(window.location.search);
         const feedbackId = urlParams.get("feedbackId");
-
         if(feedbackId){
             document.getElementById("feedbackId").value = feedbackId;
+        }
+
+        //{{status}}값이 있을 때 라디오버튼 선택
+        const statusValue = "{{status}}";
+        console.log(statusValue);
+        if(statusValue.trim() === "승인"){
+            document.getElementById("approved").checked = true;
+        }else if(statusValue.trim() === "반려"){
+            document.getElementById("rejected").checked = true;
         }
     });
 
