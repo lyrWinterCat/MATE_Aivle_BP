@@ -47,24 +47,13 @@ public class UserService {
         return passwordEncoder.matches(rawPassword, user.getPassword());
     }
 
-    // 현재 로그인한 유저가 참여한 미팅들의 미팅명, 시작시간, 참여자 목록을 담은 List 를 반환
-    // user/meetingList 페이지에서 사용
-    public List<MeetingLogDto> getMeetingLogs(Integer userId) {
-        List<Integer> meetingIds = meetingService.getMeetingIdsByUserId(userId); // 현재 로그인한 유저가 참여한 미팅 ID 목록
 
-        return meetingIds.stream().map(meetingId -> {
-            Meeting meeting = meetingService.getMeetingByMeetingId(meetingId); // 하나의 회의 객체를 받아옴
-            List<User> participants = meetingParticipantService.getParticipantsByMeetingId(meetingId); // 하나의 회의에 참여한 사람들을 받아옴
-            return MeetingLogDto.fromEntity(meeting, participants); // 회의 정보와 참여자 정보를 이용해 MeetingLogDto 객체 생성
-        }).collect(Collectors.toList()); // 회의 정보를 담은 MeetingLogDto 객체들을 List 로 반환
-    }
-
+    // Pagination : 현재 로그인한 유저가 참여한 미팅들의 미팅명, 시작시간, 참여자 목록 반환
     public Page<MeetingLogDto> getMeetingLogsWithPaging(Integer userId, Pageable pageable) {
-        // 구현 필요
-        Page<Meeting> pagedMeetings = meetingService.getMeetingsByUserIdWithPaging(userId, pageable);
+        Page<Meeting> pagedMeetings = meetingService.getMeetingsByUserIdWithPaging(userId, pageable); // 현재 유저가 참여한 모든 회의 반환
         return pagedMeetings.map(meeting -> {
-            List<User> participants = meetingParticipantService.getParticipantsByMeetingId(meeting.getMeetingId());
-            return MeetingLogDto.fromEntity(meeting, participants);
+            List<User> participants = meetingParticipantService.getParticipantsByMeetingId(meeting.getMeetingId()); // 한 회의의 참가자들을 모두 가져옴
+            return MeetingLogDto.fromEntity(meeting, participants); // Meeting 객체 하나하나를 MeetingDto 객체로 변환 (이름 ,로 연결 / 날짜 포맷팅 등이 처리됨)
         });
     }
 
@@ -74,18 +63,11 @@ public class UserService {
         return speechLogs.map(this::convertToSpeechLogDto);
     }
 
-    public List<SpeechLogDto> getAllSpeechLogs() {
-        List<SpeechLog> speechLogs = userRepository.findAllSpeechLogs();
-
-        return speechLogs.stream()
-                .map(this::convertToSpeechLogDto)
-                .collect(Collectors.toList());
-    }
-
+    // 모든 발화로그를 가져와서 Page 에 집어넣음
     public Page<SpeechLogDto> getPagedSpeechLogs(Pageable pageable) {
         Page<SpeechLog> pagedSpeechLogs =  userRepository.findAllSpeechLogsWithPaging(pageable);
 
-        return pagedSpeechLogs.map(this::convertToSpeechLogDto);
+        return pagedSpeechLogs.map(this::convertToSpeechLogDto); // 포맷팅, 독성 or 일반 표시 등의 처리를 해주기 위해 Dto 로 변환
     }
 
     // SpeechLog 객체를 받아서 SpeechLogDto 객체로 변환
