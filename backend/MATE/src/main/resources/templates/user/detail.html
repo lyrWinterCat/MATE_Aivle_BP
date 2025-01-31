@@ -64,11 +64,7 @@
             background-color: #f1f1f1;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+
     </style>
     <link rel="stylesheet" type="text/css" href="/css/boardDetail.css" />
 </head>
@@ -130,7 +126,7 @@
         <div class="form-group">
             <label for="toxicityId">독성발언 조회</label>
             <input type="text" id="toxicityId" name="toxicityId" placeholder="독성발언을 선택하세요">
-            <button type="button" class="search-btn">조회</button>
+            <button type="button" id="searchBtn" onclick="showBox()" class="search-btn">조회</button>
         </div>
         <div class="file-upload">
             <label for="filepath">첨부 파일</label>
@@ -163,6 +159,10 @@
 
     function goback(){
         window.location.href = "/user/userFix";
+    }
+
+    function showBox(){
+        console.log("조회박스 실행");
     }
 </script>
 </html>
