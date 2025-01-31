@@ -1,7 +1,8 @@
 .container {
     max-width: 800px;
-    margin: 0 auto;
     padding: 20px;
+    margin:2% auto;
+    text-align: center; /* 내부 요소도 중앙 정렬 */
 }
 
 .form-group,
