@@ -65,12 +65,16 @@
 <body>
 <header>
     <div class="header-left">
-        <img src="/img/logo.png" alt="Mate Logo">
+        <a href="/admin/adminMain">
+            <img src="/img/logo.png" alt="Mate Logo" class="logo-img">
+        </a>
         <h1>정정게시판</h1>
     </div>
     <div class="header-right">
         <span>관리자님 반갑습니다.</span>
-        <button>정정게시판</button>
+        <form action="/admin/adminLog" method="get" style="display:inline;">
+            <button type="submit" class="nav-button">로그조회</button>
+        </form>
         <form action="/signOut" method="post" style="display:inline;">
             <button type="submit" class="nav-button">로그아웃</button>
         </form>
