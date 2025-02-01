@@ -10,7 +10,9 @@ import com.example.MATE.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.jdbc.Expectation;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -50,7 +52,13 @@ public class UserService {
 
     // Pagination : 현재 로그인한 유저가 참여한 미팅들의 미팅명, 시작시간, 참여자 목록 반환
     public Page<MeetingLogDto> getMeetingLogsWithPaging(Integer userId, Pageable pageable) {
-        Page<Meeting> pagedMeetings = meetingService.getMeetingsByUserIdWithPaging(userId, pageable); // 현재 유저가 참여한 모든 회의 반환
+        //최신순 정렬
+        Pageable sortedPageable = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(Sort.Direction.DESC,"createdAt")
+        );
+        Page<Meeting> pagedMeetings = meetingService.getMeetingsByUserIdWithPaging(userId, sortedPageable); // 현재 유저가 참여한 모든 회의 반환
         return pagedMeetings.map(meeting -> {
             List<User> participants = meetingParticipantService.getParticipantsByMeetingId(meeting.getMeetingId()); // 한 회의의 참가자들을 모두 가져옴
             return MeetingLogDto.fromEntity(meeting, participants); // Meeting 객체 하나하나를 MeetingDto 객체로 변환 (이름 ,로 연결 / 날짜 포맷팅 등이 처리됨)
@@ -58,7 +66,13 @@ public class UserService {
     }
 
     public Page<SpeechLogDto> getSpeechLogsByUserId(Integer userId, Pageable pageable) {
-        Page<SpeechLog> speechLogs = userRepository.findSpeechLogsByUserId(userId, pageable);
+        //최신순정렬
+        Pageable sortedPageable = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(Sort.Direction.DESC,"timestamp")
+        );
+        Page<SpeechLog> speechLogs = userRepository.findSpeechLogsByUserId(userId, sortedPageable);
 
         return speechLogs.map(this::convertToSpeechLogDto);
     }
