@@ -1,27 +1,21 @@
 package com.example.MATE.controller;
 
 import com.example.MATE.dto.*;
-import com.example.MATE.model.AdminFeedback;
-import com.example.MATE.model.AdminFeedbackComments;
-import com.example.MATE.model.SpeechLog;
-import com.example.MATE.model.User;
-import com.example.MATE.repository.UserRepository;
+import com.example.MATE.model.*;
 import com.example.MATE.service.AdminService;
 import com.example.MATE.service.UserService;
+import com.example.MATE.utils.DateUtil;
 import com.example.MATE.utils.PaginationUtils;
 import com.example.MATE.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.yaml.snakeyaml.events.CollectionEndEvent;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,13 +42,18 @@ public class AdminController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public String detail(@RequestParam("feedbackId") Integer feedbackId, Model model) {
         AdminFeedback feedback = adminService.getFeedbackById(feedbackId);
+        ToxicityLog toxicityLog = feedback.getToxicityLog();
+        SpeechLog speechLog = toxicityLog.getSpeechLog();
+
         model.addAttribute("title", feedback.getTitle());
         model.addAttribute("userName", feedback.getUser().getName());
-        model.addAttribute("toxicityId", feedback.getToxicityLog().getToxicityId());
+        model.addAttribute("toxicityId", speechLog.getContent());
         String filepath = (feedback.getFilepath() != null) ? feedback.getFilepath() : "";
         model.addAttribute("filepath", filepath);
         model.addAttribute("content", feedback.getContent());
         model.addAttribute("status",feedback.getStatus());
+        model.addAttribute("speechLogTimestamp",DateUtil.format(speechLog.getTimestamp()));
+
         String response = adminService.getCommentByFeedbackId(feedbackId)
                 .map(AdminFeedbackComments::getContent)
                 .orElse("");

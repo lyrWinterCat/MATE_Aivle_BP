@@ -10,13 +10,13 @@ import com.example.MATE.model.User;
 import com.example.MATE.repository.UserRepository;
 import com.example.MATE.service.AdminService;
 import com.example.MATE.service.UserService;
+import com.example.MATE.utils.DateUtil;
 import com.example.MATE.utils.PaginationUtils;
 import com.example.MATE.utils.SecurityUtils;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Controller
@@ -220,13 +219,8 @@ public class UserController {
         ToxicityLog toxicityLog = adminFeedback.getToxicityLog();
         SpeechLog speechLog = toxicityLog.getSpeechLog();
         model.addAttribute("toxicitySpeechLog", speechLog.getContent());
-
-        //날짜데이터 포맷
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        String toxicitySpeechLog_time = speechLog.getTimestamp().format(formatter);
-        String createdAt = adminFeedback.getCreatedAt().format(formatter);
-        model.addAttribute("toxicitySpeechLog_time", toxicitySpeechLog_time);
-        model.addAttribute("createdAt_format", createdAt);
+        model.addAttribute("toxicitySpeechLog_time", DateUtil.format(speechLog.getTimestamp()));
+        model.addAttribute("createdAt_format", DateUtil.format(adminFeedback.getCreatedAt()));
 
         if (adminFeedback.getFilepath() == null) {
             adminFeedback.setFilepath("");  // 빈 문자열로 설정하여 Mustache 오류 방지

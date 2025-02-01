@@ -70,9 +70,9 @@
 <body>
 <header>
     <div class="header-left">
-
-        <img src="/img/logo.png" alt="Mate Logo">
-
+        <a href="/admin/adminMain">
+            <img src="/img/logo.png" alt="Mate Logo" class="logo-img">
+        </a>
         <h1>정정게시판</h1>
     </div>
     <div class="header-right">
@@ -96,7 +96,7 @@
         </div>
         <div class="read-group">
             <label for="reference">독성발언조회</label>
-            <input type="text" id="reference" value="{{toxicityId}}" readonly>
+            <input type="text" id="reference" value="{{speechLogTimestamp}} / {{toxicityId}}" readonly>
         </div>
         <div class="read-file-upload">
             <label for="attachment">첨부 파일</label>
