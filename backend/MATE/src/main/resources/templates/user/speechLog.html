@@ -32,8 +32,8 @@
         }
 
         .header-left h1 {
-            font-size: 58px;
-            color: #fff;
+            font-size: 50px;
+            color: #FFF;
             margin: 0;
         }
 
@@ -238,6 +238,7 @@
             border-color: #5b5fc7;
         }
     </style>
+    <link rel="stylesheet" type="text/css" href="/css/header.css"/>
     <script>
         function filterTable(category, button) {
             const rows = document.querySelectorAll("tbody tr");
@@ -272,12 +273,12 @@
         <a href="/user/userMain">
             <img src="/img/logo.png" alt="Mate Logo" class="logo-img">
         </a>
-        <h1>Mypage</h1>
+        <h1>Mate</h1>
     </div>
     <div class="header-right">
         <span>{{userName}}님 반갑습니다.</span>
         <form action="/user/meetingList" method="get" style="display:inline;">
-            <button type="submit">Mypage</button>
+            <button type="submit">마이페이지</button>
         </form>
         <form action="/user/userFix" method="get" style="display:inline;">
             <button type="submit">정정게시판</button>
@@ -287,6 +288,9 @@
         </form>
     </div>
 </header>
+<div class="subtitle-container">
+    <h2>로그 조회</h2>
+</div>
 <div class="content">
     <div class="filter-bar">
         <div class="filter-buttons">

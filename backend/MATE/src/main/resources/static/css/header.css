@@ -1,0 +1,19 @@
+.subtitle-container {
+    text-align: center; /* 가운데 정렬 */
+    font-size: 22px; /* 글씨 크기 적당히 줄임 */
+    font-weight: bold;
+    color: #333; /* 더 선명한 색 */
+    margin: 30px auto; /* 위아래 여백 추가 */
+    position: relative;
+}
+
+/* 🔹 부제목 아래 짧은 선 */
+.subtitle-container::after {
+    content: "";
+    display: block;
+    width: 100px; /* 선 길이 조절 */
+    height: 3px; /* 선 두께 */
+    background: linear-gradient(90deg, #5b5fc7, #6B2399); /* 선 색상 */
+    margin: 8px auto 0; /* 가운데 정렬 */
+    border-radius: 4px; /* 살짝 둥글게 */
+}

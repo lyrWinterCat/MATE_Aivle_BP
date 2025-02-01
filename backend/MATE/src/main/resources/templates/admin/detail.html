@@ -66,6 +66,7 @@
         }
     </style>
     <link rel="stylesheet" type="text/css" href="/css/boardDetail.css" />
+    <link rel="stylesheet" type="text/css" href="/css/header.css"/>
 </head>
 <body>
 <header>
@@ -73,7 +74,7 @@
         <a href="/admin/adminMain">
             <img src="/img/logo.png" alt="Mate Logo" class="logo-img">
         </a>
-        <h1>정정게시판</h1>
+        <h1>Mate</h1>
     </div>
     <div class="header-right">
         <span>관리자님 반갑습니다.</span> <!-- 추후 템플릿 엔진(머스타치, 타임리프)이나 javascript 로 이름 삽입하는 식으로 변경 필요합니다-->
@@ -83,6 +84,9 @@
         </form>
     </div>
 </header>
+<div class="subtitle-container">
+    <h2>정정 게시글 작성</h2>
+</div>
 <div class="container">
     <form action="../adminFix/detail" method="post">
         <input type="hidden" id="feedbackId" name="feedbackId">

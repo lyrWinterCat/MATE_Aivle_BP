@@ -60,6 +60,7 @@
         }
     </style>
     <link rel="stylesheet" type="text/css" href="/css/board.css" />
+    <link rel="stylesheet" type="text/css" href="/css/header.css"/>
 </head>
 <body>
 <header>
@@ -67,20 +68,21 @@
         <a href="/user/userMain">
             <img src="/img/logo.png" alt="Mate Logo" class="logo-img">
         </a>
-        <h1>정정게시판</h1>
+        <h1>Mate</h1>
     </div>
     <div class="header-right">
         <span>{{userName}}님 반갑습니다.</span>
         <form action="/user/meetingList" method="get" style="display:inline;">
             <button type="submit" class="nav-button">마이페이지</button>
         </form>
-        <button>정정게시판</button>
         <form action="/signOut" method="post" style="display:inline;">
             <button type="submit" class="nav-button">로그아웃</button>
         </form>
     </div>
 </header>
-
+<div class="subtitle-container">
+    <h2>정정 게시판</h2>
+</div>
 <!-- 검색 영역 -->
 <div class="search-bar">
     <label for="date-range">기간</label>
