@@ -67,6 +67,7 @@
 
     </style>
     <link rel="stylesheet" type="text/css" href="/css/boardDetail.css" />
+    <link rel="stylesheet" type="text/css" href="/css/modal.css"/>
 </head>
 <body>
 <header>
@@ -83,6 +84,26 @@
         </form>
     </div>
 </header>
+<!-- 모달창 -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>독성발언 조회</h2>
+        <!-- 검색창 -->
+        <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Search..." onkeyup="filterList()">
+        </div>
+        <!-- 리스트 -->
+        <ul id="toxicity-list" class="toxicity-list">
+
+            <li onclick="selectToxicity('욕설')">욕설</li>
+            {{#toxicityList}}
+            {{/toxicityList}}
+        </ul>
+    </div>
+</div>
+<!-- 메인 박스 -->
 <div class="container">
     {{#feedback}} <!-- /user/userFix/detail 시 보이는 form -->
     <form>
@@ -126,7 +147,7 @@
         <div class="form-group">
             <label for="toxicityId">독성발언 조회</label>
             <input type="text" id="toxicityId" name="toxicityId" placeholder="독성발언을 선택하세요">
-            <button type="button" id="searchBtn" onclick="showBox()" class="search-btn">조회</button>
+            <button type="button" id="searchBtn" onclick="openModal()" class="search-btn">조회</button>
         </div>
         <div class="file-upload">
             <label for="filepath">첨부 파일</label>
@@ -161,8 +182,57 @@
         window.location.href = "/user/userFix";
     }
 
-    function showBox(){
-        console.log("조회박스 실행");
+    function openModal() {
+        const modal = document.getElementById("modal");
+        modal.style.display = "flex";  // 중앙 정렬을 위해 flex 사용
+
+        // 애니메이션 적용을 위해 setTimeout 사용
+        setTimeout(() => {
+            modal.classList.add("show");
+        }, 10);
+    }
+
+    function closeModal() {
+        const modal = document.getElementById("modal");
+        modal.classList.remove("show");
+
+        // 애니메이션 종료 후 모달 숨김 처리
+        setTimeout(() => {
+            modal.style.display = "none";
+        }, 300);
+    }
+
+    function filterList() {
+        let input = document.getElementById("searchInput").value.toLowerCase();
+        let items = document.getElementById("toxicity-list").getElementsByTagName("li");
+
+        for (let i = 0; i < items.length; i++) {
+            let text = items[i].textContent.toLowerCase();
+            if (text.includes(input)) {
+                items[i].style.display = "";
+            } else {
+                items[i].style.display = "none";
+            }
+        }
+    }
+
+    function selectToxicity(text) {
+        let tagContainer = document.getElementById("selectedTags");
+
+        // 중복 선택 방지
+        if (Array.from(tagContainer.children).some(tag => tag.textContent.includes(text))) return;
+
+        // 태그 생성
+        /*let tag = document.createElement("div");
+        tag.className = "tag";
+        tag.innerHTML = `${text} <span class="remove" onclick="removeTag(this)">×</span>`;
+
+        tagContainer.appendChild(tag);*/
+    }
+
+    function removeTag(element) {
+        element.parentNode.remove();
     }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </html>

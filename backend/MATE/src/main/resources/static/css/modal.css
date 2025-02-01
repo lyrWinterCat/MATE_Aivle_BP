@@ -1,0 +1,114 @@
+/* 모달 기본 스타일 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* 배경 어둡게 */
+    backdrop-filter: blur(4px); /* 흐림 효과 */
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 10vh;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 60%;
+    max-width: 800px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+
+    /* 애니메이션 효과 추가 */
+    opacity: 0;
+    transform: translateY(50px); /* 처음에는 아래에 위치 */
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+/* 모달 활성화 시 애니메이션 적용 */
+.modal.show .modal-content {
+    opacity: 1;
+    transform: translateY(0);
+}
+/* 닫기 버튼 */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* 검색 스타일 */
+.search-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.search-container input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+}
+
+.search-container .search-icon {
+    margin-right: 8px;
+    color: #555;
+}
+
+/* 독성 발언 리스트 */
+.toxicity-list {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 0;
+    list-style: none;
+    margin: 0;
+    border-top: 1px solid #ccc;
+}
+
+.toxicity-list li {
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.toxicity-list li:hover {
+    background-color: #f0f0f0;
+}
+
+/* 선택된 태그 스타일 */
+.selected-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.tag {
+    display: flex;
+    align-items: center;
+    background-color: #eef;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 14px;
+}
+
+.tag .remove {
+    margin-left: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
