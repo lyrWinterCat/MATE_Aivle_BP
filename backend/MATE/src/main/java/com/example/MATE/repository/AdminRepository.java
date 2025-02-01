@@ -20,6 +20,6 @@ public interface AdminRepository extends JpaRepository<AdminFeedback, Long> {
 
 
     // 모든 정정 요청을 pagination 을 위해 가져옴
-    @Query(value = "select * from admin_feedback", nativeQuery = true)
+    @Query(value = "select * from admin_feedback ORDER BY created_at DESC", nativeQuery = true)
     Page<AdminFeedback> findAllFeedbacksWithPaging(Pageable pageable);
 }
