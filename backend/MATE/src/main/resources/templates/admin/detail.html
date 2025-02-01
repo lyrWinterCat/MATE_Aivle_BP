@@ -77,7 +77,10 @@
         <h1>Mate</h1>
     </div>
     <div class="header-right">
-        <span>관리자님 반갑습니다.</span> <!-- 추후 템플릿 엔진(머스타치, 타임리프)이나 javascript 로 이름 삽입하는 식으로 변경 필요합니다-->
+        <span></span> <!-- 추후 템플릿 엔진(머스타치, 타임리프)이나 javascript 로 이름 삽입하는 식으로 변경 필요합니다-->
+        <form action="/admin/adminMain" method="get" style="display:inline;">
+            <button type="submit" class="nav-button">통계</button>
+        </form>
         <button>로그조회</button>
         <form action="/signOut" method="post" style="display:inline;">
             <button type="submit" class="nav-button">로그아웃</button>
@@ -125,7 +128,7 @@
             </div>
         </div>
         <div class="btnArea">
-            <button id="submitBtn" type="submit" class="submit-btn">완료하기</button>
+            <button id="submitBtn" type="submit" class="submit-btn">답변하기</button>
             <button id="backBtn" onclick="goback()" type="button" class="submit-btn">뒤로가기</button>
         </div>
     </form>
@@ -158,10 +161,13 @@
         }else if(statusValue.trim() === "반려"){
             document.getElementById("rejected").checked = true;
         }
+
     });
 
     function goback(){
-        window.location.href = "/admin/adminFix";
+        if (confirm("정정게시글 리스트로 되돌아가시겠습니까?")) {
+            window.location.href = "/admin/adminFix";
+        }
     }
 </script>
 </html>

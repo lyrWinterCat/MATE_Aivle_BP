@@ -32,8 +32,8 @@
         }
 
         .header-left h1 {
-            font-size: 58px;
-            color: #fff;
+            font-size: 50px;
+            color: #FFF;
             margin: 0;
         }
 
@@ -64,16 +64,12 @@
             background-color: #f1f1f1;
         }
 
-        .content {
-            margin-top: 50px;
-            padding: 0 40px;
-        }
-
         .filter-bar {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            justify-content: center;
+            padding: 20px 40px;
+            gap: 10px;
         }
 
         .filter-buttons {
@@ -86,25 +82,27 @@
             font-size: 16px;
             font-weight: bold;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             color: #fff;
-            background-color: #333; /* 기본 버튼 색상 */
+            background-color: #5b5fc7;
             cursor: pointer;
         }
 
         .filter-buttons button.active {
-            background-color: #00274d; /* 진한 파랑색 */
+            background-color: #b58aff;
         }
 
         .filter-buttons button:hover {
-            background-color: #555;
+            transition: background-color 0.3s ease-in-out;
+            background-color: #3b3e8f;
+            color:#ffffff
         }
 
         .summary-button {
             padding: 10px 20px;
             font-size: 16px;
             font-weight: bold;
-            background-color: #333;
+            background-color: #5b5fc7;
             color: #fff;
             border: none;
             border-radius: 5px;
@@ -112,7 +110,9 @@
         }
 
         .summary-button:hover {
-            background-color: #555;
+            transition: background-color 0.3s ease-in-out;
+            background-color: #3b3e8f;
+            color:#ffffff
         }
 
         table {
@@ -130,8 +130,10 @@
         table th {
             background: linear-gradient(90deg, #5b5fc7, #6B2399);
             color: #fff;
+            font-weight: bold;
             position: sticky;
             top: 0;
+            z-index: 5; /* 낮은 값으로 설정 */
         }
 
         table td {
@@ -157,6 +159,7 @@
             background-color: rgba(0, 0, 0, 0.5);
             justify-content: center;
             align-items: center;
+            z-index: 10; /* 모달이 thead 위로 올라오도록 설정 */
         }
 
         .modal-content {
@@ -209,49 +212,30 @@
             color: #cc0000;
         }
 
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin: 20px 0;
-        }
-
-        .pagination a {
-            display: inline-block;
-            padding: 10px 20px;
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background-color: #f9f9f9;
-        }
-
-        .pagination a:hover {
-            background-color: #e0e0e0;
-        }
-
-        .pagination .current {
-            background-color: #5b5fc7;
-            color: #fff;
-            border-color: #5b5fc7;
-        }
-
     </style>
     <link rel="stylesheet" type="text/css" href="/css/header.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/board.css"/>
     <script>
         function filterTable(category, button) {
             const rows = document.querySelectorAll("tbody tr");
+            let visibleRowCount = 0;
+
             rows.forEach(row => {
-                if (category === "전체") {
-                    row.style.display = "";
-                } else {
-                    const type = row.querySelector(".type").textContent.trim();
-                    row.style.display = type === category ? "" : "none";
+                const type = row.querySelector(".type").textContent.trim();
+                if (category === "전체" || type === category) {
+                    visibleRowCount++;
                 }
             });
+            if (visibleRowCount === 0) {
+                alert("해당 카테고리에 해당하는 데이터가 없습니다.");
+                return;
+            }
 
+            //필터 실행
+            rows.forEach(row => {
+                const type = row.querySelector(".type").textContent.trim();
+                row.style.display = (category === "전체" || type === category) ? "" : "none";
+            });
             // 버튼 색상 변경
             const buttons = document.querySelectorAll(".filter-buttons button");
             buttons.forEach(btn => btn.classList.remove("active"));
@@ -277,8 +261,11 @@
         <h1>Mate</h1> <!-- 임시제목입니다. -->
     </div>
     <div class="header-right">
-        <span>관리자님 반갑습니다.</span>
+        <span></span>
 <!--        <button>로그조회</button>-->
+        <form action="/admin/adminMain" method="get" style="display:inline;">
+            <button type="submit" class="nav-button">통계</button>
+        </form>
         <form action="/admin/adminFix" method="get" style="display:inline;">
             <button type="submit" class="nav-button">정정게시판</button>
         </form>
@@ -290,57 +277,59 @@
 <div class="subtitle-container">
     <h2>로그 조회</h2>
 </div>
-<div class="content">
-    <div class="filter-bar">
-        <div class="filter-buttons">
-            <button class="active" onclick="filterTable('전체', this)">전체</button>
-            <button onclick="filterTable('독성', this)">독성발언</button>
-            <button onclick="filterTable('업무외발언', this)">업무 외 발언</button>
+<div class="filter-bar">
+    <div class="filter-buttons">
+        <button class="active" onclick="filterTable('전체', this)">전체</button>
+        <button onclick="filterTable('독성', this)">독성발언</button>
+        <button onclick="filterTable('업무외발언', this)">업무 외 발언</button>
+    </div>
+</div>
+<div class="table-container">
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th>Time</th>
+                <th>분류</th>
+                <th>발언자</th>
+                <th>내용</th>
+                <th>요약보기</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#pagedSpeechLogs}}
+            <tr>
+                <td>{{timestamp}}</td>
+                <td class="type">{{speechType}}</td>
+                <td>{{userName}}</td>
+                <td>{{content}}</td>
+                <td><button class="summary-button" onclick="openModal()">요약보기</button></td>
+            </tr>
+            {{/pagedSpeechLogs}}
+            </tbody>
+        </table>
+
+        <!-- 페이지네이션 -->
+        <div class="pagination">
+            <!-- 이전 페이지가 존재하면 이전 버튼을 생성 -->
+            {{#pagedSpeechLogs.hasPrevious}}
+            <a href="/admin/adminLog?page={{previousPage}}">이전</a>
+            {{/pagedSpeechLogs.hasPrevious}}
+
+            <!-- 페이지 번호 버튼들 -->
+            <!-- 만약 현재 페이지라면 current 클래스를 붙여서 강조해준다 -->
+            {{#pageNumbers}}
+            <a href="/admin/adminLog?page={{pageIndex}}">
+                {{displayIndex}}
+            </a>
+            {{/pageNumbers}}
+
+            <!-- 다음 페이지가 존재하면 다음 버튼을 생성 -->
+            {{#pagedSpeechLogs.hasNext}}
+            <a href="/admin/adminLog?page={{nextPage}}">다음</a>
+            {{/pagedSpeechLogs.hasNext}}
         </div>
-        <button class="summary-button" onclick="openModal()">요약보기</button>
     </div>
-    <table>
-        <thead>
-        <tr>
-            <th>Time</th>
-            <th>분류</th>
-            <th>발언자</th>
-            <th>내용</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#pagedSpeechLogs}}
-        <tr>
-            <td>{{timestamp}}</td>
-            <td class="type">{{speechType}}</td>
-            <td>{{userName}}</td>
-            <td>{{content}}</td>
-        </tr>
-        {{/pagedSpeechLogs}}
-        </tbody>
-    </table>
-
-    <!-- 페이지네이션 -->
-    <div class="pagination">
-        <!-- 이전 페이지가 존재하면 이전 버튼을 생성 -->
-        {{#pagedSpeechLogs.hasPrevious}}
-        <a href="/admin/adminLog?page={{previousPage}}">이전</a>
-        {{/pagedSpeechLogs.hasPrevious}}
-
-        <!-- 페이지 번호 버튼들 -->
-        <!-- 만약 현재 페이지라면 current 클래스를 붙여서 강조해준다 -->
-        {{#pageNumbers}}
-        <a href="/admin/adminLog?page={{pageIndex}}">
-            {{displayIndex}}
-        </a>
-        {{/pageNumbers}}
-
-        <!-- 다음 페이지가 존재하면 다음 버튼을 생성 -->
-        {{#pagedSpeechLogs.hasNext}}
-        <a href="/admin/adminLog?page={{nextPage}}">다음</a>
-        {{/pagedSpeechLogs.hasNext}}
-    </div>
-
 </div>
 <div class="modal">
     <div class="modal-content">
