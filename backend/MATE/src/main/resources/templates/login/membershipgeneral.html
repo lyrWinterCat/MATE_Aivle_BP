@@ -5,76 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mate Signup</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(90deg, #5b5fc7, #6B2399);
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            height: 100vh;
-            margin: 0;
-            padding: 50px 8%;
-        }
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(90deg, #5b5fc7, #6B2399);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        height: 100vh;
+        margin: 0;
+        padding: 50px 8%;
+    }
 
-        /* ✅ 헤더 스타일 */
-        .header {
-            position: absolute;
-            top: 20px;
-            right: 120px; /* 🔹 살짝 왼쪽으로 이동 */
-            display: flex;
-            gap: 30px; /* 🔹 링크 간 여백 증가 */
-        }
+    /* ✅ 헤더 스타일 */
+    .header {
+        position: absolute;
+        top: 20px;
+        right: 120px; /* 🔹 살짝 왼쪽으로 이동 */
+        display: flex;
+        gap: 30px; /* 🔹 링크 간 여백 증가 */
+    }
 
-        .header a {
-            text-decoration: none;
-            font-size: 18px;
-            font-weight: 300; /* 🔹 글자 굵기 최대한 얇게 */
-            color: white;
-        }
+    .header a {
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: 300; /* 🔹 글자 굵기 최대한 얇게 */
+        color: white;
+    }
 
-        .header a:hover {
-            text-decoration: underline;
-        }
+    .header a:hover {
+        text-decoration: underline;
+    }
 
-        .left-container {
-            text-align: left;
-            max-width: 50%;
-            
-        }
+    .left-container {
+        text-align: left;
+        max-width: 50%;
 
-        .left-container img {
-            width: 100px;
-            height: auto;
-            vertical-align: middle;
-        }
+    }
 
-        .left-container h1 {
-            font-size: 80px;
-            margin: 0 0 10px 20px;
-            color: #fff;
-            font-weight: bold;
-            display: inline-block;
-            vertical-align: middle;
-        }
+    .left-container img {
+        width: 100px;
+        height: auto;
+        vertical-align: middle;
+    }
 
-        .left-container p {
-            font-size: 40px;
-            margin: 20px 0;
-            color: #fff;
-            font-weight: bold;
-        }
+    .left-container h1 {
+        font-size: 80px;
+        margin: 0 0 10px 20px;
+        color: #fff;
+        font-weight: bold;
+        display: inline-block;
+        vertical-align: middle;
+    }
 
-        .left-container .image {
-            margin-top: 20px;
-        }
+    .left-container p {
+        font-size: 40px;
+        margin: 20px 0;
+        color: #fff;
+        font-weight: bold;
+    }
 
-        .left-container .image img {
-            width: 110%;
-            max-width: 600px;
-            height: auto;
-        }
-      
-      .signup-container {
+    .left-container .image {
+        margin-top: 20px;
+    }
+
+    .left-container .image img {
+        width: 110%;
+        max-width: 600px;
+        height: auto;
+    }
+
+    .signup-container {
           background-color: white;
           padding: 25px 40px;
           border-radius: 15px;
@@ -84,7 +84,7 @@
           margin-top: -30px;
       }
       .signup-container h2 {
-        
+
           font-size: 36px;
           margin-bottom: 20px;
           color: #333;
@@ -141,7 +141,7 @@
       .form-inline-group button:hover {
           background-color:  #F5E6FF;
       }
-      .signup-container button[type="submit"] {
+      .controlBtn {
           width: 100%;
           padding: 14px;
           background-color: #333;
@@ -152,7 +152,7 @@
           font-size: 16px;
           font-weight: bold;
       }
-      .signup-container button[type="submit"]:hover {
+      .controlBtn:hover {
           background-color: #555;
       }
       .modal-overlay {
@@ -189,6 +189,15 @@
           text-align: center;
           width: 100%;
       }
+      .btnArea {
+        display: flex;
+        flex-direction: column; /* 버튼을 위아래로 정렬 */
+        align-items: center;
+        gap: 10px; /* 버튼 간격 조정 */
+        width: 100%;
+    }
+
+
     </style>
 </head>
 <body>
@@ -209,7 +218,7 @@
             <label for="name">이름</label>
             <input type="text" id="name" name="name" required>
         </div>
-        <div class="form-group">
+        <br class="form-group">
             <label for="email">이메일 주소</label>
             <div style="display: flex; gap: 10px; align-items: center;">
                 <input type="email" id="email" name="email" placeholder="이메일 주소를 입력하세요" required style="width: 320px; height: 45px; padding: 0 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box;">
@@ -241,7 +250,10 @@
                 </label>
                 <button type="button" onclick="openModal2()">전체 보기</button>
             </div>
-            <button type="submit">회원가입</button>
+            <div class="btnArea">
+                <button class="controlBtn signupBtn" type="submit" onclick="check();">회원가입</button>
+                <button class="controlBtn backBtn" type="button" onclick="goback();">로그인으로 돌아가기</button>
+            </div>
     </form>
 </div>
 
@@ -342,45 +354,56 @@
     function openModal2() { document.getElementById('modalOverlay2').style.display = 'flex'; }
     function closeModal2() { document.getElementById('modalOverlay2').style.display = 'none'; }
     async function checkEmailDuplicate() {
-     const email = document.getElementById('email').value;
+         const email = document.getElementById('email').value;
 
-     // 이메일 형식 검사
-     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-     if (!email) {
-         alert('이메일을 입력해주세요.');
-         return;
-     }
-     if (!emailRegex.test(email)) {
-         alert('올바른 이메일 형식이 아닙니다.');
-         return;
-     }
-
-     try {
-         // 서버로 이메일 중복 확인 요청
-         const response = await fetch('/api/check-email', {
-             method: 'POST',
-             headers: {
-                 'Content-Type': 'application/json',
-             },
-             body: JSON.stringify({ email: email })
-         });
-
-         if (!response.ok) {
-             throw new Error('서버 응답 오류');
+         // 이메일 형식 검사
+         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+         if (!email) {
+             alert('이메일을 입력해주세요.');
+             return;
+         }
+         if (!emailRegex.test(email)) {
+             alert('올바른 이메일 형식이 아닙니다.');
+             return;
          }
 
-         const data = await response.json();
+         try {
+             // 서버로 이메일 중복 확인 요청
+             const response = await fetch('/api/check-email', {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json',
+                 },
+                 body: JSON.stringify({ email: email })
+             });
 
-         if (data.isDuplicate) {
-             alert('이미 사용 중인 이메일입니다.');
-         } else {
-             alert('사용 가능한 이메일입니다.');
+             if (!response.ok) {
+                 throw new Error('서버 응답 오류');
+             }
+
+             const data = await response.json();
+
+             if (data.isDuplicate) {
+                 alert('이미 사용 중인 이메일입니다.');
+             } else {
+                 alert('사용 가능한 이메일입니다.');
+             }
+         } catch (error) {
+             console.error('이메일 중복 확인 중 오류 발생:', error);
+             alert('이메일 중복 확인 중 오류가 발생했습니다.');
          }
-     } catch (error) {
-         console.error('이메일 중복 확인 중 오류 발생:', error);
-         alert('이메일 중복 확인 중 오류가 발생했습니다.');
      }
- }
+
+    function goback(){
+        if (confirm("로그인창으로 돌아가시겠습니까?")) {
+            window.location.href = "/signIn";
+        }
+    }
+    function check(){
+        if (!confirm("정말 회원가입을 하시겠습니까?")) {
+            event.preventDefault(); // 폼 제출 중단
+        }
+    }
 </script>
 </body>
 </html>
