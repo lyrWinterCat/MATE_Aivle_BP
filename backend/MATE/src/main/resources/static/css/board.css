@@ -16,7 +16,7 @@
     border-radius: 4px;
 }
 .search-bar button {
-    background-color: #FFCC00;
+    background-color: #5b5fc7;;
     color: #fff;
     font-size: 16px;
     font-weight: bold;
@@ -26,7 +26,9 @@
     cursor: pointer;
 }
 .search-bar button:hover {
-    background-color: #FFBB00;
+    transition: background-color 0.3s ease-in-out;
+    background-color: #3b3e8f;
+    color:#ffffff
 }
 
 /* 테이블 컨테이너 */
@@ -167,7 +169,7 @@ table th {
     background-color: #3b3e8f;
     color: #fff;
 }
-/*userFix 정정 요청하기 버튼*/
+/*userFix 정정 요청하기 버튼, adminFix 조회버튼*/
 .write-button {
     background-color: #5b5fc7;
     color: #fff;

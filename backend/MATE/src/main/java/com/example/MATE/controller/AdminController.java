@@ -54,7 +54,7 @@ public class AdminController {
         String filepath = (feedback.getFilepath() != null) ? feedback.getFilepath() : "";
         model.addAttribute("filepath", filepath);
         model.addAttribute("content", feedback.getContent());
-
+        model.addAttribute("status",feedback.getStatus());
         String response = adminService.getCommentByFeedbackId(feedbackId)
                 .map(AdminFeedbackComments::getContent)
                 .orElse("");
