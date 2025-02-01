@@ -68,7 +68,9 @@ public class SecurityConfig {
                         "/static/**",  // static 리소스 전체 추가
                         "/aboutus",
                         "/admin/**",
-                        "/user/**"
+                        "/user/**",
+                        "/meeting/**",
+                        "/toxic/**"
                         //공통인증에서 /user/**에 권한부여해도 CSRF가 설정되어있으면 접근이 안되어 일단 둘다 써둠
                 )
         );
@@ -87,8 +89,12 @@ public class SecurityConfig {
                         "/static/**",  // static 리소스 전체 추가
                         "/aboutus"
                 ).permitAll()
-                .requestMatchers("/user/**").hasAuthority("USER")
-                .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                .requestMatchers("/user/**",
+                        "/toxic/**",
+                        "/meeting/**").hasAuthority("USER")
+                .requestMatchers("/admin/**",
+                        "/toxic/**",
+                        "/meeting/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
         );
         //일반로그인 인증

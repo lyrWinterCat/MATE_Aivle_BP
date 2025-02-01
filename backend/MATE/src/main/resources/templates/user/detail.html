@@ -89,25 +89,39 @@
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <h2>독성발언 조회</h2>
-        <!-- 검색창 -->
-        <div class="search-container">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="searchInput" placeholder="Search..." onkeyup="filterList()">
-        </div>
-        <!-- 리스트 -->
-        <ul id="toxicity-list" class="toxicity-list">
 
-            <li onclick="selectToxicity('욕설')">욕설</li>
-            {{#toxicityList}}
-            {{/toxicityList}}
+        <!-- 1. 미팅 선택 -->
+        <div class="select-container">
+            <label for="meetingSelect">미팅 선택:</label>
+            <select id="meetingSelect" onchange="fetchToxicityLogs()">
+                <option value="">미팅을 선택하세요</option>
+                <option value="1">미팅 A</option>
+                <option value="2">미팅 B</option>
+                <option value="3">미팅 C</option>
+                <option value="4">미팅 D</option>
+            </select>
+        </div>
+
+        <!-- 2. 검색창 (미팅 선택 전에는 숨김) -->
+        <div id="search-container" class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="독성 발언 검색..." onkeyup="filterList()">
+        </div>
+
+        <!-- 3. 독성 발언 리스트 (미팅 선택 전에는 숨김) -->
+        <ul id="toxicity-list" class="toxicity-list">
+            <!-- 독성 발언 리스트가 여기에 추가됨 -->
         </ul>
+
+        <!-- 4. 선택 완료 버튼 -->
+        <button id="confirmSelection" onclick="confirmToxicity()" style="display: none;">선택 완료</button>
     </div>
 </div>
 <!-- 메인 박스 -->
 <div class="container">
     {{#feedback}} <!-- /user/userFix/detail 시 보이는 form -->
     <form>
-        <input type="hidden" name="userId" value="{{userId}}">
+        <input type="hidden" name="userId" value="{{userId}}" id="userId">
         <div class="read-group">
             <label for="title">제목</label>
             <input type="text" id="title" name="title" value="{{title}}" readonly>
@@ -135,7 +149,7 @@
     {{/feedback}}
     {{^feedback}} <!-- /user/userFix/write 시 보이는 form -->
     <form action="../userFix/write" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="userId" value="{{userId}}">
+        <input type="hidden" name="userId" id="userId" value="{{userId}}">
         <div class="form-group">
             <label for="title">제목</label>
             <input type="text" id="title" name="title" placeholder="제목을 입력하세요">
@@ -146,7 +160,8 @@
         </div>
         <div class="form-group">
             <label for="toxicityId">독성발언 조회</label>
-            <input type="text" id="toxicityId" name="toxicityId" placeholder="독성발언을 선택하세요">
+            <input type="text" id="toxicityContent" name="toxicityContent" placeholder="독성발언을 선택하세요">
+            <input type="hidden" id="toxicityId" name="toxicityId">
             <button type="button" id="searchBtn" onclick="openModal()" class="search-btn">조회</button>
         </div>
         <div class="file-upload">
@@ -181,58 +196,163 @@
     function goback(){
         window.location.href = "/user/userFix";
     }
+    /* 모달 */
 
+    // 모달 열기
     function openModal() {
-        const modal = document.getElementById("modal");
-        modal.style.display = "flex";  // 중앙 정렬을 위해 flex 사용
-
-        // 애니메이션 적용을 위해 setTimeout 사용
-        setTimeout(() => {
-            modal.classList.add("show");
-        }, 10);
+        document.getElementById("modal").style.display = "flex";
+        loadMeetings(); // 미팅 리스트 로드
     }
 
+    // 모달 닫기
     function closeModal() {
-        const modal = document.getElementById("modal");
-        modal.classList.remove("show");
-
-        // 애니메이션 종료 후 모달 숨김 처리
-        setTimeout(() => {
-            modal.style.display = "none";
-        }, 300);
+        document.getElementById("modal").style.display = "none";
     }
 
-    function filterList() {
-        let input = document.getElementById("searchInput").value.toLowerCase();
-        let items = document.getElementById("toxicity-list").getElementsByTagName("li");
+    // 미팅 목록 로드 (백엔드 API 호출)
+    function loadMeetings() {
+        const userId = document.getElementById("userId");
+        console.log(">>> userId:"+userId.value);
+        //ajax 요청(javascript)
+        fetch("/meeting/user/meetingInfo",{
+            method:"POST",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify({userId : userId.value})
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("미팅 정보 : ", data);
+            updateMeetingDropdown(data);
+        })
+        .catch(error => console.error("미팅 데이터 로드 실패:", error));
+    }
+    //미팅리스트 셋팅
+    function updateMeetingDropdown(meetings){
+        const meetingSelect = document.getElementById("meetingSelect");
+        // 기존 옵션 초기화 (첫 번째 기본 옵션 제외)
+        meetingSelect.innerHTML = '<option value="">미팅을 선택하세요</option>';
 
-        for (let i = 0; i < items.length; i++) {
-            let text = items[i].textContent.toLowerCase();
-            if (text.includes(input)) {
-                items[i].style.display = "";
-            } else {
-                items[i].style.display = "none";
-            }
+        meetings.forEach(meeting => {
+            const option = document.createElement("option");
+            option.value = meeting.meetingId; // 미팅 ID
+            option.textContent = meeting.meetingName; // 미팅 이름
+            meetingSelect.appendChild(option);
+        });
+
+        console.log("미팅 드롭다운이 업데이트되었습니다:", meetings);
+    }
+    // 특정 미팅의 독성 발언 조회
+    function fetchToxicityLogs() {
+        const userId = document.getElementById("userId").value;
+        const meetingId = document.getElementById("meetingSelect").value;
+        const searchContainer = document.getElementById("search-container");
+        console.log(">>> searchContainer"+searchContainer.style.display);
+        const toxicityList = document.getElementById("toxicity-list");
+        const confirmButton = document.getElementById("confirmSelection");
+        //선택 미팅ID
+        console.log(">>> meetingId : "+meetingId);
+
+        if (!meetingId) {
+            // 미팅을 선택하지않을 경우 UI 초기화
+            resetToxicityList();
+            return;
         }
+
+        // 미팅을 선택하면 검색창, 리스트, 버튼 보이기
+        searchContainer.style.display = "flex";
+        toxicityList.style.display = "block";
+        confirmButton.style.display = "block";
+
+        //독성 발언 리스트 가져오기
+        fetch("/toxic/userToxicLog",{
+            method : "POST",
+            headers : {"Content-Type" : "application/json"},
+            body : JSON.stringify({meetingId : meetingId, userId: userId})
+        })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                    return;
+                }
+                if(!response.ok){
+                    throw new Error(`서버 응답 오류 : ${response.status}`); //404
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(">>> 독성발언 조회 결과 : ",data);
+                updateToxicityList(data);
+            })
+            .catch(error =>{
+                console.error("독성 발언 데이터 로드 실패:", error);
+                resetToxicityList();
+            });
+
+    }
+    //독성리스트 셋팅
+    function updateToxicityList(toxicityLogs){
+        const listContainer = document.getElementById("toxicity-list");
+        listContainer.innerHTML = ""; //기존 목록 비우기
+        console.log(">>> updateToxicityList", toxicityLogs);
+
+        if(!toxicityLogs || toxicityLogs.length === 0){
+            listContainer.innerHTML = "<li class='empty-message'>조회된 독성 발언이 없습니다.</li>";
+            return;
+        }
+
+        toxicityLogs.forEach( log => {
+            console.log(">> 리스트 생성",log.speechContent);
+            const listItem = document.createElement("li");
+            listItem.id = "txNum"+log.toxicityId;
+            listItem.textContent = log.speechTimestamp+" / "+log.speechContent; //독성발언리스트표시
+            listItem.classList.add("toxicity-item");
+
+            listItem.addEventListener("click",function(){
+                selectToxicity(this);
+            });
+            listContainer.appendChild(listItem);
+        });
+    }
+    //독성 리스트 초기화
+    function resetToxicityList() {
+        document.getElementById("search-container").style.display = "none";
+        document.getElementById("toxicity-list").style.display = "none";
+        document.getElementById("confirmSelection").style.display = "none";
+        document.getElementById("toxicity-list").innerHTML = "";
+    }
+    // 독성 발언 검색 필터
+    function filterList() {
+        const query = document.getElementById("searchInput").value.toLowerCase();
+        document.querySelectorAll("#toxicity-list li").forEach(item => {
+            item.style.display = item.textContent.toLowerCase().includes(query) ? "" : "none";
+        });
     }
 
-    function selectToxicity(text) {
-        let tagContainer = document.getElementById("selectedTags");
-
-        // 중복 선택 방지
-        if (Array.from(tagContainer.children).some(tag => tag.textContent.includes(text))) return;
-
-        // 태그 생성
-        /*let tag = document.createElement("div");
-        tag.className = "tag";
-        tag.innerHTML = `${text} <span class="remove" onclick="removeTag(this)">×</span>`;
-
-        tagContainer.appendChild(tag);*/
+    // 독성 발언 선택
+    let selectedContent = null;
+    let selectedId = null;
+    function selectToxicity(element) {
+        document.querySelectorAll("#toxicity-list li").forEach(item => item.classList.remove("selected"));
+        //현재 클릭된 요소에 "selected" 클래스 추가
+        element.classList.add("selected");
+        //선택된 텍스트 저장
+        selectedContent = element.textContent;
+        selectedId = element.id;
+        console.log(">>> 선택된 독성 번호:", selectedId);
+        console.log(">>> 선택된 독성 발언:", selectedContent);
     }
 
-    function removeTag(element) {
-        element.parentNode.remove();
+    // 선택 완료
+    function confirmToxicity() {
+        if (!selectedContent && !selectedId) {
+            alert("독성 발언을 선택하세요!");
+            return;
+        }
+        document.getElementById("toxicityContent").value = selectedContent;
+        document.getElementById("toxicityId").value = selectedId.replace("txNum","");
+        closeModal();
     }
 </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </html>
