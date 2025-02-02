@@ -121,7 +121,11 @@ public class UserController {
     //정정게시판 이동
     @GetMapping("/userFix")
     @PreAuthorize("hasAuthority('USER')")
-    public String userFix(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page){
+    public String userFix(Model model, HttpSession session,
+                          @RequestParam(defaultValue = "0") int page,
+                          @RequestParam(required = false) String startDate,
+                          @RequestParam(required = false) String endDate,
+                          @RequestParam(required = false) String status) {
         //현재 사용자 조회
         String email = SecurityUtils.getCurrentUserEmail();
         if (email != null) {
@@ -132,9 +136,13 @@ public class UserController {
                 model.addAttribute("userId", userId);
                 model.addAttribute("userName", user.getName());
 
-                // 추후에 Admin 모델을 UserFix 로 변경해야 할 것 같습니다.
+                model.addAttribute("startDate", startDate !=null ? startDate : "");
+                model.addAttribute("endDate", endDate !=null ? endDate : "");
+                model.addAttribute("status", status !=null ? status : "");
+
                 // 현재 사용자의 정정게시글 조회
-                Page<AdminFeedbackDto> userFixes = adminService.getFeedbackByUserId(userId, PageRequest.of(page, 10));
+                // Page<AdminFeedbackDto> userFixes = adminService.getFeedbackByUserId(userId, PageRequest.of(page, 10));
+                Page<AdminFeedbackDto> userFixes = adminService.getFeedbackByUserIdWithFilter(userId, startDate, endDate, status, PageRequest.of(page, 10));
                 model.addAttribute("userFixes", userFixes);
 
                 PaginationUtils.addPaginationAttributes(model, userFixes, page);

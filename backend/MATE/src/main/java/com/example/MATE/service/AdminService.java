@@ -17,6 +17,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -53,11 +55,37 @@ public class AdminService {
     }
 
     // 한 유저의 정정 요청을 모두 가져옴
-    public Page<AdminFeedbackDto> getFeedbackByUserId(Integer userId, Pageable pageable) {
-        //최신순 조회
-        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdAt").descending());
-        return adminRepository.findByUser_UserId(userId, sortedPageable)
-                .map(AdminFeedbackDto::fromEntity);
+    // 클라이언트 사이드 필터링 -> 서버 사이드 필터링 수정 (현재 페이지 내에서만 필터링 되던 것을 DB 모든 자료 내에서 필터링해서 새로 pagination 되도록 수정)
+    public Page<AdminFeedbackDto> getFeedbackByUserIdWithFilter(Integer userId, String startDateStr, String endDateStr, String statusStr, Pageable pageable) {
+        LocalDateTime startDate = null;
+        LocalDateTime endDate = null;
+
+        // 입력받은 startDate 를 LocalDateTime 으로 변환 (하루의 시작은 00:00:00)
+        if (startDateStr != null && !startDateStr.isEmpty()) {
+            // LocalDate 타입으로 받아와야 오류없이 yyyy-MM-dd 타입으로 저장 가능
+            LocalDate localStart = LocalDate.parse(startDateStr);
+            startDate = localStart.atStartOfDay();
+        }
+
+        // 마찬가지로 endDate를 LocalDateTime으로 변환 (하루의 끝은 23:59:59)
+        if (endDateStr != null && !endDateStr.isEmpty()) {
+            // LocalDate 타입으로 받아와야 오류없이 yyyy-MM-dd 타입으로 저장 가능
+            LocalDate localEnd = LocalDate.parse(endDateStr);
+            endDate = localEnd.atTime(23, 59, 59);
+        }
+
+        // status 변환 (String -> enum)
+        AdminFeedback.FeedbackStatus status = null;
+        if (statusStr != null && !statusStr.isEmpty()) {
+            try {
+                status = AdminFeedback.FeedbackStatus.valueOf(statusStr);
+            } catch (IllegalArgumentException e) {
+                System.out.println(">>> [AdminService] 잘못된 status 값: " + statusStr);
+            }
+        }
+
+        Page<AdminFeedback> pagedFeedbacks = adminRepository.findFeedbacksByUserIdWithFilter(userId, startDate, endDate, status, pageable);
+        return pagedFeedbacks.map(AdminFeedbackDto::fromEntity);
     }
 
     //댓글 저장

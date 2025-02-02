@@ -83,19 +83,23 @@
 <div class="subtitle-container">
     <h2>정정 게시판</h2>
 </div>
-<!-- 검색 영역 -->
-<div class="search-bar">
+
+<!-- 필터링 폼 -->
+<form id="filter-form" class="search-bar" method="get" action="/user/userFix">
     <label for="date-range">기간</label>
-    <input id="date-range" type="date">
+    <input id="date-range" type="date" name="startDate">
+    <input id="date-range-end" type="date" name="endDate">
 
     <label for="status-select">상태</label>
-    <select id="status-select" ><!--onchange="filterTable()" -->
+    <select id="status-select" name="status">
         <option value="">전체</option>
         <option value="승인">승인</option>
         <option value="신청">신청</option>
         <option value="반려">반려</option>
     </select>
-</div>
+
+    <button type="submit">조회</button>
+</form>
 
 <!-- 테이블 -->
 
@@ -124,24 +128,25 @@
             {{/userFixes}}
             </tbody>
         </table>
-        <input type="hidden" name="userId" value="{{userId}}">
+
+        <!-- 페이지네이션 -->
         <div class="pagination">
             <!-- 이전 페이지가 존재하면 이전 버튼을 생성 -->
             {{#userFixes.hasPrevious}}
-            <a href="/user/userFix?page={{previousPage}}">이전</a>
+            <a href="/user/userFix?page={{previousPage}}&startDate={{startDate}}&endDate={{endDate}}&status={{status}}">이전</a>
             {{/userFixes.hasPrevious}}
 
             <!-- 페이지 번호 버튼들 -->
             <!-- 만약 현재 페이지라면 current 클래스를 붙여서 강조해준다 -->
             {{#pageNumbers}}
-            <a href="/user/userFix?page={{pageIndex}}">
+            <a href="/user/userFix?page={{pageIndex}}&startDate={{startDate}}&endDate={{endDate}}&status={{status}}">
                 {{displayIndex}}
             </a>
             {{/pageNumbers}}
 
             <!-- 다음 페이지가 존재하면 다음 버튼을 생성 -->
             {{#userFixes.hasNext}}
-            <a href="/user/userFix?page={{nextPage}}">다음</a>
+            <a href="/user/userFix?page={{nextPage}}&startDate={{startDate}}&endDate={{endDate}}&status={{status}}">다음</a>
             {{/userFixes.hasNext}}
         </div>
     </div>
@@ -149,15 +154,30 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
+        // URL에서 필터 값 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const startDate = urlParams.get("startDate");
+        const endDate = urlParams.get("endDate");
+        const status = urlParams.get("status");
 
-        const tableRows = document.querySelectorAll('#table-body tr');
-        const dateInput = document.getElementById('date-range');
-        const statusSelect = document.getElementById('status-select');
+        // 날짜 값 설정
+        if (startDate) document.getElementById("date-range").value = startDate;
+        if (endDate) document.getElementById("date-range-end").value = endDate;
 
-        // 모든 테이블 행의 상태 셀을 가져와 스타일 추가
+        // 상태 선택 설정
+        const statusSelect = document.getElementById("status-select");
+        if (status) {
+            for (let option of statusSelect.options) {
+                if (option.value === status) {
+                    option.selected = true;
+                    break;
+                }
+            }
+        }
+
+        // 상태 컬럼 스타일 적용
         document.querySelectorAll('#table-body td:nth-child(3)').forEach(cell => {
             const status = cell.textContent.trim();
-
             if (status === '승인') {
                 cell.innerHTML = `<div class="status status-approved">${status}</div>`;
             } else if (status === '신청') {
@@ -167,48 +187,14 @@
             }
         });
 
-        //상태와 날짜를 동시에 필터링하는 함수
-        function filterTable() {
-            const selectedDate = dateInput.value; // 선택된 날짜
-            const selectedStatus = statusSelect.value; // 선택된 상태
-
-            tableRows.forEach(row => {
-                const dateCell = row.querySelector(".dateCol").textContent.trim();
-                const rowDate = dateCell.split(" ")[0];
-                const statusCell = row.querySelector(".statusCol").textContent.trim();
-
-                // 조건 1: 날짜가 없거나, 선택된 날짜와 행의 날짜가 동일
-                const matchesDate = !selectedDate || rowDate === selectedDate;
-                // 조건 2: 상태가 없거나, 선택된 상태와 행의 상태가 동일
-                const matchesStatus = !selectedStatus || statusCell === selectedStatus;
-
-                // 두 조건을 모두 충족하는 경우 표시, 그렇지 않으면 숨김
-                row.style.display = (matchesDate && matchesStatus) ? "" : "none";
-            });
-        }
-
-        // 이벤트 리스너 추가
-        dateInput.addEventListener('change', filterTable);
-        statusSelect.addEventListener('change', filterTable);
-    });
-
-    // 현재 페이지 버튼에 current 클래스를 부착하기 위한 이벤트리스너
-    document.addEventListener("DOMContentLoaded", () => {
-        // 현재 URL의 page 파라미터를 가져옴
-        const urlParams = new URLSearchParams(window.location.search);
-        const currentPage = urlParams.get("page") || "0"; // 페이지가 없으면 기본값 0
-
-        // 모든 페이지네이션 링크를 가져옴
-        const pageLinks = document.querySelectorAll(".pagination a");
-
-        pageLinks.forEach(link => {
-            const pageParam = new URL(link.href).searchParams.get("page");
-            if (pageParam === currentPage) {
-                link.classList.add("current"); // 현재 페이지에 'current' 클래스 추가
+        // 현재 페이지 버튼 강조
+        const currentPage = urlParams.get("page") || "0";
+        document.querySelectorAll(".pagination a").forEach(link => {
+            if (new URL(link.href).searchParams.get("page") === currentPage) {
+                link.classList.add("current");
             }
         });
     });
-
 </script>
 </body>
 </html>
