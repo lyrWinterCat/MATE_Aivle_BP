@@ -92,15 +92,20 @@
 <div class="subtitle-container">
     <h2>마이페이지</h2>
 </div>
-<div class="search-bar">
+
+<!-- 필터링 폼 (GET 방식으로 서버에 검색 조건 전달) -->
+<form id="filter-form" class="search-bar" method="get" action="/user/meetingList">
     <label for="employee-name">사원명</label>
-    <input id="employee-name" type="text" placeholder="입력하세요">
-    <label for="department-name">부서명</label>
-    <input id="department-name" type="text" placeholder="입력하세요">
-    <label for="date-range">기간</label>
-    <input id="date-range" type="date">
-    <button>조회</button>
-</div>
+    <input id="employee-name" name="employeeName" type="text" placeholder="입력하세요">
+
+    <label for="start-date">기간</label>
+    <input id="start-date" name="startDate" type="date">
+
+    <label for="end-date">기간</label>
+    <input id="end-date" name="endDate" type="date">
+
+    <button type="submit">조회</button>
+</form>
 
 <div class="table-container">
     <div>
@@ -126,20 +131,20 @@
         <div class="pagination">
             <!-- 이전 페이지가 존재하면 이전 버튼을 생성 -->
             {{#meetingLogs.hasPrevious}}
-            <a href="/user/meetingList?page={{previousPage}}">이전</a>
+            <a href="/user/meetingList?page={{previousPage}}&employeeName={{employeeName}}&startDate={{startDate}}&endDate={{endDate}}">이전</a>
             {{/meetingLogs.hasPrevious}}
 
             <!-- 페이지 번호 버튼들 -->
             <!-- 만약 현재 페이지라면 current 클래스를 붙여서 강조해준다 -->
             {{#pageNumbers}}
-            <a href="/user/meetingList?page={{pageIndex}}">
+            <a href="/user/meetingList?page={{pageIndex}}&employeeName={{employeeName}}&startDate={{startDate}}&endDate={{endDate}}">
                 {{displayIndex}}
             </a>
             {{/pageNumbers}}
 
             <!-- 다음 페이지가 존재하면 다음 버튼을 생성 -->
             {{#meetingLogs.hasNext}}
-            <a href="/user/meetingList?page={{nextPage}}">다음</a>
+            <a href="/user/meetingList?page={{nextPage}}&employeeName={{employeeName}}&startDate={{startDate}}&endDate={{endDate}}">다음</a>
             {{/meetingLogs.hasNext}}
         </div>
     </div>
@@ -180,6 +185,13 @@
         // 현재 URL의 page 파라미터를 가져옴
         const urlParams = new URLSearchParams(window.location.search);
         const currentPage = urlParams.get("page") || "0"; // 페이지가 없으면 기본값 0
+        const employeeName = urlParams.get("employeeName");
+        const startDate = urlParams.get("startDate");
+        const endDate = urlParams.get("endDate");
+
+        if (employeeName) document.getElementById("employee-name").value = employeeName;
+        if (startDate) document.getElementById("start-date").value = startDate;
+        if (endDate) document.getElementById("end-date").value = endDate;
 
         // 모든 페이지네이션 링크를 가져옴
         const pageLinks = document.querySelectorAll(".pagination a");
