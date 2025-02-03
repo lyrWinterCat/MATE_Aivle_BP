@@ -62,72 +62,162 @@
             cursor: pointer;
         }
 
-        .content {
+        /* 전체 화면 정렬 */
+        .container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 130px;  /* 약간 아래로 이동 */
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            padding-top: 50px;
         }
 
-        .url-section {
+        /* 카드 스타일 */
+        .meeting-card {
+            background: white;
+            padding: 60px 30px 30px;
+            border-radius: 12px;
+            border:2px solid linear-gradient(90deg, #5b5fc7, #6B2399);
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+            width: 600px;
+            position: relative;
+            overflow: hidden; /* 내부 요소가 넘치는 것 방지 */
+        }
+
+        /* 탭 버튼 컨테이너 - 카드 내부로 이동 */
+        .meeting-header {
             display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 40px;
+            width: 100%; /* 카드 전체 너비 차지 */
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
-        .url-label {
-            font-size: 24px;
-            font-weight: bold;
-            color: black;
-        }
-
-        .url-input {
-            width: 500px;
-            padding: 12px;
-            border: none;
-            border-radius: 5px;
-            font-size: 18px;
-        }
-
-        .connect-button {
-            padding: 12px 25px;
-            background-color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 18px;
+        /* 탭 버튼 기본 스타일 */
+        .tab-button {
+            flex: 1; /* 두 개의 버튼이 동일한 너비 차지 */
+            text-align: center;
+            background-color: #a2a6bd;
+            color: white;
+            border: 1px solid white;
+            padding: 12px 0;
+            border-radius: 10px 10px 0 0; /* 위쪽만 둥글게 */
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
         }
-
+        .tab-button:first-child {
+            border-radius: 10px 0 0 0; /* 왼쪽 상단만 둥글게 */
+        }
+        .tab-button:last-child {
+            border-radius: 0 10px 0 0; /* 오른쪽 상단만 둥글게 */
+        }
+        .tab-button.active {
+            background: white;
+            color: black;
+            border-bottom: none; /* 아래쪽 테두리 없앰 */
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+            z-index: 10;
+        }
+        .input-label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .input-field {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        /* 접속 버튼 */
+        .connect-button {
+            background: #5b5fc7;;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+        .connect-button:hover {
+            background:#3b3e8f;
+        }
+        /* 라디오 그룹 */
         .radio-groups {
             display: flex;
-            gap: 30px;
-            margin-top: 20px;
+            justify-content: space-between;
         }
-
+        /* 라디오 버튼 박스 */
         .radio-container {
-            background-color: white;
-            padding: 25px;
-            border-radius: 10px;
-            width: 300px;  /* 두 박스의 너비를 동일하게 설정 */
+            background: #e6e3fc;
+            padding: 20px;
+            width: 48%;
+            padding-top:1%;
         }
-
+        .radio-container .radio-title {
+            text-align:center;
+            background:#564fb0;
+            border-radius:4px;
+            color:white;
+        }
+        .radio-container:first-child {
+            border-radius: 10px 0 0 10px;
+            margin-left:3px;
+        }
+        .radio-container:last-child {
+            border-radius: 0 10px 10px 0;
+            margin-right:3px;
+        }
+        .radio-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
         .radio-option {
-            margin-bottom: 15px;
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 18px;
+            font-size: 16px;
+            margin-bottom: 8px;
         }
-
-        .radio-option:last-child {
-            margin-bottom: 0;
+        .radio-option:hover {
+            background: rgba(91, 95, 199, 0.2);
+            transform: scale(1.02);
         }
-
-        input[type="radio"] {
+        .radio-option input {
             width: 18px;
             height: 18px;
+            accent-color: #5b5fc7; /* 체크 표시 보라색 */
+        }
+        /* Select Box 기본 스타일 */
+        .select-field {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #5b5fc7; /* 보라색 테두리 */
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            outline: none;
+            appearance: none; /* 기본 드롭다운 화살표 제거 */
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%235b5fc7"><path d="M7 10l5 5 5-5H7z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            display:none;
+        }
+        .input-field{
+            border: 2px solid #5b5fc7; /* 보라색 테두리 */
+            border-radius: 8px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -155,40 +245,92 @@
     </div>
 </header>
 
-<main class="content">
-    <div class="url-section">
-        <label class="url-label">회의방 URL</label>
-        <input type="text" class="url-input" placeholder="회의방 URL을 입력하세요">
-        <button class="connect-button">접속</button>
-    </div>
-
-    <div class="radio-groups">
-        <div class="radio-container">
-            <div class="radio-option">
-                <input type="radio" id="time-10" name="time">
-                <label for="time-10">10초마다 피로도 탐지</label>
-            </div>
-            <div class="radio-option">
-                <input type="radio" id="time-20" name="time">
-                <label for="time-20">20초마다 피로도 탐지</label>
-            </div>
-            <div class="radio-option">
-                <input type="radio" id="time-30" name="time" checked>
-                <label for="time-30">30초마다 피로도 탐지(default)</label>
-            </div>
+<main class="container">
+    <div class="meeting-card">
+        <!-- 상단 탭 버튼 -->
+        <div class="meeting-header">
+            <button id="newRoom" class="tab-button active">새로 참가하기</button>
+            <button id="continueRoom" class="tab-button">이어 참가하기</button>
         </div>
-
-        <div class="radio-container">
-            <div class="radio-option">
-                <input type="radio" id="type-1" name="type">
-                <label for="type-1">일반</label>
+        <!-- 회의 제목, URL 입력 -->
+        <div class="form-group" id="meetingTitle">
+            <label class="input-label" id="meetingTitle-label">회의 제목</label>
+            <input type="text" class="input-field" id="meetingTitle-input" placeholder="회의 제목을 입력하세요">
+            <!-- 드롭다운 선택 박스 (처음에는 숨김) -->
+            <select class="select-field" id="meetingTitle-select">
+                <option value="" disabled selected>회의를 선택하세요</option>
+                <option value="회의1">회의 1</option>
+                <option value="회의2">회의 2</option>
+                <option value="회의3">회의 3</option>
+            </select>
+        </div>
+        <div class="form-group" id="meetingUrl">
+            <label class="input-label" id="meetingUrl-label">회의방 URL</label>
+            <input type="text" class="input-field" id="meetingUrl-input" placeholder="회의방 URL을 입력하세요">
+        </div>
+        <div class="form-group">
+            <button class="connect-button">접속</button>
+        </div>
+        <!-- 라디오 버튼 그룹 -->
+        <div class="radio-groups">
+            <div class="radio-container">
+                <h3 class="radio-title">피로도 탐지 주기</h3>
+                <label class="radio-option">
+                    <input type="radio" name="time" id="10second" value="10">
+                    <span>10초마다 피로도 탐지</span>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="time" id="20second" value="20">
+                    <span>20초마다 피로도 탐지</span>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="time" id="30second" value="30" checked>
+                    <span>30초마다 피로도 탐지 (default)</span>
+                </label>
             </div>
-            <div class="radio-option">
-                <input type="radio" id="type-2" name="type" checked>
-                <label for="type-2">기록자용</label>
+
+            <div class="radio-container">
+                <h3 class="radio-title">회의 모드</h3>
+                <label class="radio-option">
+                    <input type="radio" name="mode" id="general" value="general">
+                    <span>일반</span>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="mode" id="record" value="record" checked>
+                    <span>기록자용</span>
+                </label>
             </div>
         </div>
     </div>
 </main>
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tabs = document.querySelectorAll(".tab-button");
+        const urlInputLabel = document.getElementById("meetingUrl-label");
+        const meetingTitleInput = document.getElementById("meetingTitle-input");
+        const meetingTitleSelect = document.getElementById("meetingTitle-select");
+
+        tabs.forEach(tab => {
+            tab.addEventListener("click", function () {
+                // 모든 탭에서 active 클래스 제거
+                tabs.forEach(t => t.classList.remove("active"));
+
+                // 클릭한 탭에 active 클래스 추가
+                this.classList.add("active");
+
+                // "이어 참가하기"와 "새로 참가하기"에 따른 입력 필드 변경
+                if (this.id === "newRoom") {
+                    urlInputLabel.innerText = "회의 생성 URL";
+                    meetingTitleInput.style.display = "block"; // 입력 필드 보이기
+                    meetingTitleSelect.style.display = "none"; // 셀렉트 숨기기
+                } else {
+                    urlInputLabel.innerText = "회의방 URL";
+                    meetingTitleInput.style.display = "none"; // 입력 필드 숨기기
+                    meetingTitleSelect.style.display = "block"; // 셀렉트 보이기
+                }
+            });
+        });
+    });
+</script>
 </html>
