@@ -105,6 +105,7 @@
         const meetingId = document.getElementById("meetingTitle-select").value; // 참여자가 선택한 미팅
 
         const meetingTitleInput = document.getElementById("meetingTitle-input").value.trim(); // 회의제목
+        const meetingTitleSelect = document.getElementById("meetingUrl-input-select").value.trim();
         const userId = document.getElementById("userId").value; // 현재 사용자 ID
 
         const hostUrl = "";
@@ -152,25 +153,31 @@
                         window.location.href = clientUrl; // 참여자 페이지로 이동
                     }
                 } else {
+                    //data.success가 false일때...
+                    console.log("우?");
                     alert(`회의 생성 실패: ${data.message || "알 수 없는 오류"}`);
                 }
             })
-            .catch(error => {
+            .catch(error => { //400, 500
                 console.error("회의 생성 요청 실패:", error);
-                alert(`네트워크 오류 또는 서버 문제로 회의 생성에 실패했습니다.\n오류 메시지: ${error.message}`);
+                if(error.message.includes("500")){
+                    alert("이미 저장된 회의 URL입니다.");
+                }else{
+                    alert(`네트워크 오류 또는 서버 문제로 회의 생성에 실패했습니다.\n오류 메시지: ${error.message}`);
+                }
             });
         } else {
             //DB에서 회의 가져오기
             // 이어 참가하기
             // 회의 제목, 회의URL입력확인
-            if (!meetingTitleInput) {
+            if (!meetingTitleSelect) {
                 alert("회의 제목을 선택해주세요.");
                 return;
             }
             const hostUrl = `/meeting/host/${meetingId}`;
             const clientUrl = `/meeting/client/${meetingId}`;
             if (selectedMode === "host"){
-                alert("기록자로 새 회의를 시작합니다: ");
+                alert("기록자로 회의를 이어 진행합니다.: ");
                 console.log("host > "+hostUrl);
                 window.location.href = hostUrl;
             }else{

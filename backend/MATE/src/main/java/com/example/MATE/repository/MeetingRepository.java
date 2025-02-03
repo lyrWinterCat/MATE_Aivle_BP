@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 // Meeting 정보를 불러오기 위한 query derived method 작성
 public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
@@ -25,7 +26,8 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
     // 미팅 ID 를 받아 해당 미팅의 정보를 반환
     Meeting findByMeetingId(Integer meetingId);
 
-
+    //미팅URL유무 확인
+    Boolean existsByUrl(String url);
     // 서버 사이드 필터링을 사용
     // meetingList 에 정보를 바인딩하기 위한 JPQL 문
     // 로그인한 사용자가 포함된 회의의 ID 를 모두 가져와서 그 ID에 해당하는 Meeting 객체만 가져옴

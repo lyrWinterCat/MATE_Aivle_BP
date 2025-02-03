@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -52,6 +53,10 @@ public class MeetingService {
     @Transactional
     public MeetingDto createMeeting(MeetingDto meetingDto, Integer userId) {
         System.out.println("[MeetingService/createMeeting] 실행!");
+        //url 중복여부확인
+        if( meetingRepository.existsByUrl(meetingDto.getMeetingUrl()) ){
+            throw new IllegalArgumentException("이미 존재하는 회의 URL입니다. URL을 다시 확인해주세요.");
+        }
 
         //Dto-> entity 변환 후 DB 저장
         Meeting meeting = meetingDto.toEntity();
