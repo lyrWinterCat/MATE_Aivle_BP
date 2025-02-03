@@ -148,7 +148,7 @@
                         console.log("host > "+hostUrl);
                         window.location.href = hostUrl; // 기록자 페이지로 이동
                     } else {
-                        alert("참여자로 새 회의를 시작합니다: " + clientUrl);
+                        alert("참여자로 새 회의에 참가합니다. :  " + clientUrl);
                         console.log("client > "+clientUrl);
                         window.location.href = clientUrl; // 참여자 페이지로 이동
                     }
