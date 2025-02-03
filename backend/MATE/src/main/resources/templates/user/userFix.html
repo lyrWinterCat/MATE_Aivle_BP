@@ -64,10 +64,8 @@
 </head>
 <body>
 <header>
-    <div class="header-left">
-        <a href="/user/userMain">
-            <img src="/img/logo.png" alt="Mate Logo" class="logo-img">
-        </a>
+    <div class="header-left" onclick="moveMain()">
+        <img src="/img/logo.png" alt="Mate Logo" class="logo-img">
         <h1>Mate</h1>
     </div>
     <div class="header-right">
@@ -153,6 +151,9 @@
 </div>
 
 <script>
+    function moveMain(){
+        window.location.href="/user/userMain";
+    }
     document.addEventListener("DOMContentLoaded", () => {
         // URL에서 필터 값 가져오기
         const urlParams = new URLSearchParams(window.location.search);
