@@ -28,6 +28,4 @@ public class SpeechLog {
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "is_off_topic", nullable = false)
-    private Boolean isOffTopic;
 }
