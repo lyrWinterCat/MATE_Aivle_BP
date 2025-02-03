@@ -1,33 +1,9 @@
-let stompClient = null;
 let localStream = null;
-let peerConnection = null;
 let mediaRecorder;
 let audioChunks = [];
 let recordingInterval;
 let captureInterval;
 let isCaptureStopping = false;
-
-const configuration = {
-    iceServers: [
-        { urls: 'stun:stun.l.google.com:19302' }
-    ]
-};
-
-// WebSocket 연결 설정
-function connect() {
-    const socket = new SockJS('/ws-endpoint');
-    stompClient = Stomp.over(socket);
-    stompClient.connect({}, onConnected, onError);
-}
-
-function onConnected() {
-    console.log('WebSocket 연결 성공');
-    stompClient.subscribe('/topic/public', onMessageReceived);
-}
-
-function onError(error) {
-    console.error('WebSocket 연결 실패:', error);
-}
 
 // 화면 및 오디오 스트림 시작 함수
 async function startCapture() {
@@ -38,9 +14,6 @@ async function startCapture() {
         });
         document.getElementById('localVideo').srcObject = localStream;
 
-        // WebRTC 연결 초기화
-        initializePeerConnection();
-
         // 화면 캡처 및 오디오 녹음 시작
         startAudioRecording();
         startScreenCapture();
@@ -49,151 +22,12 @@ async function startCapture() {
     }
 }
 
-// WebRTC 연결 초기화
-//function initializePeerConnection() {
-//    peerConnection = new RTCPeerConnection(configuration);
-//
-//    localStream.getTracks().forEach(track => {
-//        peerConnection.addTrack(track, localStream);
-//    });
-//
-//    peerConnection.onicecandidate = (event) => {
-//        if (event.candidate) {
-//            stompClient.send("/app/ice-candidate",
-//                {},
-//                JSON.stringify({
-//                    type: 'ice-candidate',
-//                    payload: event.candidate
-//                })
-//            );
-//        }
-//    };
-//
-//    peerConnection.onconnectionstatechange = () => {
-//        console.log('Connection state:', peerConnection.connectionState);
-//    };
-//
-//    createAndSendOffer();
-//}
-
-function initializePeerConnection() {
-    peerConnection = new RTCPeerConnection(configuration);
-
-    // ICE Candidate 처리 (3번 수정사항)
-    peerConnection.onicecandidate = (event) => {
-        if (event.candidate) {
-            console.log('Sending ICE candidate:', event.candidate);
-            stompClient.send("/app/ice-candidate",
-                {},
-                JSON.stringify({
-                    type: 'ice-candidate',
-                    payload: event.candidate
-                })
-            );
-        }
-    };
-
-    // 연결 상태 모니터링 (4번 수정사항)
-    peerConnection.onconnectionstatechange = () => {
-        console.log('Connection State:', peerConnection.connectionState);
-        if (peerConnection.connectionState === 'failed') {
-            console.error('Connection failed - reinitializing');
-            // 재연결 로직 구현
-        }
-    };
-
-    peerConnection.oniceconnectionstatechange = () => {
-        console.log('ICE Connection State:', peerConnection.iceConnectionState);
-    };
-
-    createAndSendOffer();
-}
-
-async function createAndSendOffer() {
-    try {
-        const offer = await peerConnection.createOffer();
-        await peerConnection.setLocalDescription(offer);
-
-        if (stompClient && stompClient.connected) {
-            stompClient.send("/app/signal",
-                {},
-                JSON.stringify({
-                    type: 'offer',
-                    payload: offer
-                })
-            );
-        } else {
-            console.error('STOMP client not connected');
-            // 재연결 시도
-            connect();
-        }
-    } catch (error) {
-        console.error('Error creating offer:', error);
-    }
-}
-async function onMessageReceived(payload) {
-    const message = JSON.parse(payload.body);
-
-    switch(message.type) {
-        case 'answer':
-            try {
-                await peerConnection.setRemoteDescription(new RTCSessionDescription(message.payload));
-            } catch (error) {
-                console.error('Error handling answer:', error);
-            }
-            break;
-
-        case 'ice-candidate':
-            try {
-                if (message.payload) {
-                    await peerConnection.addIceCandidate(new RTCIceCandidate(message.payload));
-                }
-            } catch (error) {
-                console.error('Error adding ice candidate:', error);
-            }
-            break;
-
-        case 'viewer-ready':
-            if (peerConnection && localStream) {
-                createAndSendOffer();
-            }
-            break;
-    }
-}
-
 function sanitizeFilename(filename) {
     // 유효하지 않은 문자를 '_'로 대체
     return filename.replace(/[<>:"/\\|?*]/g, '_');
 }
 
-//// 화면 캡쳐 시작
-//function startScreenCapture() {
-//    const video = document.getElementById('localVideo');
-//    const canvas = document.createElement('canvas');
-//    const context = canvas.getContext('2d');
-//
-//    captureInterval = setInterval(() => {
-//        if (video.videoWidth === 0 || video.videoHeight === 0) return;
-//
-//        canvas.width = video.videoWidth;
-//        canvas.height = video.videoHeight;
-//        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-//
-//        canvas.toBlob((blob) => {
-//            const url = URL.createObjectURL(blob);
-//            const a = document.createElement('a');
-//            a.style.display = 'none';
-//            a.href = url;
-//            a.download = `screenshot-${new Date().toISOString()}.png`;
-//            document.body.appendChild(a);
-//            a.click();
-//            setTimeout(() => {
-//                document.body.removeChild(a);
-//                window.URL.revokeObjectURL(url);
-//            }, 100);
-//        }, 'image/png');
-//    }, 30000);
-//}
+// 화면 캡처 시작
 function startScreenCapture() {
     const video = document.getElementById('localVideo');
     const canvas = document.createElement('canvas');
@@ -315,52 +149,7 @@ function writeString(view, offset, string) {
     }
 }
 
-// 오디오 WAV 파일 저장
-//async function saveAudioToWav(chunks) {
-//    if (!chunks || chunks.length === 0) {
-//        console.log('저장할 오디오 데이터가 없습니다.');
-//        return;
-//    }
-//
-//    try {
-//        const blob = new Blob(chunks, { type: 'audio/webm' });
-//
-//        if (blob.size === 0) {
-//            console.log('빈 오디오 데이터입니다.');
-//            return;
-//        }
-//
-//        const arrayBuffer = await blob.arrayBuffer();
-//        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-//
-//        try {
-//            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-//            const wavBlob = await convertToWav(audioBuffer);
-//
-//            const url = URL.createObjectURL(wavBlob);
-//            const a = document.createElement('a');
-//            a.style.display = 'none';
-//            a.href = url;
-//            a.download = `audio-${new Date().toISOString()}.wav`;
-//            document.body.appendChild(a);
-//            a.click();
-//            setTimeout(() => {
-//                document.body.removeChild(a);
-//                window.URL.revokeObjectURL(url);
-//            }, 100);
-//
-//            console.log('오디오 파일이 저장되었습니다.');
-//        } catch (decodeError) {
-//            console.error('오디오 디코딩 중 오류 발생:', decodeError);
-//            throw decodeError;
-//        }
-//    } catch (error) {
-//        console.error('오디오 저장 중 오류 발생:', error);
-//        throw error;
-//    }
-//}
-
-// 오디오 WAV 파일 저장 코드 fastAPI로 전송
+// 오디오 WAV 파일 저장 코드 FastAPI로 전송
 async function saveAudioToWav(chunks) {
     if (!chunks || chunks.length === 0) {
         console.log('저장할 오디오 데이터가 없습니다.');
@@ -413,11 +202,6 @@ async function saveAudioToWav(chunks) {
 function stopCapture() {
     isCaptureStopping = true;
 
-    if (peerConnection) {
-        peerConnection.close();
-        peerConnection = null;
-    }
-
     stopScreenCapture();
     stopAudioRecording();
 }
@@ -436,17 +220,10 @@ function stopAudioRecording() {
     if (mediaRecorder && mediaRecorder.state === 'recording') {
         mediaRecorder.stop();
     }
-
-    if (stompClient) {
-        stompClient.disconnect();
-    }
 }
 
 // 이벤트 리스너 설정
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('startButton').addEventListener('click', () => {
-        connect();
-        startCapture();
-    });
+    document.getElementById('startButton').addEventListener('click', startCapture);
     document.getElementById('stopButton').addEventListener('click', stopCapture);
 });
