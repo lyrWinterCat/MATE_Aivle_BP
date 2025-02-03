@@ -2,3 +2,8 @@ api_keys.json
 voices/
 crt.pem
 key.pem
+voice/
+*.wav
+*.png
+huggingFace_token.txt
+my_openai_api.txt
