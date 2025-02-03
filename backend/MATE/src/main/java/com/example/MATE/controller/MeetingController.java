@@ -32,24 +32,6 @@ public class MeetingController {
         return "meeting/client";
     }
 
-
-    @GetMapping("/view")
-    public String meetingView(){
-        return "meeting/view";
-    }
-
-    @MessageMapping("/signal")
-    @SendTo("/topic/public")
-    public ScreenData handleSignal(ScreenData signal) {
-        return signal;
-    }
-
-    @MessageMapping("/ice-candidate")
-    @SendTo("/topic/public")
-    public ScreenData handleIceCandidate(ScreenData candidate) {
-        return candidate;
-    }
-
     //유저의 모든 미팅 목록 조회(번호, 미팅이름)
     @PostMapping("/user/meetingInfo")
     @PreAuthorize("hasAuthority('USER')")
