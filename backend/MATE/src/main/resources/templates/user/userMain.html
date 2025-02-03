@@ -67,7 +67,7 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            height: 100vh;
+            height: 100%;
             padding-top: 50px;
         }
 
@@ -81,6 +81,7 @@
             width: 600px;
             position: relative;
             overflow: hidden; /* 내부 요소가 넘치는 것 방지 */
+            margin-top:3%;
         }
 
         /* 탭 버튼 컨테이너 - 카드 내부로 이동 */
@@ -135,11 +136,11 @@
         }
         /* 접속 버튼 */
         .connect-button {
-            background: #5b5fc7;;
+            background: linear-gradient(90deg, #5b5fc7, #6B2399);
             color: white;
             border: none;
             padding: 12px;
-            font-size: 16px;
+            font-size: 19px;
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
@@ -187,10 +188,6 @@
             font-size: 16px;
             margin-bottom: 8px;
         }
-        .radio-option:hover {
-            background: rgba(91, 95, 199, 0.2);
-            transform: scale(1.02);
-        }
         .radio-option input {
             width: 18px;
             height: 18px;
@@ -207,8 +204,6 @@
             color: #333;
             cursor: pointer;
             outline: none;
-            appearance: none; /* 기본 드롭다운 화살표 제거 */
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%235b5fc7"><path d="M7 10l5 5 5-5H7z"/></svg>');
             background-repeat: no-repeat;
             background-position: right 12px center;
             background-size: 16px;
@@ -219,14 +214,15 @@
             border-radius: 8px;
             cursor: pointer;
         }
+        #meetingUrl-input-select {
+            display:none;
+        }
     </style>
 </head>
 <body>
 <header class="header">
-    <div class="logo-section">
-        <a href="/user/userMain">
-            <img src="/img/logo.png" alt="Mate Logo" class="logo-img">
-        </a>
+    <div class="logo-section" onclick="moveMain()">
+        <img src="/img/logo.png" alt="Mate Logo" class="logo-img">
         <span class="logo-text">Mate</span>
     </div>
     <div class="nav-section">
@@ -246,6 +242,7 @@
 </header>
 
 <main class="container">
+    <input type="hidden" name="userId" id="userId" value="{{userId}}">
     <div class="meeting-card">
         <!-- 상단 탭 버튼 -->
         <div class="meeting-header">
@@ -260,16 +257,12 @@
             <select class="select-field" id="meetingTitle-select">
                 <option value="" disabled selected>회의를 선택하세요</option>
                 <option value="회의1">회의 1</option>
-                <option value="회의2">회의 2</option>
-                <option value="회의3">회의 3</option>
             </select>
         </div>
         <div class="form-group" id="meetingUrl">
             <label class="input-label" id="meetingUrl-label">회의방 URL</label>
-            <input type="text" class="input-field" id="meetingUrl-input" placeholder="회의방 URL을 입력하세요">
-        </div>
-        <div class="form-group">
-            <button class="connect-button">접속</button>
+            <input type="text" class="input-field" id="meetingUrl-input-new" value="" placeholder="회의방 URL을 입력하세요">
+            <input type="text" class="input-field" id="meetingUrl-input-select" value="" placeholder="회의방 URL을 입력하세요">
         </div>
         <!-- 라디오 버튼 그룹 -->
         <div class="radio-groups">
@@ -288,9 +281,8 @@
                     <span>30초마다 피로도 탐지 (default)</span>
                 </label>
             </div>
-
             <div class="radio-container">
-                <h3 class="radio-title">회의 모드</h3>
+                <h3 class="radio-title" id="meetingMode">회의 모드</h3>
                 <label class="radio-option">
                     <input type="radio" name="mode" id="general" value="general">
                     <span>일반</span>
@@ -301,15 +293,32 @@
                 </label>
             </div>
         </div>
+        <!-- 접속 버튼 -->
+        <div class="form-group">
+            <button class="connect-button" onclick="connectMeeting()">접속</button>
+        </div>
     </div>
 </main>
 </body>
 <script>
+    let meetingsData = [];
+    let isNewMeeting = true;
+
+    function moveMain(){
+        window.location.href="/user/userMain";
+    }
     document.addEventListener("DOMContentLoaded", function () {
+        //탭버튼 동작
         const tabs = document.querySelectorAll(".tab-button");
         const urlInputLabel = document.getElementById("meetingUrl-label");
         const meetingTitleInput = document.getElementById("meetingTitle-input");
         const meetingTitleSelect = document.getElementById("meetingTitle-select");
+        const meetingUrlInputNew = document.getElementById("meetingUrl-input-new");
+        const meetingUrlInputSelect = document.getElementById("meetingUrl-input-select");
+        const connectButton = document.querySelector(".connect-button");
+
+        const radioGeneral = document.getElementById("general");
+        const radioRecord = document.getElementById("record");
 
         tabs.forEach(tab => {
             tab.addEventListener("click", function () {
@@ -321,16 +330,111 @@
 
                 // "이어 참가하기"와 "새로 참가하기"에 따른 입력 필드 변경
                 if (this.id === "newRoom") {
-                    urlInputLabel.innerText = "회의 생성 URL";
+                    isNewMeeting = true;
+                    meetingUrlInputNew.value="";
+                    meetingUrlInputNew.style.display = "block";
+                    meetingUrlInputSelect.style.display = "none";
                     meetingTitleInput.style.display = "block"; // 입력 필드 보이기
                     meetingTitleSelect.style.display = "none"; // 셀렉트 숨기기
                 } else {
-                    urlInputLabel.innerText = "회의방 URL";
-                    meetingTitleInput.style.display = "none"; // 입력 필드 숨기기
+                    isNewMeeting = false;
+                    meetingUrlInputSelect.value="";
+                    meetingUrlInputNew.style.display = "none";
+                    meetingUrlInputSelect.style.display = "block";
+                    meetingTitleInput.style.display = "none"; // 입력 필드 보이기
                     meetingTitleSelect.style.display = "block"; // 셀렉트 보이기
+                    //회의 리스트 세팅
+                    loadMeetings();
                 }
             });
         });
     });
+    //회의목록 호출
+    function loadMeetings() {
+        const userId = document.getElementById("userId");
+        console.log(">>> userId:"+userId.value);
+        //ajax 요청(javascript)
+        fetch("/meeting/user/meetingInfo",{
+            method:"POST",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify({userId : userId.value})
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("회의 정보 : ", data);
+            updateMeetingDropdown(data);
+        })
+        .catch(error => console.error("회의 데이터 로드 실패:", error));
+    }
+    //회의 리스트 셋팅
+    function updateMeetingDropdown(meetings){
+        const meetingTitleSelect = document.getElementById("meetingTitle-select");
+
+        // 기존 옵션 초기화 (첫 번째 기본 옵션 제외)
+        meetingTitleSelect.innerHTML = '<option value="">회의를 선택하세요</option>';
+        meetingsData = meetings;
+
+        meetings.forEach(meeting => {
+            const option = document.createElement("option");
+            option.value = meeting.meetingId; // 회의 ID
+            option.textContent = meeting.meetingName; // 회의제목
+            meetingTitleSelect.appendChild(option);
+        });
+
+        console.log("회의 드롭다운이 업데이트되었습니다:");
+    }
+    //회의 선택 시 url 추가
+    document.getElementById("meetingTitle-select").addEventListener("change", function() {
+        const selectedValue = this.value; // 선택된 회의 ID
+
+        // 선택된 회의 정보를 찾아서 URL을 가져옴
+        const selectedMeeting = meetingsData.find(meeting => meeting.meetingId === Number(selectedValue));
+        if (selectedMeeting) {
+            document.getElementById("meetingUrl-input-select").value = selectedMeeting.meetingUrl;
+        } else {
+            console.warn("선택된 회의 정보를 찾을 수 없습니다.");
+            document.getElementById("meetingUrl-input-select").value = ""; // URL 초기화
+        }
+    });
+    //접속 버튼 클릭 시
+    function connectMeeting(){
+        const selectedMode = document.querySelector('input[name="mode"]:checked').value;
+        const meetingUrlInputNew = document.getElementById("meetingUrl-input-new").value.trim();
+        const meetingUrlInputSelect = document.getElementById("meetingUrl-input-select").value.trim();
+        const meetingId = document.getElementById("meetingTitle-select").value; // 참여자가 선택한 미팅
+
+        if (isNewMeeting) {
+            //새 회의 DB 저장
+            //...
+            // 새로 참가하기
+            if (selectedMode === "record") {
+                if (!meetingUrlInputNew) {
+                    alert("새 회의를 만들려면 회의 생성 URL을 입력해주세요.");
+                    return;
+                }
+                alert("기록자로 새 회의를 시작합니다: " + meetingUrlInputNew);
+                window.location.href = "/meeting/host";
+            } else {
+                alert("참여자로 새 회의를 시작합니다.");
+                window.location.href = "/meeting/client";
+            }
+        } else {
+            //DB에서 회의 가져오기
+            // 이어 참가하기
+            if (selectedMode === "record"){
+                if (!meetingUrlInputSelect) {
+                    alert("이어 참가할 회의를 선택하세요.");
+                    return;
+                }
+                alert("기록자로 새 회의를 시작합니다: " + meetingUrlInputSelect);
+                window.location.href = "/meeting/host";
+            }else{
+                alert(`참여자로 이어 참가합니다: 회의 ID ${meetingId}`);
+                window.location.href = "/meeting/client";
+            }
+        }
+    }
 </script>
 </html>
