@@ -49,6 +49,34 @@ public class AdminService {
         return pagedFeedbacks.map(AdminFeedbackDto::fromEntity);
     }
 
+    public Page<AdminFeedbackDto> getFeedbackListSSF(String employeeName, String startDate, String endDate, String statusStr, Pageable pageable) {
+        LocalDateTime startDateTime = null;
+        LocalDateTime endDateTime = null;
+
+        // 하루의 시작은 00:00:00
+        if (startDate != null && !startDate.isEmpty()) {
+            startDateTime = LocalDate.parse(startDate).atStartOfDay();
+        }
+
+        // 하루의 끝은 23:59:59
+        if (endDate != null && !endDate.isEmpty()) {
+            endDateTime = LocalDate.parse(endDate).atTime(23, 59, 59);
+        }
+
+        // status 변환 (String -> enum)
+        AdminFeedback.FeedbackStatus status = null;
+        if (statusStr != null && !statusStr.isEmpty()) {
+            try {
+                status = AdminFeedback.FeedbackStatus.valueOf(statusStr);
+            } catch (IllegalArgumentException e) {
+                System.out.println(">>> [AdminService] 잘못된 status 값: " + statusStr);
+            }
+        }
+
+        Page<AdminFeedback> feedbacks = adminRepository.findFeedbackListSSF(employeeName, startDateTime, endDateTime, status, pageable);
+        return feedbacks.map(AdminFeedbackDto::fromEntity);
+    }
+
     public AdminFeedback getFeedbackById(Integer feedbackId) {
         return adminRepository.findById(Long.valueOf(feedbackId))
                 .orElseThrow(() -> new IllegalArgumentException("해당 피드백을 찾을 수 없습니다: " + feedbackId));
