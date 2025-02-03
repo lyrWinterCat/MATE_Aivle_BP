@@ -51,6 +51,7 @@ public class UserController {
             if (userOptional.isPresent()) { //DB에 있음
                 User user = userOptional.get();
                 System.out.println(">>> [UserController/userMain] "+user.getName());
+                model.addAttribute("userId",user.getUserId());
                 model.addAttribute("userName", user.getName());
                 //model.addAttribute("userRole", user.getRole().name());
             }
