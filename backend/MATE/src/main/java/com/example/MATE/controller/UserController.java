@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -68,7 +69,11 @@ public class UserController {
     // 현재 로그인한 유저가 참여한 모든 회의를 보여주는 페이지
     @GetMapping("/meetingList")
     @PreAuthorize("hasAuthority('USER')")
-    public String meetingList(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page){
+    public String meetingList(Model model, HttpSession session,
+                              @RequestParam(defaultValue = "0") int page,
+                              @RequestParam(required = false) String employeeName,
+                              @RequestParam(required = false) String startDate,
+                              @RequestParam(required = false) String endDate, Pageable pageable){
 
         //세션에서 사용자 메일가져오기
         String email = SecurityUtils.getCurrentUserEmail();
@@ -83,8 +88,12 @@ public class UserController {
                 model.addAttribute("userName", user.getName());
 
                 //참여 미팅 로그
-                Page<MeetingLogDto> meetingLogs = userService.getMeetingLogsWithPaging(userId, PageRequest.of(page, 10));
+                Page<MeetingLogDto> meetingLogs = userService.getMeetingLogsSSF(userId, employeeName, startDate, endDate, PageRequest.of(page, 10));
                 model.addAttribute("meetingLogs", meetingLogs);
+
+                model.addAttribute("employeeName", employeeName !=null ? employeeName : "");
+                model.addAttribute("startDate", startDate !=null ? startDate : "");
+                model.addAttribute("endDate", endDate !=null ? endDate : "");
 
                 // 이전페이지, 다음페이지, 페이지 번호 버튼 생성
                 PaginationUtils.addPaginationAttributes(model, meetingLogs, page);
@@ -141,7 +150,6 @@ public class UserController {
                 model.addAttribute("status", status !=null ? status : "");
 
                 // 현재 사용자의 정정게시글 조회
-                // Page<AdminFeedbackDto> userFixes = adminService.getFeedbackByUserId(userId, PageRequest.of(page, 10));
                 Page<AdminFeedbackDto> userFixes = adminService.getFeedbackByUserIdWithFilter(userId, startDate, endDate, status, PageRequest.of(page, 10));
                 model.addAttribute("userFixes", userFixes);
 

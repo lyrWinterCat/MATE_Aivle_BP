@@ -5,6 +5,7 @@ import com.example.MATE.dto.MeetingLogDto;
 import com.example.MATE.dto.SpeechLogDto;
 import com.example.MATE.model.*;
 import com.example.MATE.repository.AdminRepository;
+import com.example.MATE.repository.MeetingRepository;
 import com.example.MATE.repository.ToxicityLogRepository;
 import com.example.MATE.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +35,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final ToxicityLogRepository toxicityLogRepository;
     private final AdminRepository adminRepository;
+    private final MeetingRepository meetingRepository;
 
 
     //회원조회
@@ -62,6 +66,35 @@ public class UserService {
         return pagedMeetings.map(meeting -> {
             List<User> participants = meetingParticipantService.getParticipantsByMeetingId(meeting.getMeetingId()); // 한 회의의 참가자들을 모두 가져옴
             return MeetingLogDto.fromEntity(meeting, participants); // Meeting 객체 하나하나를 MeetingDto 객체로 변환 (이름 ,로 연결 / 날짜 포맷팅 등이 처리됨)
+        });
+    }
+
+    // Pagination : 현재 로그인한 유저가 참여한 미팅들의 미팅명, 시작시간, 참여자 목록 반환
+    public Page<MeetingLogDto> getMeetingLogsSSF(Integer userId, String employeeName, String startDate, String endDate, Pageable pageable) {
+        LocalDateTime startDateTime = null;
+        LocalDateTime endDateTime = null;
+
+        if (startDate != null && !startDate.isEmpty()) {
+            startDateTime = LocalDate.parse(startDate).atStartOfDay();
+        }
+
+        if (endDate != null && !endDate.isEmpty()) {
+            endDateTime = LocalDate.parse(endDate).atTime(23, 59, 59);
+        }
+
+        Page<Meeting> meetings = meetingRepository.findMeetingsByUserIdSSF(
+                userId,
+                employeeName != null ? employeeName : "",
+                startDateTime,
+                endDateTime,
+                pageable
+        );
+
+        return meetings.map(meeting -> {
+            List<User> participants = meeting.getMeetingParticipants().stream()
+                    .map(MeetingParticipant::getUser)
+                    .toList();
+            return MeetingLogDto.fromEntity(meeting, participants);
         });
     }
 
