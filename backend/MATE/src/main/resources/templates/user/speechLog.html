@@ -276,10 +276,21 @@
     <h2>로그 조회</h2>
 </div>
 <div class="filter-bar">
-    <div class="filter-buttons">
-        <button class="active" onclick="filterTable('전체', this)">전체</button>
-        <button onclick="filterTable('독성', this)">독성발언</button>
-    </div>
+    <!-- 필터링 폼 (GET 방식으로 서버에 검색 조건 전달) -->
+    <form id="filter-form" class="search-bar" method="get" action="/user/speechLog">
+        <label for="start-date">기간</label>
+        <input id="start-date" name="startDate" type="date">
+        <input id="end-date" name="endDate" type="date">
+
+        <label for="speechType-select">상태</label>
+        <select id="speechType-select" name="speechType">
+            <option value="">전체</option>
+            <option value="일반">일반</option>
+            <option value="독성">독성</option>
+        </select>
+        <button type="submit">조회</button>
+    </form>
+
 </div>
 <div class="table-container">
     <div>
@@ -293,7 +304,7 @@
                 <th>요약보기</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="table-body">
             {{#speechLogs}}
             <tr>
                 <td>{{timestamp}}</td>
@@ -337,36 +348,43 @@
     </div>
 </div>
 <script>
-    // 상태에 따라서 다른 CSS 를 적용하기 위한 이벤트리스너
     document.addEventListener("DOMContentLoaded", () => {
-        // 모든 테이블 행의 상태 셀을 가져옵니다.
-        const statusCells = document.querySelectorAll('tbody tr td:nth-child(2)');
+        // URL에서 필터 값 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const startDate = urlParams.get("startDate");
+        const endDate = urlParams.get("endDate");
+        const speechType = urlParams.get("speechType");
 
-        statusCells.forEach(cell => {
-            const status = cell.textContent.trim(); // 셀의 텍스트(상태값) 가져오기
+        // 날짜 값 설정
+        if (startDate) document.getElementById("start-date").value = startDate;
+        if (endDate) document.getElementById("end-date").value = endDate;
 
-            // 상태값에 따라 적절한 클래스와 스타일 추가
-            if (status === '일반') {
-                cell.innerHTML = `<div class="status status-normal">${status}</div>`;
-            } else if (status === '독성') {
-                cell.innerHTML = `<div class="status status-toxic">${status}</div>`;
+        // 상태 선택 설정
+        const speechTypeSelect = document.getElementById("speechType-select");
+        if (speechType) {
+            for (let option of speechTypeSelect.options) {
+                if (option.value === speechType) {
+                    option.selected = true;
+                    break;
+                }
+            }
+        }
+
+        // 상태 컬럼 스타일 적용
+        document.querySelectorAll('#table-body td:nth-child(2)').forEach(cell => {
+            const speechType = cell.textContent.trim();
+            if (speechType === '일반') {
+                cell.innerHTML = `<div class="status status-normal">${speechType}</div>`;
+            } else if (speechType === '독성') {
+                cell.innerHTML = `<div class="status status-toxic">${speechType}</div>`;
             }
         });
-    });
 
-    // 현재 페이지 버튼에 current 클래스를 부착하기 위한 이벤트리스너
-    document.addEventListener("DOMContentLoaded", () => {
-        // 현재 URL의 page 파라미터를 가져옴
-        const urlParams = new URLSearchParams(window.location.search);
-        const currentPage = urlParams.get("page") || "0"; // 페이지가 없으면 기본값 0
-
-        // 모든 페이지네이션 링크를 가져옴
-        const pageLinks = document.querySelectorAll(".pagination a");
-
-        pageLinks.forEach(link => {
-            const pageParam = new URL(link.href).searchParams.get("page");
-            if (pageParam === currentPage) {
-                link.classList.add("current"); // 현재 페이지에 'current' 클래스 추가
+        // 현재 페이지 버튼 강조
+        const currentPage = urlParams.get("page") || "0";
+        document.querySelectorAll(".pagination a").forEach(link => {
+            if (new URL(link.href).searchParams.get("page") === currentPage) {
+                link.classList.add("current");
             }
         });
     });

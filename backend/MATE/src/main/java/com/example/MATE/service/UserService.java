@@ -9,6 +9,7 @@ import com.example.MATE.repository.MeetingRepository;
 import com.example.MATE.repository.ToxicityLogRepository;
 import com.example.MATE.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.jdbc.Expectation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,10 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -98,16 +102,40 @@ public class UserService {
         });
     }
 
-    public Page<SpeechLogDto> getSpeechLogsByUserId(Integer userId, Pageable pageable) {
-        //최신순정렬
-        Pageable sortedPageable = PageRequest.of(
-                pageable.getPageNumber(),
-                pageable.getPageSize(),
-                Sort.by(Sort.Direction.DESC,"timestamp")
-        );
-        Page<SpeechLog> speechLogs = userRepository.findSpeechLogsByUserId(userId, sortedPageable);
 
-        return speechLogs.map(this::convertToSpeechLogDto);
+    // 서버 사이드 필터링
+    // 한 사람의 발화 로그를 모두 가져옴
+    public Page<Map<String, Object>> getSpeechLogsByUserIdSSF(Integer userId, String startDate, String endDate, String speechType, Pageable pageable) {
+        LocalDateTime startDateTime = null;
+        LocalDateTime endDateTime = null;
+
+        // 하루의 시작은 00:00:00
+        if (startDate != null && !startDate.isEmpty()) {
+            startDateTime = LocalDate.parse(startDate).atStartOfDay();
+        }
+
+        // 하루의 끝은 23:59:59
+        if (endDate != null && !endDate.isEmpty()) {
+            endDateTime = LocalDate.parse(endDate).atTime(23, 59, 59);
+        }
+
+        // 0번째 원소로 SpeechLog 객체가 담기고
+        // 1번째 원소로 "일반" 혹은 "독성" 이라는 문자열이 담긴다.
+        Page<Object[]> results = userRepository.findSpeechLogsByUserIdSSF(userId, startDateTime, endDateTime, speechType != null ? speechType : "", pageable);
+
+        // timestamp, userName, content, speechType 를 key-value 쌍으로 가지는 results 를 반환
+        return results.map(row -> {
+            SpeechLog speechLog = (SpeechLog) row[0];
+            String toxicity = (String) row[1]; // "일반" 혹은 "독성"
+
+            Map<String, Object> logMap = new HashMap<>();
+            logMap.put("timestamp", speechLog.getTimestamp().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            logMap.put("userName", speechLog.getUser().getName());
+            logMap.put("content", speechLog.getContent());
+            logMap.put("speechType", toxicity);
+
+            return logMap;
+        });
     }
 
     // 모든 발화로그를 가져와서 Page 에 집어넣음
