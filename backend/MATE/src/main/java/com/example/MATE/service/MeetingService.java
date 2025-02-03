@@ -17,14 +17,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class MeetingService {
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
 
     private final MeetingRepository meetingRepository;
-
-    public void broadcastScreenData(ScreenData screenData) {
-        messagingTemplate.convertAndSend("/topic/public", screenData);
-    }
 
     public List<Meeting> getAllMeetings() {
         return meetingRepository.findAllMeetings();
