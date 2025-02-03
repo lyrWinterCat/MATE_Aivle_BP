@@ -95,12 +95,21 @@ public class AdminController {
     }
 
     @GetMapping("/adminFix")
-    public String adminFix(Model model, @RequestParam(defaultValue = "0") int page) {
-        // pagination
-        int pageSize = 10; // 한 페이지에 보여줄 row 수
+    public String adminFix(Model model,
+                           @RequestParam(defaultValue = "0") int page,
+                           @RequestParam(required = false) String employeeName,
+                           @RequestParam(required = false) String startDate,
+                           @RequestParam(required = false) String endDate,
+                           @RequestParam(required = false) String status) {
 
-        Page<AdminFeedbackDto> feedbackList = adminService.getFeedbackListWithPaging(PageRequest.of(page, pageSize));
+        // Page<AdminFeedbackDto> feedbackList = adminService.getFeedbackListWithPaging(PageRequest.of(page, pageSize));
+        Page<AdminFeedbackDto> feedbackList = adminService.getFeedbackListSSF(employeeName, startDate, endDate, status, PageRequest.of(page, 10));
         model.addAttribute("feedbackList", feedbackList);
+
+        model.addAttribute("employeeName", employeeName !=null ? employeeName : "");
+        model.addAttribute("startDate", startDate !=null ? startDate : "");
+        model.addAttribute("endDate", endDate !=null ? endDate : "");
+        model.addAttribute("status", status !=null ? status : "");
 
         // 이전페이지, 다음페이지, 페이지 번호 버튼 생성
         PaginationUtils.addPaginationAttributes(model, feedbackList, page);
