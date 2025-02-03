@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -73,7 +74,7 @@ public class UserController {
                               @RequestParam(defaultValue = "0") int page,
                               @RequestParam(required = false) String employeeName,
                               @RequestParam(required = false) String startDate,
-                              @RequestParam(required = false) String endDate, Pageable pageable){
+                              @RequestParam(required = false) String endDate){
 
         //세션에서 사용자 메일가져오기
         String email = SecurityUtils.getCurrentUserEmail();
@@ -105,7 +106,11 @@ public class UserController {
     //마이페이지 로그
     @GetMapping("/speechLog")
     @PreAuthorize("hasAuthority('USER')")
-    public String speechLog(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page) {
+    public String speechLog(Model model, HttpSession session,
+                            @RequestParam(defaultValue = "0") int page,
+                            @RequestParam(required = false) String startDate,
+                            @RequestParam(required = false) String endDate,
+                            @RequestParam(required = false) String speechType) {
 
         String email = SecurityUtils.getCurrentUserEmail();
         if (email != null) {
@@ -117,7 +122,7 @@ public class UserController {
                 model.addAttribute("userName", user.getName());
 
                 // 유저 ID 를 받아 해당 유저가 발화한 모든 발화 로그를 반환
-                Page<SpeechLogDto> speechLogs = userService.getSpeechLogsByUserId(userId, PageRequest.of(page, 10));
+                Page<Map<String, Object>> speechLogs = userService.getSpeechLogsByUserIdSSF(userId, startDate, endDate, speechType, PageRequest.of(page, 10));
                 model.addAttribute("speechLogs", speechLogs);
 
                 PaginationUtils.addPaginationAttributes(model, speechLogs, page);

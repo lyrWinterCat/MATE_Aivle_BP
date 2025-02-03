@@ -84,9 +84,9 @@
 
 <!-- 필터링 폼 -->
 <form id="filter-form" class="search-bar" method="get" action="/user/userFix">
-    <label for="date-range">기간</label>
-    <input id="date-range" type="date" name="startDate">
-    <input id="date-range-end" type="date" name="endDate">
+    <label for="start-date">기간</label>
+    <input id="start-date" type="date" name="startDate">
+    <input id="end-date" type="date" name="endDate">
 
     <label for="status-select">상태</label>
     <select id="status-select" name="status">
@@ -162,8 +162,8 @@
         const status = urlParams.get("status");
 
         // 날짜 값 설정
-        if (startDate) document.getElementById("date-range").value = startDate;
-        if (endDate) document.getElementById("date-range-end").value = endDate;
+        if (startDate) document.getElementById("start-date").value = startDate;
+        if (endDate) document.getElementById("end-date").value = endDate;
 
         // 상태 선택 설정
         const statusSelect = document.getElementById("status-select");
