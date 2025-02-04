@@ -341,15 +341,16 @@
     <form action="/signUp" method="post">
         <div class="form-group">
             <label for="name" class="labelafter">이름</label>
-            <input type="text" id="name" name="name" placeholder="이름을 입력하세요" required>
+            <input type="text" id="name" name="name" placeholder="이름을 입력하세요" value="{{#signupName}}{{signupName}}{{/signupName}}" required>
         </div>
         <div class="form-group">
             <label for="email" class="labelafter">이메일 주소</label>
             <div style="display: flex; gap: 10px; align-items: center; width:100%;">
-                <input type="email" id="email" name="email" placeholder="이메일 주소를 입력하세요" required style="width: 320px; height: 45px; padding: 0 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box;">
+                <input type="email" id="email" name="email" placeholder="이메일 주소를 입력하세요" required style="width: 320px; height: 45px; padding: 0 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box;" value="{{#signupEmail}}{{signupEmail}}{{/signupEmail}}">
                 <button type="button" class="duplicatedButton" id="duplicatedButton" onclick="checkEmailDuplicate()">중복확인</button>
             </div>
         </div>
+        {{^signupEmail}}
         <div class="form-group">
             <label for="password" class="labelafter">비밀번호</label>
             <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
@@ -359,6 +360,7 @@
             <input type="password" id="password-confirm" name="password-confirm" placeholder="비밀번호를 재입력하세요" required oninput="validatePassword()">
             <span id="password-error" class="error-message"></span>
         </div>
+        {{/signupEmail}}
         <div class="form-group">
             <label for="department" class="labelafter">부서명</label>
             <select id="department" name="departmentName" required>
