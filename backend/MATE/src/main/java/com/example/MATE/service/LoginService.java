@@ -62,4 +62,8 @@ public class LoginService {
             throw ex;
         }
     }
+
+    public boolean isEmailDuplicated(String email){
+        return userRepository.existsByEmail(email);
+    }
 }

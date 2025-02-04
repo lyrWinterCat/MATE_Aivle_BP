@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -21,10 +22,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -103,7 +106,27 @@ public class LoginController {
         }catch (Exception ex){
             redirectAttributes.addFlashAttribute("error","회원가입에 실패하였습니다. 다시 시도해주세요.");
         }
-        return "redirect:/signIn";
+        return "redirect:/signUp";
+    }
+
+    //이메일 중복확인
+    @PostMapping("/signUp/checkEmail")
+    public ResponseEntity<?> checkEmail(@RequestBody Map<String, Object> request){
+        System.out.println("[LoginController/checkMail] 실행!");
+        String signUpEmail = (String) request.get("email");
+
+        if(signUpEmail == null || signUpEmail.trim().isEmpty()){
+            return ResponseEntity.badRequest().body("이메일을 입력해주세요.");
+        }
+
+        boolean isDuplicated = loginService.isEmailDuplicated(signUpEmail);
+        System.out.println("duplicated : "+isDuplicated);
+        if(isDuplicated){
+            return ResponseEntity.status(409).body("이미 사용 중인 이메일입니다.");
+        }else{
+            return ResponseEntity.ok("사용 가능한 이메일 입니다.");
+        }
+
     }
 
     //로그아웃

@@ -5,203 +5,328 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mate Signup</title>
     <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: linear-gradient(90deg, #5b5fc7, #6B2399);
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        height: 100vh;
-        margin: 0;
-        padding: 50px 8%;
-    }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(90deg, #5b5fc7, #6B2399);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            height: 100%;
+            margin: 0;
+            padding: 50px 8%;
+        }
 
-    /* ✅ 헤더 스타일 */
-    .header {
-        position: absolute;
-        top: 20px;
-        right: 120px; /* 🔹 살짝 왼쪽으로 이동 */
-        display: flex;
-        gap: 30px; /* 🔹 링크 간 여백 증가 */
-    }
+        /* ✅ 헤더 스타일 */
+        .header {
+            position: absolute;
+            top: 20px;
+            right: 120px; /* 🔹 살짝 왼쪽으로 이동 */
+            display: flex;
+            gap: 30px; /* 🔹 링크 간 여백 증가 */
+        }
 
-    .header a {
-        text-decoration: none;
-        font-size: 18px;
-        font-weight: 300; /* 🔹 글자 굵기 최대한 얇게 */
-        color: white;
-    }
+        .header a {
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 300; /* 🔹 글자 굵기 최대한 얇게 */
+            color: white;
+        }
 
-    .header a:hover {
-        text-decoration: underline;
-    }
+        .header a:hover {
+            text-decoration: underline;
+        }
 
-    .left-container {
-        text-align: left;
-        max-width: 50%;
+        .left-container {
+            text-align: left;
+            max-width: 50%;
 
-    }
+        }
 
-    .left-container img {
-        width: 100px;
-        height: auto;
-        vertical-align: middle;
-    }
+        .left-container img {
+            width: 100px;
+            height: auto;
+            vertical-align: middle;
+        }
 
-    .left-container h1 {
-        font-size: 80px;
-        margin: 0 0 10px 20px;
-        color: #fff;
-        font-weight: bold;
-        display: inline-block;
-        vertical-align: middle;
-    }
+        .left-container h1 {
+            font-size: 80px;
+            margin: 0 0 10px 20px;
+            color: #fff;
+            font-weight: bold;
+            display: inline-block;
+            vertical-align: middle;
+        }
 
-    .left-container p {
-        font-size: 40px;
-        margin: 20px 0;
-        color: #fff;
-        font-weight: bold;
-    }
+        .left-container p {
+            font-size: 40px;
+            margin: 20px 0;
+            color: #fff;
+            font-weight: bold;
+        }
 
-    .left-container .image {
-        margin-top: 20px;
-    }
+        .left-container .image {
+            margin-top: 20px;
+        }
 
-    .left-container .image img {
-        width: 110%;
-        max-width: 600px;
-        height: auto;
-    }
-
-    .signup-container {
-          background-color: white;
-          padding: 25px 40px;
-          border-radius: 15px;
-          box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-          text-align: left;
-          width: 400px;
-          margin-top: -30px;
-      }
-      .signup-container h2 {
-
-          font-size: 36px;
-          margin-bottom: 20px;
-          color: #333;
-          font-weight: bold;
-          text-align: center;
-      }
-      .form-group {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          margin-bottom: 12px;
-          width: 100%;
-      }
-      .form-group label {
-          font-size: 16px;
-          font-weight: bold;
-          color: #333;
-          margin-bottom: 3px;
-      }
-      .form-group input[type="text"],
-      .form-group input[type="email"],
-      .form-group input[type="password"] {
-          width: 100%;
-          padding: 12px;
-          font-size: 16px;
-          border: 1px solid #ccc;
-          border-radius: 8px;
-      }
-      .form-inline-group {
+        .left-container .image img {
+            width: 110%;
+            max-width: 600px;
+            height: auto;
+        }
+        .signup-container {
+            background-color: white;
+            padding: 25px 40px;
+            border-radius: 15px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+            text-align: left;
+            width: 400px;
+            margin-top: 20px;
+        }
+        .signup-container h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: bold;
+            text-align: center;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            width: 100%;
+        }
+        .form-group label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 3px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+        #department {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        .form-inline-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        .form-inline-group input[type="checkbox"] {
+            opacity: 0;
+            position: absolute;
+            margin-right: 10px;
+        }
+        .form-inline-group label {
           display: flex;
           align-items: center;
-          justify-content: space-between;
-          width: 100%;
-          margin-bottom: 12px;
-      }
-      .form-inline-group label {
-          font-size: 16px;
-          font-weight: bold;
-          color: #333;
-          display: flex;
-          align-items: center;
-      }
-      .form-inline-group input[type="checkbox"] {
-          margin-right: 10px;
-      }
-      .form-inline-group button {
-          padding: 5px 10px;
-          font-size: 14px;
-          background-color: #F5E6FF;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-      }
-      .form-inline-group button:hover {
-          background-color:  #F5E6FF;
-      }
-      .controlBtn {
-          width: 100%;
-          padding: 14px;
-          background-color: #333;
-          color: white;
-          border: none;
-          border-radius: 8px;
           cursor: pointer;
           font-size: 16px;
           font-weight: bold;
-      }
-      .controlBtn:hover {
-          background-color: #555;
-      }
-      .modal-overlay {
-          display: none;
-          position: fixed;
-          top: 0;
-          left: 0;
-          overflow-y: auto;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.5);
-          justify-content: center;
-          align-items: center;
-      }
-      .modal {
-          overflow-y: auto;
-          background: white;
-          max-height: 80vh;
-          padding: 20px;
-          border-radius: 10px;
-          max-width: 500px;
-          text-align: left;
-      }
-      .modal h2, .modal h3 {
           color: #333;
-      }
-      .close-btn {
-          display: block;
-          margin-top: 20px;
-          padding: 10px;
-          background-color: rgba(0, 0, 0, 0.5);
-          border: none;
-          cursor: pointer;
-          text-align: center;
-          width: 100%;
-      }
-      .btnArea {
-        display: flex;
-        flex-direction: column; /* 버튼을 위아래로 정렬 */
-        align-items: center;
-        gap: 10px; /* 버튼 간격 조정 */
-        width: 100%;
-    }
+          position: relative;
+          padding-left: 30px; /* 체크박스 공간 확보 */
+        }
 
+        .form-inline-group label::before {
+            content: "";
+            width: 20px;
+            height: 20px;
+            border: 2px solid #5b5fc7; /* 체크박스 보라색 테두리 */
+            border-radius: 5px; /* 둥글게 */
+            background-color: white;
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: all 0.3s ease-in-out;
+        }
 
+        .form-inline-group input[type="checkbox"]:checked + label::before {
+            background-color: #5b5fc7; /* 체크 시 보라색 배경 */
+            border-color: #5b5fc7;
+            content: "✔";
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            line-height: 18px;
+            font-weight: bold;
+        }
+
+        .form-inline-group label:hover::before {
+            border-color: #6f6fdf; /* 호버 시 밝은 보라색 */
+        }
+        .controlBtn {
+            width: 100%;
+            padding: 14px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .controlBtn:hover {
+            transition: background-color 0.3s ease-in-out;
+            background: linear-gradient(90deg, #5b5fc7, #6B2399);
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.show {
+          display:flex;
+        }
+        .modal {
+            background: white;
+            max-height: 80vh;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 40%;
+            text-align: left;
+        }
+        .modal-content {
+            overflow-y: auto;
+            max-height: 60vh;
+            padding: 20px;
+            text-align: left;
+        }
+        .modal h2, .modal h3 {
+            color: #333;
+        }
+        .close-btn {
+            display: block;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #5b5fc7;
+            border: none;
+            border-radius:4px;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+            font-size:17px;
+            color:white;
+        }
+        .close-btn:hover{
+            transition: background-color 0.3s ease-in-out;
+            background-color: #3b3e8f;
+        }
+        .btnArea {
+            display: flex;
+            flex-direction: column; /* 버튼을 위아래로 정렬 */
+            align-items: center;
+            gap: 10px; /* 버튼 간격 조정 */
+            width: 100%;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 13px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .footer-item {
+            margin: 0 10px;
+        }
+
+        .footer-separator {
+            color: #F7C600;
+            margin: 0 5px;
+        }
+        .duplicatedButton {
+            height: 45px; padding: 0 15px;
+            background-color: #5b5fc7;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            white-space: nowrap;
+            box-sizing:border-box;
+            color:white;
+        }
+        .duplicatedButton.checkEmail {
+            height: 45px; padding: 0 15px;
+            background-color: #3b3e8f;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            white-space: nowrap;
+            box-sizing:border-box;
+            color:white;
+        }
+        .duplicatedButton:hover {
+            transition: background-color 0.3s ease-in-out;
+            background-color: #3b3e8f;
+        }
+        .modalbtn {
+            height: 30px; padding: 0 15px;
+            background-color: #5b5fc7;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+            white-space: nowrap;
+            box-sizing:border-box;
+            color:white;
+        }
+        .modalbtn:hover {
+            transition: background-color 0.3s ease-in-out;
+            background-color: #3b3e8f;
+        }
+        .labelafter::after{
+            content: " *";
+            color: red;
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none; /* 기본적으로 숨김 */
+        }
+        .input-error {
+            border: 2px solid red !important;
+        }
     </style>
 </head>
 <body>
-
+<div id="errorMessageContainer" style="display:none;">
+    {{#errorMessage}}{{errorMessage}}{{/errorMessage}}
+</div>
 <div class="left-container">
     <img src="/img/logo.png" alt="Mate Logo">
     <h1>Mate</h1>
@@ -215,146 +340,165 @@
     <h2>회원가입</h2>
     <form action="/signUp" method="post">
         <div class="form-group">
-            <label for="name">이름</label>
-            <input type="text" id="name" name="name" required>
+            <label for="name" class="labelafter">이름</label>
+            <input type="text" id="name" name="name" placeholder="이름을 입력하세요" required>
         </div>
-        <br class="form-group">
-            <label for="email">이메일 주소</label>
-            <div style="display: flex; gap: 10px; align-items: center;">
+        <div class="form-group">
+            <label for="email" class="labelafter">이메일 주소</label>
+            <div style="display: flex; gap: 10px; align-items: center; width:100%;">
                 <input type="email" id="email" name="email" placeholder="이메일 주소를 입력하세요" required style="width: 320px; height: 45px; padding: 0 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box;">
-                <button type="button" style="height: 45px; padding: 0 15px; background-color:  #F5E6FF; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; white-space: nowrap;" onclick="checkEmailDuplicate()">중복확인</button>
+                <button type="button" class="duplicatedButton" id="duplicatedButton" onclick="checkEmailDuplicate()">중복확인</button>
             </div>
-            <div class="form-group">
-                <label for="password">PW</label>
-                <input type="password" id="password" name="password" placeholder="영문자, 숫자 포함 8자 이상" required>
-            </div>
-            <div class="form-group">
-                <label for="password-confirm">PW 확인</label>
-                <input type="password" id="password-confirm" name="password-confirm" placeholder="비밀번호를 재입력하세요" required>
-            </div>
-            <div class="form-group">
-                <label for="department">부서명</label>
-                <input type="text" id="department" name="departmentName" required>
-            </div>
-            <div class="form-inline-group">
-                <label>
-                    <input type="checkbox" id="terms" name="terms" required>
-                    [필수] 인증 약관 전체 동의
-                </label>
-                <button type="button" onclick="openModal()">전체 보기</button>
-            </div>
-            <div class="form-inline-group">
-                <label>
-                    <input type="checkbox" id="toxicity" name="toxicity" required>
-                    [필수] 발언 독성 탐지 전체 동의
-                </label>
-                <button type="button" onclick="openModal2()">전체 보기</button>
-            </div>
-            <div class="btnArea">
-                <button class="controlBtn signupBtn" type="submit" onclick="check();">회원가입</button>
-                <button class="controlBtn backBtn" type="button" onclick="goback();">로그인으로 돌아가기</button>
-            </div>
+        </div>
+        <div class="form-group">
+            <label for="password" class="labelafter">비밀번호</label>
+            <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+        </div>
+        <div class="form-group">
+            <label for="password-confirm" class="labelafter">비밀번호 확인</label>
+            <input type="password" id="password-confirm" name="password-confirm" placeholder="비밀번호를 재입력하세요" required oninput="validatePassword()">
+            <span id="password-error" class="error-message"></span>
+        </div>
+        <div class="form-group">
+            <label for="department" class="labelafter">부서명</label>
+            <select id="department" name="departmentName" required>
+                <option value="">부서를 선택하세요</option>
+            </select>
+        </div>
+        <div class="form-inline-group">
+            <input type="checkbox" id="terms" name="terms" required>
+            <label for="terms" class="labelafter">[필수] 인증 약관 전체 동의</label>
+            <button type="button" class="modalbtn" onclick="toggleModal('modalOverlay')">전체 보기</button>
+        </div>
+        <div class="form-inline-group">
+            <input type="checkbox" id="toxicity" name="toxicity" required>
+            <label for="toxicity" class="labelafter">[필수] 발언 독성 탐지 전체 동의</label>
+            <button type="button" class="modalbtn" onclick="toggleModal('modalOverlay2')">전체 보기</button>
+        </div>
+        <div class="btnArea">
+            <button class="controlBtn signupBtn" type="submit" onclick="check(event);">회원가입</button>
+            <button class="controlBtn backBtn" type="button" onclick="goback();">로그인으로 돌아가기</button>
+        </div>
     </form>
 </div>
 
 <!-- 인증 약관 모달 -->
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
-        <h2>MATE 인증 약관 동의</h2>
-        <p>개인정보보호법에 따라 MATE에 회원가입을 신청하시는 분께 아래와 같은 내용을 안내드립니다. 개인정보의 수집 및 이용목적, 보유 및 이용기간, 동의 거부 시 불이익에 대해 자세히 읽고 동의해 주시기 바랍니다.</p>
-        <h3>1. 수집하는 개인정보</h3>
-        <p>MATE는 서비스 제공 및 회원 관리 등을 위해 아래와 같은 개인정보를 수집합니다:</p>
-        <ul>
-            <li>(1) 회원가입 시 수집 항목</li>
-            <li>필수항목: 아이디, 비밀번호, 이름, 생년월일, 성별, 휴대전화번호</li>
-            <li>선택항목: 본인 확인 이메일주소</li>
-            <li>법정대리인 동의 시: 법정대리인의 이름, DI(중복가입확인정보), 휴대전화번호 또는 아이핀번호</li>
-        </ul>
-        <ul>
-            <li>(2) 서비스 이용 중 자동 수집 항목</li>
-            <li>IP 주소, 쿠키, 서비스 이용 기록, 기기 정보, 위치 정보</li>
-            <li>이미지 및 음성 검색 서비스 이용 시 이미지와 음성 데이터</li>
-        </ul>
-        <h3>2. 개인정보의 이용 목적</h3>
-        <p>MATE는 수집한 개인정보를 다음의 목적으로 이용합니다:</p>
-        <ul>
-            <li>회원 관리: 가입 의사 확인, 본인 및 연령 확인, 회원 탈퇴 의사 확인 등</li>
-            <li>서비스 제공: 맞춤형 콘텐츠 및 서비스 제공, 신규 서비스 개발, 기존 서비스 개선</li>
-            <li>안전한 환경 제공: 부정 이용 방지, 계정 보호, 보안 강화</li>
-            <li>마케팅 및 프로모션: 이벤트 정보 제공 및 참여 기회 제공</li>
-            <li>통계 분석: 서비스 이용 기록 및 접속 빈도 분석, 맞춤형 서비스 제공</li>
-        </ul>
-        <h3>3. 개인정보의 보유 및 이용 기간</h3>
-        <p>MATE는 원칙적으로 회원 탈퇴 시 수집한 개인정보를 지체 없이 파기합니다. 다만, 관련 법령에 따라 일정 기간 보관해야 하는 정보는 아래와 같이 보관됩니다:</p>
-        <ul>
-            <li>계약 및 청약철회 관련 기록: 5년</li>
-            <li>대금결제 및 재화 공급 관련 기록: 5년</li>
-            <li>소비자 불만 및 분쟁처리 관련 기록: 3년</li>
-            <li>로그인 기록: 3개월</li>
-        </ul>
-        <h3>4. 개인정보 수집 및 이용 동의 거부 권리</h3>
-        <p>이용자는 개인정보 수집 및 이용 동의를 거부할 권리가 있습니다. 그러나 필수 항목에 대한 동의를 거부할 경우, 회원가입 및 서비스 이용이 제한될 수 있습니다.</p>
-        <h3>5. 쿠키 사용 안내</h3>
-        <p>MATE는 쿠키를 통해 이용자의 서비스 환경을 최적화하고 맞춤형 서비스를 제공합니다. 쿠키 설정은 브라우저에서 변경할 수 있으며, 쿠키를 차단할 경우 일부 서비스 이용에 불편이 있을 수 있습니다.</p>
-        <p>쿠키 설정 방법:</p>
-        <ul>
-            <li>PC 브라우저: [설정] → [개인정보 및 보안] → [쿠키 설정]</li>
-            <li>모바일 브라우저: [설정] → [개인정보 보호] → [쿠키 설정]</li>
-        </ul>
-        <button class="close-btn" onclick="closeModal()">닫기</button>
+        <div class="modal-content">
+            <h2>MATE 인증 약관 동의</h2>
+            <p>개인정보보호법에 따라 MATE에 회원가입을 신청하시는 분께 아래와 같은 내용을 안내드립니다. 개인정보의 수집 및 이용목적, 보유 및 이용기간, 동의 거부 시 불이익에 대해 자세히 읽고 동의해 주시기 바랍니다.</p>
+            <h3>1. 수집하는 개인정보</h3>
+            <p>MATE는 서비스 제공 및 회원 관리 등을 위해 아래와 같은 개인정보를 수집합니다:</p>
+            <ul>
+                <li>(1) 회원가입 시 수집 항목</li>
+                <li>필수항목: 아이디, 비밀번호, 이름, 생년월일, 성별, 휴대전화번호</li>
+                <li>선택항목: 본인 확인 이메일주소</li>
+                <li>법정대리인 동의 시: 법정대리인의 이름, DI(중복가입확인정보), 휴대전화번호 또는 아이핀번호</li>
+            </ul>
+            <ul>
+                <li>(2) 서비스 이용 중 자동 수집 항목</li>
+                <li>IP 주소, 쿠키, 서비스 이용 기록, 기기 정보, 위치 정보</li>
+                <li>이미지 및 음성 검색 서비스 이용 시 이미지와 음성 데이터</li>
+            </ul>
+            <h3>2. 개인정보의 이용 목적</h3>
+            <p>MATE는 수집한 개인정보를 다음의 목적으로 이용합니다:</p>
+            <ul>
+                <li>회원 관리: 가입 의사 확인, 본인 및 연령 확인, 회원 탈퇴 의사 확인 등</li>
+                <li>서비스 제공: 맞춤형 콘텐츠 및 서비스 제공, 신규 서비스 개발, 기존 서비스 개선</li>
+                <li>안전한 환경 제공: 부정 이용 방지, 계정 보호, 보안 강화</li>
+                <li>마케팅 및 프로모션: 이벤트 정보 제공 및 참여 기회 제공</li>
+                <li>통계 분석: 서비스 이용 기록 및 접속 빈도 분석, 맞춤형 서비스 제공</li>
+            </ul>
+            <h3>3. 개인정보의 보유 및 이용 기간</h3>
+            <p>MATE는 원칙적으로 회원 탈퇴 시 수집한 개인정보를 지체 없이 파기합니다. 다만, 관련 법령에 따라 일정 기간 보관해야 하는 정보는 아래와 같이 보관됩니다:</p>
+            <ul>
+                <li>계약 및 청약철회 관련 기록: 5년</li>
+                <li>대금결제 및 재화 공급 관련 기록: 5년</li>
+                <li>소비자 불만 및 분쟁처리 관련 기록: 3년</li>
+                <li>로그인 기록: 3개월</li>
+            </ul>
+            <h3>4. 개인정보 수집 및 이용 동의 거부 권리</h3>
+            <p>이용자는 개인정보 수집 및 이용 동의를 거부할 권리가 있습니다. 그러나 필수 항목에 대한 동의를 거부할 경우, 회원가입 및 서비스 이용이 제한될 수 있습니다.</p>
+            <h3>5. 쿠키 사용 안내</h3>
+            <p>MATE는 쿠키를 통해 이용자의 서비스 환경을 최적화하고 맞춤형 서비스를 제공합니다. 쿠키 설정은 브라우저에서 변경할 수 있으며, 쿠키를 차단할 경우 일부 서비스 이용에 불편이 있을 수 있습니다.</p>
+            <p>쿠키 설정 방법:</p>
+            <ul>
+                <li>PC 브라우저: [설정] → [개인정보 및 보안] → [쿠키 설정]</li>
+                <li>모바일 브라우저: [설정] → [개인정보 보호] → [쿠키 설정]</li>
+            </ul>
+        </div>
+        <button class="close-btn" onclick="toggleModal('modalOverlay')">닫기</button>
     </div>
 </div>
 <div class="modal-overlay" id="modalOverlay2">
     <div class="modal">
-        <h2>MATE 발언 독성 탐지 서비스 이용 약관 동의</h2>
-        <p>
-            MATE 발언 독성 탐지 서비스를 이용하시기 전에, 아래의 내용을 자세히 읽고 동의해 주시기 바랍니다.
-            본 약관은 서비스 제공을 위한 정보 수집 및 이용 목적, 보유 기간, 동의 거부 시의 제한 사항 등을 포함합니다.
-        </p>
-        <h3>1. 수집하는 정보</h3>
-        <p>MATE 발언 독성 탐지 서비스는 서비스 이용을 위해 아래의 정보를 수집합니다:</p>
-        <ul>
-            <li>(1) 사용자 제공 정보</li>
-            <li>텍스트 입력 데이터(발언 내용)</li>
-            <li>선택적으로 제공된 사용자 정보(예: 닉네임, 이메일)</li>
-            <li>(2) 자동 수집 정보</li>
-            <li>서비스 이용 과정에서 발생하는 IP 주소, 기기 정보, 이용 기록 등</li>
-        </ul>
-        <h3>2. 정보의 이용 목적</h3>
-        <p>MATE는 수집한 정보를 다음의 목적으로 사용합니다:</p>
-        <ul>
-            <li>독성 발언 탐지 결과 제공 및 경고 알림</li>
-            <li>데이터 분석을 통한 서비스 개선 및 최적화</li>
-            <li>서비스 이용 기록 분석 및 맞춤형 기능 제공</li>
-            <li>부정 사용 방지 및 보안 강화</li>
-        </ul>
-        <h3>3. 정보의 보관 및 이용 기간</h3>
-        <p>MATE는 수집된 정보를 원칙적으로 목적 달성 후 지체 없이 파기합니다. 단, 법령에서 정한 경우 및 이용자의 동의가 있는 경우에는 일정 기간 보관합니다:</p>
-        <ul>
-            <li>탐지 기록 데이터: 3개월 동안 보관 후 익명화 처리</li>
-            <li>서비스 이용 기록: 분석 및 개선 목적으로 6개월 보관 후 파기</li>
-        </ul>
-        <h3>4. 동의 거부권 및 제한 사항</h3>
-        <p>
-            이용자는 개인정보 수집 및 이용에 대해 동의를 거부할 권리가 있습니다. 그러나 필수 정보 제공에 동의하지 않을 경우, 서비스 이용이 제한될 수 있습니다.
-        </p>
-        <h3>5. 서비스의 책임 및 이용 제한</h3>
-        <p>
-            MATE 발언 독성 탐지 서비스는 자동화된 시스템에 의해 제공되는 결과로, 실제 상황과 차이가 있을 수 있습니다.
-            본 서비스는 참고용으로만 제공되며, 특정 결정에 대한 법적 책임을 지지 않습니다.
-        </p>
-        <button class="close-btn" onclick="closeModal2()">닫기</button>
+        <div class="modal-content">
+            <h2>MATE 발언 독성 탐지 서비스 이용 약관 동의</h2>
+            <p>
+                MATE 발언 독성 탐지 서비스를 이용하시기 전에, 아래의 내용을 자세히 읽고 동의해 주시기 바랍니다.
+                본 약관은 서비스 제공을 위한 정보 수집 및 이용 목적, 보유 기간, 동의 거부 시의 제한 사항 등을 포함합니다.
+            </p>
+            <h3>1. 수집하는 정보</h3>
+            <p>MATE 발언 독성 탐지 서비스는 서비스 이용을 위해 아래의 정보를 수집합니다:</p>
+            <ul>
+                <li>(1) 사용자 제공 정보</li>
+                <li>텍스트 입력 데이터(발언 내용)</li>
+                <li>선택적으로 제공된 사용자 정보(예: 닉네임, 이메일)</li>
+                <li>(2) 자동 수집 정보</li>
+                <li>서비스 이용 과정에서 발생하는 IP 주소, 기기 정보, 이용 기록 등</li>
+            </ul>
+            <h3>2. 정보의 이용 목적</h3>
+            <p>MATE는 수집한 정보를 다음의 목적으로 사용합니다:</p>
+            <ul>
+                <li>독성 발언 탐지 결과 제공 및 경고 알림</li>
+                <li>데이터 분석을 통한 서비스 개선 및 최적화</li>
+                <li>서비스 이용 기록 분석 및 맞춤형 기능 제공</li>
+                <li>부정 사용 방지 및 보안 강화</li>
+            </ul>
+            <h3>3. 정보의 보관 및 이용 기간</h3>
+            <p>MATE는 수집된 정보를 원칙적으로 목적 달성 후 지체 없이 파기합니다. 단, 법령에서 정한 경우 및 이용자의 동의가 있는 경우에는 일정 기간 보관합니다:</p>
+            <ul>
+                <li>탐지 기록 데이터: 3개월 동안 보관 후 익명화 처리</li>
+                <li>서비스 이용 기록: 분석 및 개선 목적으로 6개월 보관 후 파기</li>
+            </ul>
+            <h3>4. 동의 거부권 및 제한 사항</h3>
+            <p>
+                이용자는 개인정보 수집 및 이용에 대해 동의를 거부할 권리가 있습니다. 그러나 필수 정보 제공에 동의하지 않을 경우, 서비스 이용이 제한될 수 있습니다.
+            </p>
+            <h3>5. 서비스의 책임 및 이용 제한</h3>
+            <p>
+                MATE 발언 독성 탐지 서비스는 자동화된 시스템에 의해 제공되는 결과로, 실제 상황과 차이가 있을 수 있습니다.
+                본 서비스는 참고용으로만 제공되며, 특정 결정에 대한 법적 책임을 지지 않습니다.
+            </p>
+        </div>
+        <button class="close-btn" onclick="toggleModal('modalOverlay2')">닫기</button>
     </div>
 </div>
-
-
+<div class="footer">
+    <span class="footer-item">©copyright Aivle06기 빅프로젝트 07조</span>
+    <span class="footer-separator">|</span>
+    <span class="footer-item">Contact : 010-5256-5459</span>
+    <span class="footer-separator">|</span>
+    <span class="footer-item">Address : 성남시 분당구 불정로 90 (정자동)</span>
+</div>
+</body>
 <script>
-    function openModal() { document.getElementById('modalOverlay').style.display = 'flex'; }
-    function closeModal() { document.getElementById('modalOverlay').style.display = 'none'; }
-    function openModal2() { document.getElementById('modalOverlay2').style.display = 'flex'; }
-    function closeModal2() { document.getElementById('modalOverlay2').style.display = 'none'; }
+    let checkEmail = false;
+    let checkPw = false;
+    //부서목록 로딩
+    document.addEventListener("DOMContentLoaded",fetchDepartments);
+
+    //모달 토글
+    function toggleModal(id) {
+        console.log(id);
+        document.getElementById(id).classList.toggle('show');
+    }
+    //이메일 중복체크
     async function checkEmailDuplicate() {
-         const email = document.getElementById('email').value;
+         const emailInput = document.getElementById('email');
+         const email = emailInput.value.trim();
+         const duplicatedButton = document.getElementById("duplicatedButton");
 
          // 이메일 형식 검사
          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -369,7 +513,7 @@
 
          try {
              // 서버로 이메일 중복 확인 요청
-             const response = await fetch('/api/check-email', {
+             const response = await fetch('/signUp/checkEmail', {
                  method: 'POST',
                  headers: {
                      'Content-Type': 'application/json',
@@ -377,33 +521,101 @@
                  body: JSON.stringify({ email: email })
              });
 
-             if (!response.ok) {
-                 throw new Error('서버 응답 오류');
-             }
-
-             const data = await response.json();
-
-             if (data.isDuplicate) {
-                 alert('이미 사용 중인 이메일입니다.');
+             const result = await response.text();
+             console.log(result);
+             if (response.status === 409){
+                alert(result);
+                checkEmail = false;
+             }else if(response.ok){
+                //중복체크 결과 여기
+                checkEmail = true;
+                alert(result);
+                duplicatedButton.classList.add("checkEmail");
              } else {
-                 alert('사용 가능한 이메일입니다.');
+                checkEmail = false;
+                alert(result);
              }
          } catch (error) {
              console.error('이메일 중복 확인 중 오류 발생:', error);
              alert('이메일 중복 확인 중 오류가 발생했습니다.');
          }
-     }
+    }
 
     function goback(){
         if (confirm("로그인창으로 돌아가시겠습니까?")) {
             window.location.href = "/signIn";
         }
     }
-    function check(){
-        if (!confirm("정말 회원가입을 하시겠습니까?")) {
-            event.preventDefault(); // 폼 제출 중단
+    //부서 드롭다운 셋티
+    async function fetchDepartments() {
+        try{
+            const response = await fetch("/api/departmentInfo");
+            const departments = await response.json();
+            const departmentSelect = document.getElementById("department");
+
+            departments.forEach(dept => {
+                const option = document.createElement("option");
+                option.value = dept.departmentName;
+                option.textContent = dept.departmentName;
+                departmentSelect.appendChild(option);
+            });
+        }catch(error){
+            console.log("부서 목록 로딩 중 오류 발생 ",error);
+        }
+    }
+
+    //중복버튼눌렀니
+    function check(event){
+        const password = document.getElementById("password").value;
+        const passwordConfirm = document.getElementById("password-confirm").value;
+        const terms = document.getElementById("terms");
+        const toxicity = document.getElementById("toxicity");
+
+        if(!checkEmail){
+            alert("이메일 중복 확인을 먼저 해주세요.");
+            event.preventDefault();
+            return;
+        }
+        if(!checkPw){
+            alert("비밀번호가 일치하지 않습니다. 다시 입력해주세요.");
+            event.preventDefault();
+            return;
+        }else{
+            if (password !== passwordConfirm) {
+                alert("비밀번호가 일치하지 않습니다. 다시 입력해주세요.");
+                event.preventDefault();
+                return;
+            }
+        }
+        if(!terms.checked){
+            alert("인증 약관에 동의해야 합니다.");
+            event.preventDefault();
+            return;
+        }
+        if(!toxicity.checked){
+            alert("발언 독성 탐지 약관에 동의해야 합니다.");
+            event.preventDefault();
+            return;
+        }
+        if(!confirm("정말 회원가입을 하시겠습니까?")){
+            event.preventDefault();
+        }
+    }
+    //비밀번호 재확인
+    function validatePassword() {
+        const password = document.getElementById("password").value;
+        const passwordConfirm = document.getElementById("password-confirm").value;
+        const errorMessage = document.getElementById("password-error");
+
+        if (passwordConfirm.length > 0 && password !== passwordConfirm) {
+            errorMessage.textContent = "비밀번호가 일치하지 않습니다.";
+            errorMessage.style.display = "block"; // 오류 메시지 표시
+            checkPw=false;
+        } else {
+            errorMessage.textContent = "";
+            errorMessage.style.display = "none"; // 오류 메시지 숨김
+            checkPw=true;
         }
     }
 </script>
-</body>
 </html>

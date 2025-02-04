@@ -11,7 +11,7 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            height: 100vh;
+            height: 100%;
             margin: 0;
             padding: 50px 8%;
             position: relative;
@@ -81,7 +81,7 @@
             box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
             text-align: center;
             width: 400px;
-            margin-top: 30px;
+            margin-top: 60px;
         }
 
         .login-container h1 {
@@ -145,14 +145,17 @@
         }
 
         .google-btn:hover {
+            transition: background-color 0.3s ease-in-out;
             background: linear-gradient(90deg, #5b5fc7, #6B2399);
         }
 
         .signIn-btn:hover {
+            transition: background-color 0.3s ease-in-out;
             background: linear-gradient(90deg, #5b5fc7, #6B2399);
         }
 
         .signUp-btn:hover {
+            transition: background-color 0.3s ease-in-out;
             background: linear-gradient(90deg, #5b5fc7, #6B2399);
         }
 
@@ -206,8 +209,8 @@
             <input type="text" id="email" name="email" placeholder="이메일을 입력해주세요" required>
         </div>
         <div class="form-group">
-            <label for="password">PW</label>
-            <input type="password" id="password" name="password" placeholder="PW를 입력해주세요" required>
+            <label for="password">비밀번호</label>
+            <input type="password" id="password" name="password" placeholder="비밀번호를 입력해주세요" required>
         </div>
         <button class="signIn-btn" type="submit">로그인하기</button>
 
