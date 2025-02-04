@@ -52,4 +52,20 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // pagination에 사용하기 위해 발화 로그를 가져옴
     @Query("SELECT s FROM SpeechLog s")
     Page<SpeechLog> findAllSpeechLogsWithPaging(Pageable pageable);
+
+    // 서버 사이드 필터링
+    // 모든 발화 로그를 반환
+    @Query("SELECT s, " +
+            "       CASE WHEN t.toxicityId IS NOT NULL THEN '독성' ELSE '일반' END AS speechType " +
+            "FROM SpeechLog s " +
+            "LEFT JOIN ToxicityLog t ON s.logId = t.speechLog.logId " +
+            "WHERE (:startDate IS NULL OR s.timestamp >= :startDate) " +
+            "  AND (:endDate IS NULL OR s.timestamp <= :endDate) " +
+            "  AND (:speechType = '' OR (:speechType = '일반' AND t.toxicityId IS NULL) OR (:speechType = '독성' AND t.toxicityId IS NOT NULL)) " +
+            "ORDER BY s.timestamp DESC")
+    Page<Object[]> findAllSpeechLogsSSF(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate,
+            @Param("speechType") String speechType,
+            Pageable pageable);
 }
