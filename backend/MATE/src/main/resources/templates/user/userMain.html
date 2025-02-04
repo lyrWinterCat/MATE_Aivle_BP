@@ -243,61 +243,63 @@
 </header>
 
 <main class="container">
-    <input type="hidden" name="userId" id="userId" value="{{userId}}">
     <div class="meeting-card">
-        <!-- 상단 탭 버튼 -->
         <div class="meeting-header">
             <button id="newRoom" class="tab-button active">새로 참가하기</button>
             <button id="continueRoom" class="tab-button">이어 참가하기</button>
         </div>
-        <!-- 회의 제목, URL 입력 -->
-        <div class="form-group" id="meetingTitle">
-            <label class="input-label" id="meetingTitle-label">회의 제목</label>
-            <input type="text" class="input-field" id="meetingTitle-input" placeholder="회의 제목을 입력하세요">
-            <!-- 드롭다운 선택 박스 (처음에는 숨김) -->
-            <select class="select-field" id="meetingTitle-select">
-                <option value="" disabled selected>회의를 선택하세요</option>
-                <option value="회의1">회의 1</option>
-            </select>
-        </div>
-        <div class="form-group" id="meetingUrl">
-            <label class="input-label" id="meetingUrl-label">회의방 URL</label>
-            <input type="text" class="input-field" id="meetingUrl-input-new" value="" placeholder="회의방 URL을 입력하세요">
-            <input type="text" class="input-field" id="meetingUrl-input-select" value="" placeholder="회의방 URL을 입력하세요">
-        </div>
-        <!-- 라디오 버튼 그룹 -->
-        <div class="radio-groups">
-            <div class="radio-container">
-                <h3 class="radio-title">피로도 탐지 주기</h3>
-                <label class="radio-option">
-                    <input type="radio" name="time" id="10second" value="10">
-                    <span>10초마다 피로도 탐지</span>
-                </label>
-                <label class="radio-option">
-                    <input type="radio" name="time" id="20second" value="20">
-                    <span>20초마다 피로도 탐지</span>
-                </label>
-                <label class="radio-option">
-                    <input type="radio" name="time" id="30second" value="30" checked>
-                    <span>30초마다 피로도 탐지 (default)</span>
-                </label>
+
+        <form id="meetingForm" action="/meeting/create" method="post">
+            <input type="hidden" name="userId" id="userId" value="{{userId}}">
+            <input type="hidden" name="mode" id="selectedMode">
+
+            <div class="form-group" id="meetingTitle">
+                <label class="input-label" id="meetingTitle-label">회의 제목</label>
+                <input type="text" name="meetingTitle" class="input-field" id="meetingTitle-input" placeholder="회의 제목을 입력하세요">
+                <select class="select-field" id="meetingTitle-select" name="meetingId">
+                    <option value="" disabled selected>회의를 선택하세요</option>
+                </select>
             </div>
-            <div class="radio-container">
-                <h3 class="radio-title" id="meetingMode">회의 모드</h3>
-                <label class="radio-option">
-                    <input type="radio" name="mode" id="client" value="client">
-                    <span>일반</span>
-                </label>
-                <label class="radio-option">
-                    <input type="radio" name="mode" id="host" value="host" checked>
-                    <span>기록자용</span>
-                </label>
+
+            <div class="form-group" id="meetingUrl">
+                <label class="input-label" id="meetingUrl-label">회의방 URL</label>
+                <input type="text" name="meetingUrl" class="input-field" id="meetingUrl-input-new" placeholder="회의방 URL을 입력하세요">
+                <input type="text" class="input-field" id="meetingUrl-input-select" placeholder="회의방 URL을 입력하세요" disabled>
             </div>
-        </div>
-        <!-- 접속 버튼 -->
-        <div class="form-group">
-            <button type="submit" class="connect-button" onclick="connectMeeting()">접속</button>
-        </div>
+
+            <div class="radio-groups">
+                <div class="radio-container">
+                    <h3 class="radio-title">피로도 탐지 주기</h3>
+                    <label class="radio-option">
+                        <input type="radio" name="time" value="10">
+                        <span>10초마다 피로도 탐지</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="time" value="20">
+                        <span>20초마다 피로도 탐지</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="time" value="30" checked>
+                        <span>30초마다 피로도 탐지 (default)</span>
+                    </label>
+                </div>
+                <div class="radio-container">
+                    <h3 class="radio-title">회의 모드</h3>
+                    <label class="radio-option">
+                        <input type="radio" name="mode" value="client">
+                        <span>일반</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="mode" value="host" checked>
+                        <span>기록자용</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="connect-button">접속</button>
+            </div>
+        </form>
     </div>
 </main>
 </body>

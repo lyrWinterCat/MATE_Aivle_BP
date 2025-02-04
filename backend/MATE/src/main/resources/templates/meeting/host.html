@@ -20,13 +20,17 @@
     <div class="content-wrapper">
         <div class="meeting-info">
             <div class="meeting-time">
-                <p>2025-01-10</p>
-                <p>9:00AM 회의시작</p>
+<!--                <p>{{#meeting}}{{createdAt.format("yyyy-MM-dd")}}{{/meeting}}</p>-->
+<!--                <p>{{#meeting}}{{endTime.format("h:mm a")}} 회의시작{{/meeting}}</p>-->
             </div>
 
             <div class="participants">
-                <h2>회의인원 : 4</h2>
-                <p class="names">윤찬혁, 고수현, 박언용,<br> 이승은</p>
+<!--                <h2>회의인원 : {{participants.length}}</h2>-->
+<!--                <p class="names">-->
+<!--                    {{#participants}}-->
+<!--                    {{.}}<br>-->
+<!--                    {{/participants}}-->
+<!--                </p>-->
             </div>
 
             <div class="control-buttons">
