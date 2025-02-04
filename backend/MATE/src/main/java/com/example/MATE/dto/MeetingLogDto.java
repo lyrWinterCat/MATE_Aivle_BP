@@ -24,7 +24,7 @@ public class MeetingLogDto {
 
         return new MeetingLogDto(
                 meeting.getMeetingName(),
-                meeting.getStartTime().format(formatter),
+                meeting.getCreatedAt().format(formatter),
                 participantNames
         );
     }
