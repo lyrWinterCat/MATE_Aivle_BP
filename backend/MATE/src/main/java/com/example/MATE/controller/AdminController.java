@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -118,15 +119,21 @@ public class AdminController {
     }
 
     @GetMapping("/adminLog")
-    public String adminLog(Model model, @RequestParam(defaultValue = "0") int page) {
-        // pagination
-        int pageSize = 10; // 한 페이지에 보여줄 row 수
+    public String adminLog(Model model,
+                           @RequestParam(defaultValue = "0") int page,
+                           @RequestParam(required = false) String startDate,
+                           @RequestParam(required = false) String endDate,
+                           @RequestParam(required = false) String speechType) {
 
-        Page<SpeechLogDto> pagedSpeechLogs = userService.getPagedSpeechLogs(PageRequest.of(page, pageSize));
-        model.addAttribute("pagedSpeechLogs", pagedSpeechLogs);
+        Page<Map<String, Object>> speechLogs = userService.getAllSpeechLogsSSF(startDate, endDate, speechType, PageRequest.of(page, 10));
+        model.addAttribute("speechLogs", speechLogs);
+
+        model.addAttribute("startDate", startDate != null ? startDate : "");
+        model.addAttribute("endDate", endDate != null ? endDate : "");
+        model.addAttribute("speechType", speechType != null ? speechType : "");
         
         // 이전페이지, 다음페이지, 페이지 번호 버튼 생성
-        PaginationUtils.addPaginationAttributes(model, pagedSpeechLogs, page);
+        PaginationUtils.addPaginationAttributes(model, speechLogs, page);
 
         return "admin/adminLog";
     }

@@ -126,6 +126,10 @@ public class UserController {
                 Page<Map<String, Object>> speechLogs = userService.getSpeechLogsByUserIdSSF(userId, startDate, endDate, speechType, PageRequest.of(page, 10));
                 model.addAttribute("speechLogs", speechLogs);
 
+                model.addAttribute("startDate", startDate !=null ? startDate : "");
+                model.addAttribute("endDate", endDate !=null ? endDate : "");
+                model.addAttribute("speechType", speechType);
+
                 PaginationUtils.addPaginationAttributes(model, speechLogs, page);
             }
         }

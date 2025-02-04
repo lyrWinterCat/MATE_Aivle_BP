@@ -86,6 +86,7 @@ public class UserService {
             endDateTime = LocalDate.parse(endDate).atTime(23, 59, 59);
         }
 
+
         Page<Meeting> meetings = meetingRepository.findMeetingsByUserIdSSF(
                 userId,
                 employeeName != null ? employeeName : "",
@@ -164,6 +165,41 @@ public class UserService {
 
         return speechLogDto;
 
+    }
+
+    // 서버 사이드 필터링
+    // 모든 발화 로그를 가져옴
+    public Page<Map<String, Object>> getAllSpeechLogsSSF(String startDate, String endDate, String speechType, Pageable pageable) {
+        LocalDateTime startDateTime = null;
+        LocalDateTime endDateTime = null;
+
+        // 하루의 시작은 00:00:00
+        if (startDate != null && !startDate.isEmpty()) {
+            startDateTime = LocalDate.parse(startDate).atStartOfDay();
+        }
+
+        // 하루의 끝은 23:59:59
+        if (endDate != null && !endDate.isEmpty()) {
+            endDateTime = LocalDate.parse(endDate).atTime(23, 59, 59);
+        }
+
+        // 0번째 원소로 SpeechLog 객체가 담기고
+        // 1번째 원소로 "일반" 혹은 "독성" 이라는 문자열이 담긴다.
+        Page<Object[]> results = userRepository.findAllSpeechLogsSSF(startDateTime, endDateTime, speechType != null ? speechType : "", pageable);
+
+        // timestamp, userName, content, speechType 를 key-value 쌍으로 가지는 results 를 반환
+        return results.map(row -> {
+            SpeechLog speechLog = (SpeechLog) row[0];
+            String toxicity = (String) row[1]; // "일반" 혹은 "독성"
+
+            Map<String, Object> logMap = new HashMap<>();
+            logMap.put("timestamp", speechLog.getTimestamp().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            logMap.put("userName", speechLog.getUser().getName());
+            logMap.put("content", speechLog.getContent());
+            logMap.put("speechType", toxicity);
+
+            return logMap;
+        });
     }
 
     //정정게시글 등록
