@@ -59,7 +59,7 @@ public class SecurityConfig {
                 .ignoringRequestMatchers(
                         "/signIn**",
                         "/login",
-                        "/signUp**",
+                        "/signUp/**",
                         "/signOut",
                         "/oauth2/authorization/**",
                         "/css/**",
@@ -70,7 +70,8 @@ public class SecurityConfig {
                         "/admin/**",
                         "/user/**",
                         "/meeting/**",
-                        "/toxic/**"
+                        "/toxic/**",
+                        "/api/**"
                         //공통인증에서 /user/**에 권한부여해도 CSRF가 설정되어있으면 접근이 안되어 일단 둘다 써둠
                 )
         );
@@ -80,14 +81,15 @@ public class SecurityConfig {
                 // 로그인 안해도 이미지, css, js 가 적용되도록 수정
                 .requestMatchers(
                         "/signIn",
-                        "/signUp",
+                        "/signUp/**",
                         "/signOut",
                         "/error/**",
                         "/css/**",
                         "/js/**",
                         "/img/**",  // 이미지 경로 추가
                         "/static/**",  // static 리소스 전체 추가
-                        "/aboutus"
+                        "/aboutus",
+                        "/api/**"
                 ).permitAll()
                 .requestMatchers("/user/**",
                         "/toxic/**",
