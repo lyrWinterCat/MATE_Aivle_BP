@@ -1,0 +1,77 @@
+.subtitle-container {
+    text-align: center; /* 가운데 정렬 */
+    font-size: 22px; /* 글씨 크기 적당히 줄임 */
+    font-weight: bold;
+    color: #333; /* 더 선명한 색 */
+    margin: 30px auto; /* 위아래 여백 추가 */
+    position: relative;
+}
+
+/* 🔹 부제목 아래 짧은 선 */
+.subtitle-container::after {
+    content: "";
+    display: block;
+    width: 100px; /* 선 길이 조절 */
+    height: 3px; /* 선 두께 */
+    background: linear-gradient(90deg, #5b5fc7, #6B2399); /* 선 색상 */
+    margin: 8px auto 0; /* 가운데 정렬 */
+    border-radius: 4px; /* 살짝 둥글게 */
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: #FFF;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background: linear-gradient(90deg, #5b5fc7, #6B2399);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.header-left img {
+    width: 50px;
+    height: 50px;
+    margin-right: 20px;
+}
+
+.header-left h1 {
+    font-size: 50px;
+    color: #FFF;
+    margin: 0;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-right span {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+}
+
+.header-right button {
+    background-color: white;
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.header-right button:hover {
+    background-color: #f1f1f1;
+}
