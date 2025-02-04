@@ -15,30 +15,6 @@ else:
     DEVICE = "cpu"
     print("diarization을 cpu로 할 경우 음성시간이 2배 정도가 소요될 것으로 에상됩니다.\n gpu 환경에서 사용하시길 권장합니다.")
 
-# # Define API key file path
-# API_KEY_PATH = "./my_openai_api.txt"
-
-# def load_key():
-#     with open(API_KEY_PATH, 'r') as f:
-#         openAI_key = f.readline().strip()
-#     return openAI_key
-
-# openai.api_key = load_key()
-# os.environ['OPENAI_API_KEY'] = openai.api_key
-
-
-# API 기반 Whisper
-# def audio_to_text(audio_file):
-#     client = OpenAI()
-#     # STT using Whisper (OpenAI)
-#     transcript = client.audio.transcriptions.create(
-#         file=audio_file,
-#         model="whisper-1",
-#         language="ko",
-#         response_format="text"
-#     )
-#     return transcript
-
 def get_text_from_sound(audio_path):
     model_size = "large-v3"
     model = WhisperModel(model_size, device=DEVICE, compute_type="int8")
@@ -72,28 +48,6 @@ def apply_fasterWhisper(audio_path, output_file):
         os.remove(compressed_file)
         
     return transcript
-
-# def load_audio(audio_path):
-    # audio_file = open(audio_path, 'rb')
-    # return audio_file
-
-# =============================================================================================
-# =============================================================================================
-# =============================================================================================
-# Audio compression
-## Get ffmpeg path
-# if os.name == 'nt':  # Windows system
-#     try:
-#         ffmpeg_path = subprocess.check_output(['where', 'ffmpeg']).decode().strip()
-#     except:
-#         print('Please make sure ffmpeg is installed and added to the PATH environment variable')
-#         exit()
-# else:  # Linux and Mac systems
-#     try:
-#         ffmpeg_path = subprocess.check_output(['which', 'ffmpeg']).decode().strip()
-#     except:
-#         print('Please make sure ffmpeg is installed and added to the PATH environment variable')
-#         exit()
 
 def compress_audio(input_file):
     # Get input file size

@@ -7,7 +7,7 @@ import re
 import json 
 import joblib 
 
-from resemblyzer import VoiceEncoder, preprocess_wav, sampling_rate
+# from resemblyzer import VoiceEncoder, preprocess_wav, sampling_rate
 from scipy.spatial.distance import cosine, cdist
 # from pydub import AudioSegment
 from datetime import timedelta
@@ -16,6 +16,7 @@ from pyannote.core import Segment
 from pyannote.audio.pipelines.speaker_verification import PretrainedSpeakerEmbedding
 from pyannote.audio.pipelines import SpeakerDiarization
 
+from functions.backend_ai_audio import detect_toxic
 from functions.stt import *
 
 with open("huggingFace_token.txt", "r") as f:
@@ -58,7 +59,7 @@ fine_tuned_pipeline = fine_tuned_pipeline.to(torch.device(DEVICE))
 
 # fine_tuned_inference = Inference(pipeline, window="whole")
 inference = Inference(fine_tuned_model, window="sliding") # embedding 모델이라고 생각하면 됨. 음성파일을 하나의 벡터로 만들기 위한 함수.  
-RESEMBLYZER_MODEL = joblib.load("diarization_model/resemblyzer.pkl")
+# RESEMBLYZER_MODEL = joblib.load("diarization_model/resemblyzer.pkl")
 
 diarization_pipeline = pretrained_model.to(torch.device(DEVICE))
 
@@ -84,7 +85,38 @@ def save_audio_segment(input_file, start_time, end_time, output_file):
     
     sf.write(output_file, y[start_sample:end_sample], sr)
 
-def predict_by_pyannote(file_location, output_dir, voice_dir, threshold=0, diarization_pipeline=fine_tuned_pipeline):
+def merge_audio_files(audio_files, meeting_name):
+    y_ref, sr_ref = sf.read(f"{meeting_name}/{audio_files[0]}")
+    
+    merged_audio = np.zeros((y_ref.shape[-1], 1))
+    
+    for audio_file in audio_files:
+        y, sr = sf.read(f"{meeting_name}/{audio_file}")
+        
+        if sr != sr_ref:
+            y = librosa.resample(y.T, orig_sr=sr, target_sr=sr_ref).T
+            
+        if len(y.shape) == 1:
+            y = np.expand_dims(y, axis=1)
+            
+        merged_audio = np.concatenate((merged_audio, y), axis=0)
+        
+    file_location = f"{meeting_name}/total.wav"
+    
+    sf.write(file_location, merged_audio, sr_ref)
+    
+    return file_location
+    
+
+def predict_by_pyannote(file_location, output_dir, voice_dir, meeting_name, diarization_pipeline=fine_tuned_pipeline):
+    print("하나의 파일로 만들겠습니다")
+    audio_files = [audio_file for audio_file in os.listdir(meeting_name) if audio_file.endswith("wav")]
+    if "total.wav" in audio_files:
+        file_location = f"{meeting_name}/total.wav"
+        print('통합본이 있습니다. 해당 통합본으로 진행합니다.')
+    else:
+        file_location = merge_audio_files(audio_files, meeting_name)
+        print(f"통합완료. 파일명: {file_location.split('/')[-1]}")
     print('화자 구분 프로세스를 시작합니다.')
     diarization_result = diarization_pipeline(file_location)
     print('화자 구분 프로세스가 끝났습니다.')
@@ -106,7 +138,7 @@ def predict_by_pyannote(file_location, output_dir, voice_dir, threshold=0, diari
             segment_embedding = inference.crop(file_location, segment, duration=inference.duration)
             
             similarity = {
-                name: float(cosine(segment_embedding, ref_embedding))
+                name: float(cosine(segment_embedding[0,:,0], ref_embedding[0,:,0]))
                 for name, ref_embedding in reference_embeddings.items() if ref_embedding is not None
             }
 
@@ -124,8 +156,14 @@ def predict_by_pyannote(file_location, output_dir, voice_dir, threshold=0, diari
             save_audio_segment(file_location, segment_start, segment_end, output_file)
 
             transcript = get_text_from_sound(output_file)
-
-            result_dict[speaker_audio_file] = {"predict": predict, "script": transcript}
+            
+            toxicity = detect_toxic([transcript])
+            
+            if toxicity:
+                toxicity = 1
+            else:
+                toxicity = 0
+            result_dict[speaker_audio_file] = {"predict": predict, "script": transcript, "toxicity": toxicity}
 
             idx = idx + 1
         except Exception as e:
@@ -139,26 +177,26 @@ def predict_by_pyannote(file_location, output_dir, voice_dir, threshold=0, diari
 #############################################################
 ############## resemblzyer ##################################
 #############################################################
-def get_resemblyzer_embedding(voice_dir): 
-    # 이부분 수정 필요, 정확한 데이터 형태 정할 필요가 있음. 
-    # 이게 rttm으로 정리된 파일을 얻는거라서 아마 잘 되지 않을까 싶음. 
-    wav_files = os.listdir(voice_dir)
-    embeddings = []
+# def get_resemblyzer_embedding(voice_dir): 
+#     # 이부분 수정 필요, 정확한 데이터 형태 정할 필요가 있음. 
+#     # 이게 rttm으로 정리된 파일을 얻는거라서 아마 잘 되지 않을까 싶음. 
+#     wav_files = os.listdir(voice_dir)
+#     embeddings = []
 
-    for wav_file in wav_files:
-        wav = preprocess_wav(f"{voice_dir}/{wav_file}")
-        embedding = RESEMBLYZER_ENCODER.embed_utterance(wav)
-        embeddings.append(embedding)
+#     for wav_file in wav_files:
+#         wav = preprocess_wav(f"{voice_dir}/{wav_file}")
+#         embedding = RESEMBLYZER_ENCODER.embed_utterance(wav)
+#         embeddings.append(embedding)
 
-    return embeddings
+#     return embeddings
 
-def predict_by_resemblyzer(voice_dir):
-    wav_files = os.listdir(voice_dir)
-    embeddings = get_resemblyzer_embedding(voice_dir)
-    predictions = RESEMBLYZER_MODEL.predict(embeddings)
+# def predict_by_resemblyzer(voice_dir):
+#     wav_files = os.listdir(voice_dir)
+#     embeddings = get_resemblyzer_embedding(voice_dir)
+#     predictions = RESEMBLYZER_MODEL.predict(embeddings)
 
-    result_dict = {}
-    for wav_file, predict in zip(wav_files, predictions):
-        result_dict[wav_file] = predict
+#     result_dict = {}
+#     for wav_file, predict in zip(wav_files, predictions):
+#         result_dict[wav_file] = predict
 
-    return result_dict
+#     return result_dict
