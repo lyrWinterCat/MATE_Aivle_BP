@@ -59,5 +59,14 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
             @Param("endDate") LocalDateTime endDate,
             Pageable pageable);
 
+    // 회의의 총 개수를 세는 함수
+    @Query("SELECT COUNT(m) FROM Meeting m")
+    Long countAllMeetings();
+
+    // 평균 회의 시간을 구하는 함수
+    // end_time 이 null 인, 즉 아직 끝나지 않은 회의들에 대해서는 계산하지 않는다.
+    @Query(value = "SELECT AVG(TIMESTAMPDIFF(SECOND, start_time, end_time)) FROM meeting WHERE end_time IS NOT NULL", nativeQuery = true)
+    Double findAverageMeetingDuration();
+
 
 }

@@ -2,11 +2,15 @@ package com.example.MATE.controller;
 
 import com.example.MATE.dto.*;
 import com.example.MATE.model.*;
+import com.example.MATE.repository.MeetingRepository;
+import com.example.MATE.repository.ToxicityLogRepository;
+import com.example.MATE.repository.UserRepository;
 import com.example.MATE.service.AdminService;
 import com.example.MATE.service.UserService;
 import com.example.MATE.utils.DateUtil;
 import com.example.MATE.utils.PaginationUtils;
 import com.example.MATE.utils.SecurityUtils;
+import com.fasterxml.jackson.core.ObjectCodec;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,10 +35,25 @@ public class AdminController {
 
     private final AdminService adminService;
     private final UserService userService;
+    private final UserRepository userRepository;
+    private final MeetingRepository meetingRepository;
+    private final ToxicityLogRepository toxicityLogRepository;
 
     @GetMapping("/adminMain")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public String adminMain() {
+    public String adminMain(Model model) {
+        // 총 회의 수
+        Long meetingCounts = adminService.getMeetingCount();
+
+        // 평균 회의 시간
+        String formattedDuration = adminService.getAverageMeetingDuration();
+
+        // 총 독성 발언 횟수
+        Long toxicityCounts = adminService.getToxicityLogCount();
+
+        model.addAttribute("meetingCounts", meetingCounts);
+        model.addAttribute("averageMeetingDuration", formattedDuration);
+        model.addAttribute("toxicityCounts", toxicityCounts);
         return "admin/adminMain";
     }
 

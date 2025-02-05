@@ -6,9 +6,7 @@ import com.example.MATE.dto.RequestDto;
 import com.example.MATE.model.AdminFeedback;
 import com.example.MATE.model.AdminFeedbackComments;
 import com.example.MATE.model.User;
-import com.example.MATE.repository.AdminRepository;
-import com.example.MATE.repository.CommentsRepository;
-import com.example.MATE.repository.UserRepository;
+import com.example.MATE.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +29,8 @@ public class AdminService {
     private final AdminRepository adminRepository;
     private final UserRepository userRepository;
     private final CommentsRepository commentsRepository;
+    private final ToxicityLogRepository toxicityLogRepository;
+    private final MeetingRepository meetingRepository;
 
     public List<RequestDto> getAllRequests() {
         // 모든 요청 가져오기 로직
@@ -136,5 +136,31 @@ public class AdminService {
     @Transactional
     public Optional<AdminFeedbackComments> getCommentByFeedbackId(Integer feedbackId) {
         return commentsRepository.findFirstByFeedback_FeedbackIdOrderByCreatedAtAsc(feedbackId);
+    }
+
+    public Long getToxicityLogCount() {
+        return toxicityLogRepository.countAllToxicityLog();
+    }
+
+    public Long getMeetingCount() {
+        return meetingRepository.countAllMeetings();
+    }
+
+    // 평균 회의 시간을 구한다
+    // end_time 이 null 인, 즉 아직 끝나지 않은 회의들에 대해서는 계산하지 않는다.
+    public String getAverageMeetingDuration() {
+        Double averageSeconds = meetingRepository.findAverageMeetingDuration();
+        
+        // end_time 이 채워져있는 회의가 하나도 없다면 화면에 "-" 로 표시
+        if (averageSeconds == null) {
+            return "-";
+        }
+
+        long averageMinutes = Math.round(averageSeconds / 60);
+        long hours = averageMinutes / 60;
+        long minutes = averageMinutes % 60;
+
+        // 1시간 초과인 경우 or 1시간 미만인 경우
+        return hours > 0 ? hours + "시간" + minutes + "분" : minutes + "분";
     }
 }

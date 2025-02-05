@@ -3,287 +3,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DashBoard</title>
+    <title>Mate Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- chartjs-plugin-datalabels 플러그인 추가 -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
+            background: linear-gradient(90deg, #5b5fc7, #6B2399);
             margin: 0;
-            padding: 0;
-            background-color: #fff;
+            padding: 20px;
+            text-align: center;
+            font-size: 18px;
         }
 
-        header {
-            background: linear-gradient(90deg, #5b5fc7, #6B2399);
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 40px;
+            padding: 10px 20px;
         }
 
-        .header-left {
+        .logo-section {
             display: flex;
             align-items: center;
+            gap: 15px;
         }
 
-        .header-left img {
-            width: 50px;
-            height: 50px;
-            margin-right: 20px;
+        .logo-img {
+            width: 80px;
+            height: 80px;
         }
 
-        .header-left h1 {
-            font-size: 50px;
-            color: #FFF;
-            margin: 0;
+        .logo-text {
+            color: white;
+            font-size: 62px;
+            font-weight: bold;
         }
 
-        .header-right {
+        .nav-section {
             display: flex;
             align-items: center;
             gap: 20px;
         }
 
-        .header-right span {
-            font-size: 20px;
-            font-weight: bold;
-            color: #333;
+        .welcome-text {
+            color: white;
+            font-size: 24px;
         }
 
-        .header-right button {
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-button {
+            padding: 10px 25px;
             background-color: white;
-            color: #333;
-            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
             font-weight: bold;
-            border: 1px solid #333;
-            border-radius: 6px;
-            padding: 10px 20px;
             cursor: pointer;
-        }
-
-        .header-right button:hover {
-            background-color: #f1f1f1;
         }
 
         .dashboard {
             max-width: 1200px;
             margin: 20px auto;
-            padding: 20px;
-            background-color: #FFF;
-            border-radius: 8px;
-        }
-
-        .dashboard-section {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .stat-box {
-            flex: 1;
-            background-color: #FFF;
-            border: 2px solid #FFCC00;
-            border-radius: 8px;
-            margin: 0 10px;
             text-align: center;
-            padding: 20px;
-            color: #333;
         }
 
-        .stat-box h2 {
-            font-size: 24px;
-            margin: 0;
+        .dashboard-cards {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            width: 100%;
         }
 
-        .stat-box p {
-            font-size: 40px;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        .stat-box p.red {
-            color: #CC0000;
-        }
-
-        .stat-box p.blue {
-            color: #0066CC;
-        }
-
-        .chart-section {
+        /* 카드 스타일 */
+        .card {
+            background-color: white;
+            padding: 15px;
+            flex: 1;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 300px;
+            height: 80px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            justify-content: center;
+            color: #333;
+            font-weight: bold;
+            border: 2px solid transparent;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
         }
 
-        .chart-row {
+        /* 카드 제목 */
+        .card h3 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        /* 카드 숫자 */
+        .card p {
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .charts {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            width: 100%;
+            flex-wrap: wrap;
         }
 
-        .chart-box {
+        /* 그래프 박스 */
+        .chart-container {
             flex: 1;
-            background-color: #FFF;
-            border: 2px solid #FFCC00;
-            border-radius: 8px;
-            margin: 0 10px;
+            background-color: white;
             padding: 20px;
-            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
-        .chart-box h3 {
-            font-size: 18px;
-            margin-bottom: 20px;
+        .chart-container h3 {
+            font-size: 30px;
+            margin-top : 0;
         }
 
         canvas {
-            max-width: 100%;
-            height: 150px; /* 그래프 높이 조정 */
+            width: 100% !important;
+            height: 90% !important;
         }
     </style>
 </head>
 <body>
-<header>
-    <div class="header-left">
-        <a href="/admin/adminMain">
-            <img src="/img/logo.png" alt="Mate Logo" class="logo-img">
-        </a>
-        <h1>Mate</h1>
+
+<header class="header">
+    <div class="logo-section" onclick="moveMain()">
+        <img src="/img/logo.png" alt="Mate Logo" class="logo-img">
+        <span class="logo-text">Mate</span>
     </div>
-    <div class="header-right">
-        <span class="welcome-text"></span>
-        <form action="/admin/adminLog" method="get" style="display:inline;">
-            <button type="submit" class="nav-button">로그조회</button>
-        </form>
-        <form action="/admin/adminFix" method="get" style="display:inline;">
-            <button type="submit" class="nav-button">정정게시판</button>
-        </form>
-        <form action="/signOut" method="post" style="display:inline;">
-            <button type="submit" class="nav-button">로그아웃</button>
-        </form>
+    <div class="nav-section">
+        <div class="nav-buttons">
+            <form action="/admin/adminLog" method="get" style="display:inline;">
+                <button type="submit" class="nav-button">로그조회</button>
+            </form>
+            <form action="/admin/adminFix" method="get" style="display:inline;">
+                <button type="submit" class="nav-button">정정게시판</button>
+            </form>
+            <form action="/signOut" method="post" style="display:inline;">
+                <button type="submit" class="nav-button">로그아웃</button>
+            </form>
+        </div>
     </div>
 </header>
+
+<!-- 대시보드 UI -->
 <div class="dashboard">
-    <div class="dashboard-section">
-        <div class="stat-box">
-            <h2>회의당 독성발언 수</h2>
-            <p class="red">3564회</p>
+    <div class="dashboard-cards">
+        <div class="card">
+            <h3>총 회의 수</h3>
+            <p style="color: #333;">{{meetingCounts}}회</p>
         </div>
-        <div class="stat-box">
-            <h2>회의당 불필요 발언 수</h2>
-            <p>299회</p>
+        <div class="card">
+            <h3>평균 회의 시간</h3>
+            <p style="color: blue;">{{averageMeetingDuration}}</p>
         </div>
-        <div class="stat-box">
-            <h2>월별 평균 / 총 회의시간(hour)</h2>
-            <p class="blue">3.7/1987.3</p>
+        <div class="card">
+            <h3>누적 독성 발언 횟수</h3>
+            <p style="color: red;">{{toxicityCounts}}회</p>
         </div>
     </div>
-    <div class="chart-section">
-        <div class="chart-row">
-            <div class="chart-box">
-                <h3>부서별 현황</h3>
-                <canvas id="departmentChart1"></canvas>
-            </div>
-            <div class="chart-box">
-                <h3>부서별 현황</h3>
-                <canvas id="departmentChart2"></canvas>
-            </div>
+    <div class="charts">
+        <div class="chart-container">
+            <h3>부서별 현황</h3>
+            <canvas id="departmentChart"></canvas>
         </div>
-        <div class="chart-row">
-            <div class="chart-box">
-                <h3>월별 추이 그래프</h3>
-                <canvas id="monthlyTrendChart1"></canvas>
-            </div>
-            <div class="chart-box">
-                <h3>월별 추이 그래프</h3>
-                <canvas id="monthlyTrendChart2"></canvas>
-            </div>
+        <div class="chart-container">
+            <h3>일별 독성 발언 추이</h3>
+            <canvas id="monthlyTrendChart"></canvas>
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
-    // 부서별 현황 차트 1
-    const departmentCtx1 = document.getElementById('departmentChart1').getContext('2d');
-    new Chart(departmentCtx1, {
-        type: 'pie',
-        data: {
-            labels: ['영업부서', 'IT개발부서', '재무부서', '인사부서'],
-            datasets: [{
-                data: [30, 40, 15, 15],
-                backgroundColor: ['#4CAF50', '#FFC107', '#2196F3', '#F44336']
-            }]
-        }
-    });
+    window.onload = function() {
+        // 부서별 현황 (원형 차트, 부서 10개)
+        var departmentCtx = document.getElementById("departmentChart").getContext("2d");
+        new Chart(departmentCtx, {
+            type: 'pie',
+            data: {
+                labels: ['영업부서', 'IT개발부서', '재무부서', '인사부서', '마케팅부서', '고객지원부서', 'R&D부서', '법무부서', '생산부서', '물류부서'],
+                datasets: [{
+                    data: [10, 15, 12, 8, 10, 14, 9, 7, 6, 9],
+                    backgroundColor: ['#4A90E2', '#4ECDC4', '#45B7D1', '#DC143C', '#FFEEAD', '#D4A5A5', '#9B97B2', '#FFB6B9', '#A8E6CF', '#36B37E']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false  // ✅ 범례 제거
+                    },
+                    datalabels: {  // ✅ 부서명을 원형 그래프 안에 표시 (숫자 없이)
+                        color: 'white',
+                        font: {
 
-    // 부서별 현황 차트 2
-    const departmentCtx2 = document.getElementById('departmentChart2').getContext('2d');
-    new Chart(departmentCtx2, {
-        type: 'pie',
-        data: {
-            labels: ['영업부서', 'IT개발부서', '재무부서', '인사부서'],
-            datasets: [{
-                data: [25, 35, 25, 15],
-                backgroundColor: ['#4CAF50', '#FFC107', '#2196F3', '#F44336']
-            }]
-        }
-    });
-
-    // 월별 추이 그래프 1
-    const monthlyTrendCtx1 = document.getElementById('monthlyTrendChart1').getContext('2d');
-    new Chart(monthlyTrendCtx1, {
-        type: 'bar',
-        data: {
-            labels: ['1월', '2월', '3월', '4월', '5월'],
-            datasets: [
-                {
-                    label: '독성발언',
-                    data: [30, 50, 70, 40, 20],
-                    backgroundColor: '#4CAF50'
-                },
-                {
-                    label: '업무외발언',
-                    data: [20, 40, 90, 50, 10],
-                    backgroundColor: '#F44336'
+                            weight: 'bold',
+                            size: 14
+                        },
+                        formatter: (value, ctx) => ctx.chart.data.labels[ctx.dataIndex] // 🔹 부서명만 표시
+                    }
                 }
-            ]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
+            },
+            plugins: [ChartDataLabels]
+        });
+
+        // 월별 추이 (막대 그래프, 10일 단위)
+        var monthlyTrendCtx = document.getElementById("monthlyTrendChart").getContext("2d");
+        new Chart(monthlyTrendCtx, {
+            type: 'bar',
+            data: {
+                labels: ['D-4', 'D-3', 'D-2', 'D-1', 'Today'],
+                datasets: [{
+                    label: '독성발언',
+                    data: [3, 6, 9, 12, 15],
+                    backgroundColor: '#9B97B2',
+                    borderColor: '#9B97B2',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false  // ✅ 범례 제거
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
-
-    // 월별 추이 그래프 2
-    const monthlyTrendCtx2 = document.getElementById('monthlyTrendChart2').getContext('2d');
-    new Chart(monthlyTrendCtx2, {
-        type: 'bar',
-        data: {
-            labels: ['1월', '2월', '3월', '4월', '5월'],
-            datasets: [
-                {
-                    label: '독성발언',
-                    data: [25, 45, 65, 35, 15],
-                    backgroundColor: '#4CAF50'
-                },
-                {
-                    label: '업무외발언',
-                    data: [15, 35, 85, 45, 5],
-                    backgroundColor: '#F44336'
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
+        });
+    };
 </script>
+
 </body>
 </html>
