@@ -79,41 +79,56 @@
     let checkUrl = false;
     //회의 URL 조회
     async function checkMeeting() {
-         const meetingUrlInputNew = document.getElementById("meetingUrl-input-new");
-         const meetingUrl = meetingUrlInputNew.value.trim();
-         console.log(">>> ", meetingUrl);
-         const selectButton = document.getElementById("meeting-select-button");
+        const meetingUrlInputNew = document.getElementById("meetingUrl-input-new");
+        const meetingTitleInput = document.getElementById("meetingTitle-input"); // 회의 제목 입력 필드
+        const selectButton = document.getElementById("meeting-select-button");
+        const meetingUrl = meetingUrlInputNew.value.trim();
 
-        if(meetingUrl == "" || meetingUrl == null){
+        console.log(">>> 입력된 회의 URL:", meetingUrl);
+
+        if (!meetingUrl) {
             alert("회의 URL을 입력하세요.");
-            event.preventDefault();
             return;
         }
-         try {
-             // 서버로 이메일 중복 확인 요청
-             const response = await fetch('/meeting/checkMeetingUrl', {
-                 method: 'POST',
-                 headers: {
-                     'Content-Type': 'application/json',
-                 },
-                 body: JSON.stringify({ meetingUrl: meetingUrl })
-             })
-             const result = await response.json();
-             console.log("서버 응답:", result);
-             if (result.meetingName){
-                checkUrl = false;
-                document.getElementById("meetingTitle-input").value = result.meetingName;
-             }else if(response.ok){
-                //중복체크 결과 여기
+
+        try {
+            // 서버에 회의 URL 중복 확인 요청
+            const response = await fetch('/meeting/checkMeetingUrl', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ meetingUrl: meetingUrl })
+            });
+
+            if (!response.ok) {
+                // 409 Conflict 상태일 경우 (이미 존재하는 회의 URL)
+                if (response.status === 409) {
+                    const result = await response.json();
+                    console.log("서버 응답 (409):", result);
+                    selectButton.classList.add("checkedUrl");
+                    checkUrl = true;
+                    meetingTitleInput.value = result.meetingName || ""; // meetingName이 있으면 입력, 없으면 빈 값
+                    console.log(result.message);
+                } else {
+                    // 기타 오류 상태 처리
+                    const errorText = await response.text();
+                    console.error("서버 오류 응답:", errorText);
+                    console.log(`서버 오류 발생: ${errorText}`);
+                    selectButton.classList.remove("checkedUrl");
+                }
+            } else {
+                // 사용 가능한 URL (200 OK)
+                const result = await response.text();
+                console.log("서버 응답 (200 OK):", result);
+
                 selectButton.classList.add("checkedUrl");
                 checkUrl = true;
-             } else {
-                checkUrl = false;
-             }
-         } catch (error) {
-             console.error('URL 중복 확인 중 오류 발생:', error);
-             alert('이미 등록된 회의URL입니다. 회의에 첫 참가시라면 접속을 눌러 참가바랍니다.');
-         }
+                meetingTitleInput.value = "";
+                alert(result);
+            }
+        } catch (error) {
+            console.error("URL 중복 확인 중 오류 발생:", error);
+            console.error("서버와의 연결이 원활하지 않습니다. 다시 시도해주세요.");
+        }
     }
     //회의 리스트 셋팅
     function updateMeetingDropdown(meetings){
