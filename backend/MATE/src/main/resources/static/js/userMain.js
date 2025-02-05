@@ -107,7 +107,7 @@
                     console.log("서버 응답 (409):", result);
                     checkUrl = true;
                     meetingTitleInput.value = result.meetingName || ""; // meetingName이 있으면 입력, 없으면 빈 값
-                    console.log(result.message);
+                    alert(result.message);
                 } else {
                     // 기타 오류 상태 처리
                     const errorText = await response.text();
