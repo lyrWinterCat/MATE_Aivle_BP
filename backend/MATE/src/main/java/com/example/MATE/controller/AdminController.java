@@ -54,6 +54,8 @@ public class AdminController {
 
         // 부서별 독성 발언 횟수
         String departmentToxicityLogs =  adminService.getToxicityLogsCountByDepartment();
+
+        // 일별 독성 발언 추이
         String dailyToxicityLogsJson = adminService.getDailyToxicityLogs();
 
         model.addAttribute("meetingCounts", meetingCounts);

@@ -163,7 +163,7 @@ public class AdminService {
         return hours > 0 ? hours + "시간" + minutes + "분" : minutes + "분";
     }
 
-    @Transactional(readOnly = true)
+    // 부서별 독성 발언 횟수
     public String getToxicityLogsCountByDepartment() {
 
         // 원소[0] 에는 부서명, 원소[1] 에는 해당 부서명의 독성 발언 횟수가 담김
