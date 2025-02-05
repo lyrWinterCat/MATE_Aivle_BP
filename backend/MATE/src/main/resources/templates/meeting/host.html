@@ -7,8 +7,120 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery 추가 -->
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+
+    <style>
+        #imageContainer {
+            display: block; /* 기본적으로 숨김 */
+            position: fixed;
+            top: 47.6%;
+            left: 54.4%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8); /* 반투명 배경 */
+            border-radius: 10px;
+            z-index: 1000;
+            text-align: center;
+        }
+
+        #imageDisplay {
+            display: none;
+            width: 100%;
+            height: 770px;
+            border-radius: 10px;
+        }
+
+        /* 요약 창 스타일 */
+        #summaryPopup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            max-height: 600px; /* 최대 높이 설정 */
+<!--            padding: 20px;-->
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            z-index: 2000;
+            overflow-y: auto; /* 세로 스크롤 */
+        }
+
+<!--        #summaryPopup button {-->
+<!--            margin-top: 10px;-->
+<!--            margin-bottom: 10px;-->
+<!--            padding: 5px 10px;-->
+<!--            background: #007bff;-->
+<!--            color: white;-->
+<!--            border: none;-->
+<!--            border-radius: 5px;-->
+<!--            cursor: pointer;-->
+<!--        }-->
+
+        .meeting-card {
+            background: #50bcdf;
+            border-radius: 12px;
+            border:2px solid linear-gradient(90deg, #5b5fc7, #6B2399);
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+            width: 600px;
+            position: relative;
+            overflow: hidden; /* 내부 요소가 넘치는 것 방지 */
+            margin-top:3%;
+        }
+
+        /* 탭 버튼 컨테이너 - 카드 내부로 이동 */
+        .meeting-header {
+            display: flex;
+            width: 100%; /* 카드 전체 너비 차지 */
+            top: 0;
+            left: 0;
+        }
+
+        /* 탭 버튼 기본 스타일 */
+        .tab-button {
+            flex: 1; /* 두 개의 버튼이 동일한 너비 차지 */
+            text-align: center;
+            background-color: #a2a6bd;
+            color: white;
+            border: 1px solid white;
+            padding: 12px 0;
+<!--            border-radius: 10px 10px 0 0; /* 위쪽만 둥글게 */-->
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .tab-button:first-child {
+            border-radius: 10px 0 0 0; /* 왼쪽 상단만 둥글게 */
+        }
+        .tab-button:last-child {
+            border-radius: 0 10px 0 0; /* 오른쪽 상단만 둥글게 */
+        }
+        .tab-button.active {
+            background: #50bcdf;
+            color: black;
+            border-bottom: none; /* 아래쪽 테두리 없앰 */
+        }
+
+        .summaryContent{
+            text-align: left;
+            padding-left: 20px;
+            margin-top: 0px;
+            overflow: hidden;
+            height: 480px;
+            overflow-y: auto;
+            white-space: pre-line;
+        }
+
+        #summary{
+            background: white;
+        }
+    </style>
 </head>
 <body>
+
+<div id="imageContainer">
+    <img id="imageDisplay" src="" alt="Generated Image">
+</div>
+
 <div class="container">
     <header>
         <div class="logo">
@@ -39,6 +151,7 @@
                 <button class="control-btn" id="stopButton">휴식하기</button>
                 <button class="control-btn">피로도 탐지</button>
                 <button class="control-btn">자료 요약</button>
+                <button class="control-btn" id="summaryButton">요약 보기</button>
                 <button class="control-btn">회의 종료</button>
             </div>
         </div>
@@ -49,7 +162,67 @@
         </div>
     </div>
 </div>
+
+<!-- 요약 팝업 -->
+<div id="summaryPopup" class="meeting-card">
+    <!-- 상단 탭 버튼 -->
+    <div class="meeting-header">
+        <button id="total" class="tab-button active">통합 요약</button>
+        <button id="topicwise" class="tab-button">주제별 요약</button>
+        <button id="posneg" class="tab-button">긍정부정 요약</button>
+        <button id="TODOList" class="tab-button">TODO List</button>
+    </div>
+    <div id="summary">
+        <p id="totalSumm" class="summaryContent">통합 요약이 존재하지 않습니다</p>
+        <p id="topicwiseSumm" class="summaryContent" style="display:none">주제별 요약이 존재하지 않습니다</p>
+        <p id="posnegSumm" class="summaryContent" style="display:none">긍정부정 요약이 존재하지 않습니다</p>
+        <p id="TODOLISTSumm" class="summaryContent" style="display:none">TODO List가 존재하지 않습니다</p>
+    </div>
+    <button onclick="closeSummaryPopup()">닫기</button>
+</div>
+
+<script>
+    document.getElementById("summaryButton").addEventListener("click", function() {
+        document.getElementById("summaryPopup").style.display = "block";
+    });
+
+    function closeSummaryPopup() {
+        document.getElementById("summaryPopup").style.display = "none";
+    }
+</script>
+<script>
+    const tabs = document.querySelectorAll(".tab-button");
+    const summaries = document.querySelectorAll(".summaryContent");
+
+    const totalSumm =  document.getElementById("totalSumm");
+    const topicwiseSumm =  document.getElementById("topicwiseSumm");
+    const posnegSumm =  document.getElementById("posnegSumm");
+    const TODOListSumm =  document.getElementById("TODOLISTSumm");
+
+    tabs.forEach(tab => {
+        tab.addEventListener("click", function(){
+            tabs.forEach(t => t.classList.remove("active"));
+
+            summaries.forEach(summary => {
+                summary.style.display = "none";
+            });
+
+            this.classList.add("active");
+
+            if (this.id === "total"){
+                totalSumm.style.display = "block";
+            } else if (this.id === "topicwise"){
+                topicwiseSumm.style.display = "block";
+            } else if (this.id === "posneg"){
+                posnegSumm.style.display = "block";
+            } else if (this.id === "TODOList"){
+                TODOListSumm.style.display = "block";
+            };
+        });
+    });
+</script>
 <script src="/js/host.js"></script>
+
 <script>
     const meetingId = "{{meetingId}}"; // Mustache에서 전달된 meetingId
     console.log(meetingId);
