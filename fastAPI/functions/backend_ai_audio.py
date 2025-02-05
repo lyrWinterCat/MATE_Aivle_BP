@@ -13,6 +13,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from faster_whisper import WhisperModel
 from faster_whisper.transcribe import BatchedInferencePipeline
 from functions.stt import run as stt
+from sqlalchemy.orm import Session
 
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
@@ -554,7 +555,21 @@ def summarize_audio(meeting_name, do_compress=False):
     summ_todo = text_summs2summ_todo(summsTD, gptModel).split(': \"')[-1].split('\"')[0]
     summ_total = text_summs2summ_total(summsTotal, gptModel).split(': \"')[-1].split('\"')[0]
     
-    return summ_topicwise, summ_posneg, summ_todo, summ_total
+    summ_all = f"""
+    주제별 요약:
+    {summ_topicwise}
+    
+    긍정 부정 요약:
+    {summ_posneg}
+    
+    TODO List:
+    {summ_todo}
+    
+    전체 요약:
+    {summ_total}
+    """    
+    
+    return summ_topicwise, summ_posneg, summ_todo, summ_total, summ_all
 
 # def summarize_audio(audio_file, do_compress=False):
 #     full_transcript = stt(audio_file, do_compress)

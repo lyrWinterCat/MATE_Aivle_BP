@@ -16,6 +16,17 @@ class Summary(Base):
     meeting_id = Column(Integer, nullable=False)
     summary_text = Column(Text)
     
+class Meeting(Base):
+    __tablename__ = "meeting"
+    
+    meeting_id = Column(Integer, primary_key=True)
+    meeting_name = Column(String(100))
+    end_time = Column(DateTime)
+    created_at = Column(DateTime)
+    url = Column(Text)
+    filepath = Column(Text)
+    last_break_time = Column(DateTime)
+    
 class User(Base):
     __tablename__ = "user"
     
@@ -27,8 +38,8 @@ class User(Base):
     role = Column(Enum(roleEnum))
     create_at = Column(DateTime)
     update_at = Column(DateTime)
-    is_social = Column(Boolean, server_default=0)
-    authorized = Column(Boolean, server_default=0)
+    is_social = Column(Boolean)
+    authorized = Column(Boolean)
 
 class SpeechLog(Base):
     __tablename__ = "speech_log"
@@ -37,7 +48,7 @@ class SpeechLog(Base):
     meeting_id = Column(Integer)
     user_id = Column(Integer)
     timestamp = Column(DateTime)
-    is_off_topic = Column(Boolean, server_default=1)
+    content = Column(Text)
     
 class ToxicityLog(Base):
     __tablename__ = "toxicity_log"
@@ -46,7 +57,7 @@ class ToxicityLog(Base):
     log_id = Column(Integer)
     meeting_id = Column(Integer)
     user_id = Column(Integer)
-    corrected = Column(Boolean, server_default=1)
+    corrected = Column(Boolean)
     updated_at = Column(DateTime)
     
     

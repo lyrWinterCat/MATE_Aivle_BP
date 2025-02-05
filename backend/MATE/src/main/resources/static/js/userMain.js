@@ -27,12 +27,51 @@ document.addEventListener("DOMContentLoaded", function() {
                 alert("회의 URL을 입력하세요.");
                 return;
             }
-            
-            // mode 값 설정
-            document.getElementById('selectedMode').value = 
-                document.querySelector('input[name="mode"]:checked').value;
-                
-            this.submit();
+
+            // 새 회의데이터 생성
+            fetch("/meeting/create", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    userId: userId,
+                    meetingTitle: meetingTitleInput,
+                    meetingUrl: meetingUrlInputNew
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`서버 응답 오류: ${response.status} ${response.statusText}`);
+                }
+                return response.json(); // JSON 변환 (에러 발생 가능)
+            })
+            .then(data => {
+                if (data.success) {
+                    const hostUrl = `/meeting/host/${data.meetingId}`;
+                    const clientUrl = `/meeting/client/${data.meetingId}`;
+
+                    if (selectedMode === "host") {
+                        alert("기록자로 새 회의를 시작합니다: ");
+                        console.log("host > "+hostUrl);
+                        window.location.href = hostUrl; // 기록자 페이지로 이동
+                    } else {
+                        alert("참여자로 새 회의에 참가합니다. :  " + clientUrl);
+                        console.log("client > "+clientUrl);
+                        window.location.href = clientUrl; // 참여자 페이지로 이동
+                    }
+                } else {
+                    //data.success가 false일때...
+                    console.log("우?");
+                    alert(`회의 생성 실패: ${data.message || "알 수 없는 오류"}`);
+                }
+            })
+            .catch(error => { //400, 500
+                console.error("회의 생성 요청 실패:", error);
+                if(error.message.includes("500")){
+                    alert("이미 저장된 회의 URL입니다. 이어 참가하기를 통해 회의에 참여바랍니다.");
+                }else{
+                    alert(`네트워크 오류 또는 서버 문제로 회의 생성에 실패했습니다.\n오류 메시지: ${error.message}`);
+                }
+            });
         } else {
             // 이어 참가하기
             const meetingId = meetingTitleSelect.value;

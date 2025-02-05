@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 # from functions.audio_recording import *
 from functions.speaker_diarization import *
 from functions.backend_ai_audio import *
-from functions.backend_ai_video import load_crop_img_by_bytes, check_fatigue
+from functions.backend_ai_video import load_crop_img, check_fatigue
 import re
 import cv2
 import base64
@@ -13,6 +13,7 @@ import soundfile as sf
 from fastapi.middleware.cors import CORSMiddleware  # 추가된 import
 from fastapi.responses import JSONResponse, Response
 from database import get_db
+from models import Meeting, Summary
 app = FastAPI()
 
 app.add_middleware(
@@ -96,9 +97,11 @@ async def post_screen(image: UploadFile=File(...), meeting_name:str = Form(...))
 
 @app.post("/detect_fatigue")
 async def detect_fatigue(image: UploadFile=File(...)):
-    bytes = await image.read()
+    file_location = f"temp_{image.filename}"
+    with open(file_location, "wb") as buffer:
+        buffer.write(await image.read())
     
-    imgs, mode = load_crop_img_by_bytes(bytes)
+    imgs, mode = load_crop_img(file_location)
     
     fratio, _, results_imgs = check_fatigue(imgs, mode)
     
@@ -106,7 +109,11 @@ async def detect_fatigue(image: UploadFile=File(...)):
     
     base64_img = base64.b64encode(encoded_img).decode("utf-8")
     
-    return JSONResponse(content={"image": base64_img, "fratio": fratio.item()})
+    if fratio.item() < 2:
+        fratio = fratio.item()
+    else:
+        fratio = 0
+    return JSONResponse(content={"image": base64_img, "fratio": fratio})
     # return JSONResponse(content={"image": encoded_img.tobytes(), "fratio": fratio.item()})
     # return {"image": encoded_img.tobytes(), "fratio": fratio.item()}
     # return Response(content=encoded_img.tobytes(), media_type="image/jpeg", headers={"fr": "0.6"})
@@ -126,68 +133,12 @@ async def summarize_meeting(audio:UploadFile=File(...), meeting_name:str = Form(
         buffer.write(await audio.read())
 
     if status == "ing":
-        summ_topicwise, summ_posneg, summ_todo, summ_total = summarize_audio(meeting_name)
+        summ_topicwise, summ_posneg, summ_todo, summ_total = summarize_and_insert(meeting_name, db)
         return {"topicwise": summ_topicwise, "posneg": summ_posneg, "todo": summ_todo, "total": summ_total}
     elif status == "end":
-        background_task.add_task(summarize_audio, meeting_name)
+        background_task.add_task(summarize_and_insert, meeting_name, db)
         background_task.add_task(audio_to_text_by_pyannote, file_location, meeting_name)
         return "회의 고생하셨습니다."
-        
-        
-        
-        
-
-# @app.post("/summarize_meeting")
-# async def summarize_meeting(audio:UploadFile=File(...), meeting_name:str = Form(...), status:str=Form("ing"), background_task:BackgroundTasks = BackgroundTasks()):
-#     if not os.path.exists(meeting_name):
-#         os.mkdir(meeting_name)
-        
-#     file_name = audio.filename
-    
-#     file_location = f"{meeting_name}/{file_name}"
-    
-#     with open(file_location, "wb") as buffer:
-#         buffer.write(await audio.read())
-    
-#     if status=="end":
-#         # 음성 데이터 합치고 
-#         audio_files = os.listdir(meeting_name)
-#         audio_files = [audio_file for audio_file in audio_files if audio_file.endswith("wav")]
-        
-#         y_ref, sr_ref = sf.read(f"{meeting_name}/{audio_files[0]}")
-        
-#         merged_audio = np.zeros((y_ref.shape[-1], 1))
-        
-#         for audio_file in audio_files:
-#             y, sr = sf.read(f"{meeting_name}/{audio_file}")
-            
-#             if sr != sr_ref:
-#                 y = librosa.resample(y.T, orig_sr=sr, target_sr=sr_ref).T
-                
-#             if len(y.shape) == 1:
-#                 y = np.expand_dims(y, axis=1)
-                
-#             merged_audio = np.concatenate((merged_audio, y), axis=0)
-            
-#         file_location = f"{meeting_name}/concat.wav"
-        
-#         sf.write(file_location, merged_audio, sr_ref)
-        
-#         # 합친 파일을 던져주고
-#         background_task.add_task(summarize_audio, file_location)
-#         background_task.add_task(audio_to_text_by_pyannote, file_location)
-        
-#     else:
-#         summ_topicwise, summ_posneg = summarize_audio(file_location)
-        
-#         result = {"topicwise": summ_topicwise, "posneg": summ_posneg}
-        
-#         return result      
-
-###########################################################################
-####################### Models ############################################
-###########################################################################
-
 
 ###########################################################################
 ####################### functions #########################################
@@ -205,7 +156,26 @@ def audio_to_text_by_pyannote(file_location, meeting_name):
         pyannote_predict = pyannote_value["predict"]
         script = pyannote_value["script"]
         toxicity = pyannote_value["toxicity"]
-        print(f"{name}: script {script} // speaker {pyannote_predict} // toxicity {toxicity}")
+        print(f"{name}: script {script} // speaker {pyannote_predict} // toxicity {toxicity}")    
+
+def summarize_and_insert(meeting_name, db:Session):
+    summ_topicwise, summ_posneg, summ_todo, summ_total, summ_all = summarize_audio(meeting_name)
+    
+    meeting = db.query(Meeting).filter(Meeting.meeting_name == meeting_name).first()
+    if not meeting:
+        return {"error": "Meeting not found"}
+    
+    summary = db.query(Summary).filter(Summary.meeting_id == meeting.meeting_id).first()
+    
+    if summary:
+        summary.summary_text = summ_all
+    else:
+        new_summary = Summary(meeting_id=meeting.meeting_id, summary_text=summ_all)
+        db.add(new_summary)
+        
+    db.commit()
+    
+    return summ_topicwise, summ_posneg, summ_todo, summ_total
 
 def background_summarize(meeting_name):
     summ_topicwise, summ_posneg, summ_todo, summ_total = summarize_audio(meeting_name)

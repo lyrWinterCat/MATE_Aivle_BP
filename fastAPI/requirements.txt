@@ -7,4 +7,6 @@ transformers==4.48.2
 sqlalchemy==2.0.37
 aiomysql==0.2.0
 pyannote.audio==3.3.2
-resembluzer==0.1.4
+ultralytics==8.3.69
+librosa==0.10.2
+aiomysql==0.2.0
