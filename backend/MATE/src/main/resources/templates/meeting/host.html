@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Mate Recorder</title>
     <link rel="stylesheet" href="/css/meeting_style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery 추가 -->
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
 </head>
@@ -44,10 +45,66 @@
 
         <div class="screen-container">
             <video id="localVideo" autoplay muted playsinline></video>
-            <video id="remoteVideo" autoplay></video>
+<!--            <video id="remoteVideo" autoplay></video>-->
         </div>
     </div>
 </div>
 <script src="/js/host.js"></script>
+<script>
+    const meetingId = "{{meetingId}}"; // Mustache에서 전달된 meetingId
+    console.log(meetingId);
+
+    let participantFetchInterval; // 참여자 정보를 주기적으로 가져오기 위한 변수
+
+    function fetchParticipants() {
+        $.ajax({
+            url: `/meeting/${meetingId}/participants`, // API 엔드포인트
+            method: 'GET',
+            success: function(data) {
+                console.log(data); // 응답을 콘솔에 출력
+
+                // 참여자 수 업데이트
+                $('#participantCount').text(data.participantCount);
+                $('#participantList').empty(); // 기존 목록 제거
+
+                // meetingParticipants가 존재하는지 확인
+                if (data.meetingParticipants && Array.isArray(data.meetingParticipants)) {
+                    data.meetingParticipants.forEach(participant => {
+                        $('#participantList').append(`<p>${participant.userName}</p>`); // User의 name 추가
+                    });
+                } else {
+                    console.warn('참여자 목록이 비어있거나 잘못된 형식입니다.');
+                    $('#participantList').append('<p>참여자가 없습니다.</p>'); // 비어있을 때 메시지 표시
+                }
+            },
+            error: function(error) {
+                console.error('참여자 정보 가져오기 오류:', error);
+            }
+        });
+    }
+
+    // 5초마다 참여자 정보 가져오기 및 페이지 새로 고침
+    function startFetchingParticipants() {
+        participantFetchInterval = setInterval(function() {
+            fetchParticipants(); // 데이터를 가져옵니다.
+            location.reload(); // 페이지를 새로 고칩니다.
+        }, 5000);
+    }
+
+    // 참여자 정보 가져오기 중지
+    function stopFetchingParticipants() {
+        clearInterval(participantFetchInterval);
+    }
+
+    // 기록하기 버튼 클릭 시 참여자 정보 가져오기 중지
+    document.getElementById('startButton').addEventListener('click', function() {
+        stopFetchingParticipants(); // 참여자 데이터 가져오기 중지
+        console.log('기록 시작'); // 추가적인 기능 구현 가능
+    });
+
+    // 페이지 로드 시 데이터 가져오기 및 주기 시작
+    fetchParticipants();
+    startFetchingParticipants();
+</script>
 </body>
 </html>

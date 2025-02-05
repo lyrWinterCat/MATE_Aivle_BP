@@ -1,19 +1,20 @@
 package com.example.MATE.controller;
 
 import com.example.MATE.dto.MeetingDto;
+import com.example.MATE.dto.MeetingParticipantDto;
 import com.example.MATE.model.Meeting;
-import com.example.MATE.model.ScreenData;
+import com.example.MATE.model.MeetingParticipant;
 import com.example.MATE.service.MeetingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,7 +54,6 @@ public class MeetingController {
 
     @GetMapping("/host/{meetingId}")
     public String meetingRecorder(@PathVariable("meetingId") Integer meetingId, Model model) {
-        System.out.println("[MeetingController] 들어옴.");
         Meeting meeting = meetingService.getMeetingByMeetingId(meetingId);
 
         // 날짜 포맷팅
@@ -68,8 +68,33 @@ public class MeetingController {
         model.addAttribute("meetingDate", formattedDate);
         model.addAttribute("meetingTime", formattedTime);
         model.addAttribute("participantCount", meeting.getMeetingParticipants().size()); // 참여자 수 추가
-
+        model.addAttribute("meetingId", meetingId);
         return "meeting/host";
+    }
+
+
+    @GetMapping("/{meetingId}/participants")
+    public ResponseEntity<Map<String, Object>> getMeetingParticipants(@PathVariable Integer meetingId) {
+        try {
+            List<MeetingParticipant> participants = meetingService.getParticipantsByMeetingId(meetingId);
+            List<MeetingParticipantDto> participantDtos = participants.stream()
+                    .map(participant -> new MeetingParticipantDto(
+                            participant.getParticipantId(),
+                            participant.getUser().getName() // User의 name 필드
+                    ))
+                    .collect(Collectors.toList());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("participantCount", participantDtos.size());
+            response.put("meetingParticipants", participantDtos);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", "참여자 정보를 가져오는 중 오류 발생: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
 
     @GetMapping("/client/{meetingId}")

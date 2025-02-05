@@ -15,4 +15,6 @@ public interface MeetingParticipantRepository extends JpaRepository<MeetingParti
     
     //특정회의에 유저의 참여 여부 확인
     boolean existsByMeetingAndUser(Meeting meeting, User user);
+
+    List<MeetingParticipant> findByMeeting_MeetingId(Integer meetingId);
 }

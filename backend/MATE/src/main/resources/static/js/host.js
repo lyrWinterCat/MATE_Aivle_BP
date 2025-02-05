@@ -227,3 +227,4 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('startButton').addEventListener('click', startCapture);
     document.getElementById('stopButton').addEventListener('click', stopCapture);
 });
+

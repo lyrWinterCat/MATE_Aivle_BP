@@ -94,4 +94,8 @@ public class MeetingService {
         //entity->Dto 반환
         return MeetingDto.fromEntity(meeting);
     }
+
+    public List<MeetingParticipant> getParticipantsByMeetingId(Integer meetingId) {
+        return meetingParticipantRepository.findByMeeting_MeetingId(meetingId);
+    }
 }
