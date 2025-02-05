@@ -120,7 +120,7 @@
         .form-group {
             display: flex;
             flex-direction: column;
-            margin-top: 3px;
+            margin-bottom: 20px;
             z-index: 10;
         }
         .input-label {
@@ -154,7 +154,6 @@
         .radio-groups {
             display: flex;
             justify-content: space-between;
-            margin-top:2px;
         }
         /* 라디오 버튼 박스 */
         .radio-container {
@@ -215,49 +214,8 @@
             border-radius: 8px;
             cursor: pointer;
         }
-        #meeingUrl-label-box{
-            width:100%;
-        }
         #meetingUrl-input-select {
             display:none;
-        }
-        .meeting-url-container {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            gap: 15px; /* 입력 필드와 버튼 사이 여백 추가 */
-        }
-
-        .meeting-url-input {
-            flex-grow: 1; /* 입력 필드가 가용 공간 최대한 활용 */
-            min-width: 0; /* 버튼 크기에 맞게 자동 조정 */
-        }
-
-        .meeting-select-button {
-            flex-shrink: 0; /* 버튼 크기 고정 */
-            width: 100px; /* 버튼 크기 설정 */
-            padding: 12px;
-            background-color: #5b5fc7;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            white-space: nowrap; /* 버튼 크기 유지 */
-        }
-
-        .meeting-select-button:hover {
-            background-color: #3b3e8f;
-        }
-
-        #meeting-select-button {
-            display:block;
-        }
-        #meeting-select-button.checkedUrl {
-            display:block;
-            background-color: #3b3e8f;
         }
     </style>
 
@@ -292,6 +250,21 @@
             <button id="newRoom" class="tab-button active">새로 참가하기</button>
             <button id="continueRoom" class="tab-button">이어 참가하기</button>
         </div>
+        <!-- 회의 제목, URL 입력 -->
+        <div class="form-group" id="meetingTitle">
+            <label class="input-label" id="meetingTitle-label">회의 제목</label>
+            <input type="text" class="input-field" id="meetingTitle-input" placeholder="회의 제목을 입력하세요">
+            <!-- 드롭다운 선택 박스 (처음에는 숨김) -->
+            <select class="select-field" id="meetingTitle-select">
+                <option value="" disabled selected>회의를 선택하세요</option>
+                <option value="회의1">회의 1</option>
+            </select>
+        </div>
+        <div class="form-group" id="meetingUrl">
+            <label class="input-label" id="meetingUrl-label">회의방 URL</label>
+            <input type="text" class="input-field" id="meetingUrl-input-new" value="" placeholder="회의방 URL을 입력하세요">
+            <input type="text" class="input-field" id="meetingUrl-input-select" value="" placeholder="회의방 URL을 입력하세요">
+        </div>
         <!-- 라디오 버튼 그룹 -->
         <div class="radio-groups">
             <div class="radio-container">
@@ -320,24 +293,6 @@
                     <span>기록자용</span>
                 </label>
             </div>
-        </div>
-        <div class="form-group" id="meetingUrl">
-            <label class="input-label" id="meetingUrl-label">회의방 URL</label>
-            <div class="meeting-url-container">
-                <input type="text" class="input-field meeting-url-input" id="meetingUrl-input-new" value="" placeholder="회의방 URL을 입력하세요">
-                <button id="meeting-select-button" class="meeting-select-button" onclick="checkMeeting()">조회</button>
-            </div>
-            <input type="text" class="input-field" id="meetingUrl-input-select" value="" placeholder="회의방 URL을 입력하세요">
-        </div>
-        <!-- 회의 제목, URL 입력 -->
-        <div class="form-group" id="meetingTitle">
-            <label class="input-label" id="meetingTitle-label">회의 제목</label>
-            <input type="text" class="input-field" id="meetingTitle-input" placeholder="회의 제목을 입력하세요">
-            <!-- 드롭다운 선택 박스 (처음에는 숨김) -->
-            <select class="select-field" id="meetingTitle-select">
-                <option value="" disabled selected>회의를 선택하세요</option>
-                <option value="회의1">회의 1</option>
-            </select>
         </div>
         <!-- 접속 버튼 -->
         <div class="form-group">

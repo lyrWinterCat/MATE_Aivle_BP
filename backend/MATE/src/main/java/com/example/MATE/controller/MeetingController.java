@@ -2,17 +2,18 @@ package com.example.MATE.controller;
 
 import com.example.MATE.dto.MeetingDto;
 import com.example.MATE.model.Meeting;
+import com.example.MATE.model.ScreenData;
 import com.example.MATE.service.MeetingService;
-import com.example.MATE.utils.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -73,15 +74,13 @@ public class MeetingController {
 
     @GetMapping("/client/{meetingId}")
     public String meetingUser(@PathVariable("meetingId") Integer meetingId, Model model){
-        System.out.println("[MeetingController] 들어옴.");
+        System.out.println("[MeetingController] 하이 클라이언트입니다.");
+        //참여자와 createAt 가져오기? 여기도 필요한가
         Meeting meeting = meetingService.getMeetingByMeetingId(meetingId);
-
-        model.addAttribute("meetingParticipants", meeting.getMeetingParticipants());
-        model.addAttribute("meetingName", meeting.getMeetingName());
-        model.addAttribute("meetingDate", DateUtil.dateFormat(meeting.getCreatedAt()));
-        model.addAttribute("meetingTime", DateUtil.timeFormat(meeting.getCreatedAt()));
-        model.addAttribute("participantCount", meeting.getMeetingParticipants().size()); // 참여자 수 추가
-
+        model.addAttribute("meetingParticipants",meeting.getMeetingParticipants());
+        model.addAttribute("meetingName",meeting.getMeetingName());
+        model.addAttribute("meetingCreatedAt",meeting.getCreatedAt());
+        System.out.println(">>> : "+meeting.getMeetingName());
         return "meeting/client";
     }
 
@@ -108,29 +107,5 @@ public class MeetingController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(meetingInfoList);
-    }
-
-    @PostMapping("/checkMeetingUrl")
-    public ResponseEntity<?> checkUrl(@RequestBody Map<String, String> request, Model model){
-        System.out.println("[MeetingController/checkUrl] 실행!");
-
-        String meetingUrl = request.get("meetingUrl");
-
-        if (meetingUrl == null || meetingUrl.trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("회의 URL을 입력해주세요.");
-        }
-
-        Meeting meeting = meetingService.getMeetingByUrl(meetingUrl);
-
-        if (meeting != null) {
-            System.out.println(">>> [MeetingController] 기존 회의명: " + meeting.getMeetingName());
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "이미 저장된 회의 URL입니다. 처음 참가하시는 회의라면 접속을 클릭하세요.");
-            response.put("meetingName", meeting.getMeetingName()); // 회의 이름 추가
-
-            return ResponseEntity.status(409).body(response); // JSON 형태로 반환
-        } else {
-            return ResponseEntity.ok("사용 가능한 회의 URL입니다. 회의 제목을 입력하고 접속을 클릭하세요.");
-        }
     }
 }
