@@ -11,6 +11,7 @@ import com.example.MATE.utils.DateUtil;
 import com.example.MATE.utils.PaginationUtils;
 import com.example.MATE.utils.SecurityUtils;
 import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -51,9 +52,25 @@ public class AdminController {
         // 총 독성 발언 횟수
         Long toxicityCounts = adminService.getToxicityLogCount();
 
+        // 부서별 독성 발언 횟수
+        Map<String, Integer> departmentToxicityLogs =  adminService.getToxicityLogsCountByDepartment();
+
+        // JSON 변환
+        ObjectMapper objectMapper = new ObjectMapper();
+        String departmentToxicityLogsJson = "{}"; // 기본값 (빈 객체)
+        try {
+            departmentToxicityLogsJson = objectMapper.writeValueAsString(departmentToxicityLogs);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // departmentToxicityLogsJson 로깅
+        System.out.println("departmentToxicityLogsJson = " + departmentToxicityLogsJson);
+
         model.addAttribute("meetingCounts", meetingCounts);
         model.addAttribute("averageMeetingDuration", formattedDuration);
         model.addAttribute("toxicityCounts", toxicityCounts);
+        model.addAttribute("departmentToxicityLogs", departmentToxicityLogsJson);
         return "admin/adminMain";
     }
 

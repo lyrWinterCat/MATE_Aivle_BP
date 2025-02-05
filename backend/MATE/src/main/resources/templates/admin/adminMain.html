@@ -200,17 +200,30 @@
     </div>
 </div>
 
+<!-- JSON 데이터를 저장하는 숨겨진 요소 -->
+<div id="departmentToxicityLogsData" style="display: none">{{departmentToxicityLogs}}</div>
+
 <script>
     window.onload = function() {
-        // 부서별 현황 (원형 차트, 부서 10개)
+        var dataElement = document.getElementById('departmentToxicityLogsData');
+        var logsJson = dataElement.innerText;
+        var toxicityData = JSON.parse(logsJson);
+
+        console.log("logsJson:", logsJson); // 콘솔에서 JSON 데이터 확인
+
+    // 데이터를 차트에 맞게 변환
+        var labels = Object.keys(toxicityData); // 부서명
+        var dataValues = Object.values(toxicityData); // 독성 발언 수
+
+        // 부서별 현황 (원형 차트)
         var departmentCtx = document.getElementById("departmentChart").getContext("2d");
         new Chart(departmentCtx, {
             type: 'pie',
             data: {
-                labels: ['영업부서', 'IT개발부서', '재무부서', '인사부서', '마케팅부서', '고객지원부서', 'R&D부서', '법무부서', '생산부서', '물류부서'],
+                labels: labels,
                 datasets: [{
-                    data: [10, 15, 12, 8, 10, 14, 9, 7, 6, 9],
-                    backgroundColor: ['#4A90E2', '#4ECDC4', '#45B7D1', '#DC143C', '#FFEEAD', '#D4A5A5', '#9B97B2', '#FFB6B9', '#A8E6CF', '#36B37E']
+                    data: dataValues,
+                    backgroundColor: ['#4A90E2', '#4ECDC4', '#45B7D1', '#DC143C', '#008080', '#D4A5A5', '#9B97B2', '#FFB6B9', '#A8E6CF', '#36B37E']
                 }]
             },
             options: {
@@ -218,16 +231,12 @@
                 maintainAspectRatio: true,
                 plugins: {
                     legend: {
-                        display: false  // ✅ 범례 제거
+                        display: true
                     },
-                    datalabels: {  // ✅ 부서명을 원형 그래프 안에 표시 (숫자 없이)
+                    datalabels: {
                         color: 'white',
-                        font: {
-
-                            weight: 'bold',
-                            size: 14
-                        },
-                        formatter: (value, ctx) => ctx.chart.data.labels[ctx.dataIndex] // 🔹 부서명만 표시
+                        font: { weight: 'bold', size: 14 },
+                        formatter: (value, ctx) => ctx.chart.data.labels[ctx.dataIndex]
                     }
                 }
             },

@@ -17,9 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -162,5 +160,40 @@ public class AdminService {
 
         // 1시간 초과인 경우 or 1시간 미만인 경우
         return hours > 0 ? hours + "시간" + minutes + "분" : minutes + "분";
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, Integer> getToxicityLogsCountByDepartment() {
+
+        // 원소[0] 에는 부서명, 원소[1] 에는 해당 부서명의 독성 발언 횟수가 담김
+        List<Object[]> results = meetingRepository.findToxicityLogsCountByDepartment();
+
+        // 부서명(영어) -> 한글 매핑
+        Map<String, String> departmentMap = Map.of(
+                "HR", "인사부서",
+                "IT", "IT개발부서",
+                "Finance", "재무부서",
+                "Marketing", "마케팅부서",
+                "Sales", "영업부서",
+                "Legal", "법무부서",
+                "Admin", "관리부서",
+                "Product", "제품개발부서",
+                "Support", "고객지원부서",
+                "R&D", "연구개발부서"
+        );
+
+        // 결과를 가공하여 Map에 저장 (출력 순서를 유지하기 위해 LinkedHashMap 사용)
+        Map<String, Integer> toxicityData = new LinkedHashMap<>();
+        for (Object[] row : results) {
+            String departmentName = (String) row[0];
+
+            // Object 를 Nuber 로 바꿔야 Int 로 바꿀 수 있음
+            int toxicityCount = ((Number) row[1]).intValue();
+
+            // departmentName 이 departmentMap 에 없으면 "기타"로 처리
+            toxicityData.put(departmentMap.getOrDefault(departmentName, "기타"), toxicityCount);
+        }
+
+        return toxicityData;
     }
 }

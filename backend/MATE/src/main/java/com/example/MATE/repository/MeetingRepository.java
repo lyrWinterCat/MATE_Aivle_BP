@@ -68,5 +68,14 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
     @Query(value = "SELECT AVG(TIMESTAMPDIFF(SECOND, start_time, end_time)) FROM meeting WHERE end_time IS NOT NULL", nativeQuery = true)
     Double findAverageMeetingDuration();
 
+    // 부서별 독성 발언 수를 구하는 함수
+    @Query("""
+        SELECT d.departmentName, COUNT(t.toxicityId)
+        FROM ToxicityLog t
+        JOIN User u on t.user.userId = u.userId
+        JOIN Department d on u.department.departmentId = d.departmentId
+        GROUP BY d.departmentName
+    """)
+    List<Object[]> findToxicityLogsCountByDepartment();
 
 }
