@@ -30,7 +30,9 @@ public class MeetingService {
     private final UserRepository userRepository;
     private final MeetingParticipantRepository meetingParticipantRepository;
 
-
+    public List<Meeting> getAllMeetings() {
+        return meetingRepository.findAllMeetings();
+    }
     // 유저 ID 를 받아 해당 유저가 참여한 모든 미팅 ID 를 반환
     public List<Integer> getMeetingIdsByUserId(Integer userId) {
         return meetingRepository.findMeetingIdsByUserId(userId);
@@ -60,6 +62,7 @@ public class MeetingService {
         }else{
             //Dto-> entity 변환 후 DB 저장
             meeting = meetingDto.toEntity();
+            meeting.setStartTime(LocalDateTime.now());
             meeting.setCreatedAt(LocalDateTime.now());
             meeting.setEndTime(null);
             meeting.setLastBreakTime(null);
