@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회의 상세 정보</title>
+    <link rel="stylesheet" type="text/css" href="/css/boardDetail.css" />
+    <link rel="stylesheet" type="text/css" href="/css/modal.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/header.css"/>
+</head>
+<body>
+<header>
+    <div class="header-left">
+        <a href="/user/userMain">
+            <img src="/img/logo.png" alt="Mate Logo" class="logo-img">
+        </a>
+        <h1>Mate</h1>
+    </div>
+    <div class="header-right">
+        <span>{{userName}}님 반갑습니다.</span>
+        <button onclick="location.href='/user/meetingList'">회의 목록</button>
+        <form action="/signOut" method="post" style="display:inline;">
+            <button type="submit">로그아웃</button>
+        </form>
+    </div>
+</header>
+
+<div class="subtitle-container">
+    <h2>회의 상세 정보</h2>
+</div>
+
+<div class="container">
+    <form>
+        <div class="read-group">
+            <label for="meetingName">회의명</label>
+            <input type="text" id="meetingName" name="meetingName" value="{{meetingDetail.meetingName}}" readonly>
+        </div>
+
+        <div class="read-group">
+            <label for="meetingTime">회의 시작 시간</label>
+            <input type="text" id="meetingTime" name="meetingTime" value="{{meetingDetail.meetingTime}}" readonly>
+        </div>
+
+        <div class="read-group">
+            <label for="endTime">회의 종료 시간</label>
+            <input type="text" id="endTime" name="endTime" value="{{meetingDetail.endTime}}" readonly>
+        </div>
+
+        <div class="read-group">
+            <label for="createdAt">회의 생성 시간</label>
+            <input type="text" id="createdAt" name="createdAt" value="{{meetingDetail.createdAt}}" readonly>
+        </div>
+
+        <div class="read-group">
+            <label for="url">회의 URL</label>
+            <input type="text" id="url" name="url" value="{{meetingDetail.url}}" readonly>
+        </div>
+
+        <div class="read-group">
+            <label for="filepath">첨부 파일</label>
+            <input type="text" id="filepath" name="filepath" value="{{meetingDetail.filepath}}" readonly>
+        </div>
+
+        <div class="read-group">
+            <label for="participants">참여자</label>
+            <textarea id="participants" name="participants" readonly>{{meetingDetail.participants}}</textarea>
+        </div>
+
+        <div class="read-group">
+            <label for="summaryTopic">주제별 요약</label>
+            <textarea id="summaryTopic" name="summaryTopic" readonly>{{meetingDetail.summaryTopic}}</textarea>
+        </div>
+
+        <div class="read-group">
+            <label for="positiveNegative">긍정부정 요약</label>
+            <textarea id="positiveNegative" name="positiveNegative" readonly>{{meetingDetail.summaryPositiveNegative}}</textarea>
+        </div>
+
+        <div class="read-group">
+            <label for="todoList">Todo List</label>
+            <textarea id="todoList" name="todoList" readonly>{{meetingDetail.todoList}}</textarea>
+        </div>
+
+        <div class="read-group">
+            <label for="summaryTotal">전체 요약</label>
+            <textarea id="summaryTotal" name="summaryTotal" readonly>{{meetingDetail.summaryTotal}}</textarea>
+        </div>
+
+        <div class="btnArea">
+            <button onclick="goback()" id="backbtn" type="button" class="submit-btn">뒤로가기</button>
+        </div>
+    </form>
+</div>
+</body>
+<script>
+    function goback(){
+        if (confirm("회의 리스트로 되돌아가시겠습니까?")) {
+            window.location.href = "/user/meetingList";
+        }
+    }
+</script>
+</html>

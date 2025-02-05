@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>정정게시판</title>
     <style>
-        
+
     </style>
     <link rel="stylesheet" type="text/css" href="/css/board.css" />
     <link rel="stylesheet" type="text/css" href="/css/header.css" />
@@ -56,6 +56,7 @@
                 <th>Time</th>
                 <th>회의명</th>
                 <th>참여자</th>
+                <th>상세보기</th>
             </tr>
             </thead>
             <tbody>
@@ -64,6 +65,11 @@
                 <td>{{meetingTime}}</td>
                 <td>{{meetingName}}</td>
                 <td>{{participants}}</td>
+                <td class="commentCol">
+                    <button class="commentBtn" onclick="location.href='/user/meetingDetail?meetingId={{meetingId}}'">
+                        상세보기
+                    </button>
+                </td>
             </tr>
             {{/meetingLogs}}
             </tbody>
