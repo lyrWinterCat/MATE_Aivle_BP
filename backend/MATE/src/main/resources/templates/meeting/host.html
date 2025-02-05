@@ -132,11 +132,13 @@
 
     <div class="content-wrapper">
         <div class="meeting-info">
+            <div class="meeting-title" id="meetingTitle">
+                <p> 회의 제목 : {{meetingName}}</p>
+            </div>
             <div class="meeting-time">
                 <p>{{meetingDate}}</p>
                 <p>{{meetingTime}} 회의시작</p>
             </div>
-
             <div class="participants">
                 <h2>회의 인원: {{participantCount}}</h2>
                 <p class="names">
@@ -155,7 +157,6 @@
                 <button class="control-btn" id="endMeetingButton">회의 종료</button>
             </div>
         </div>
-
         <div class="screen-container">
             <video id="localVideo" autoplay muted playsinline></video>
 <!--            <video id="remoteVideo" autoplay></video>-->

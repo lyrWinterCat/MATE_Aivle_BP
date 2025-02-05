@@ -35,6 +35,7 @@
                 if (this.id === "newRoom") {
                     isNewMeeting = true;
                     meetingUrlInputNew.value="";
+                    meetingTitleInput.value="";
                     meetingUrlInputNew.style.display = "block";
                     meetingUrlInputSelect.style.display = "none";
                     meetingTitleInput.style.display = "block"; // 입력 필드 보이기
