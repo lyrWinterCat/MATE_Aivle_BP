@@ -20,13 +20,17 @@
     <div class="content-wrapper">
         <div class="meeting-info">
             <div class="meeting-time">
-                <p>2025-01-10</p>
-                <p>9:00AM 회의시작</p>
+                <p>{{meetingDate}}</p>
+                <p>{{meetingTime}} 회의시작</p>
             </div>
 
             <div class="participants">
-                <h2>회의인원 : 4</h2>
-                <p class="names">윤찬혁, 고수현, 박언용,<br> 이승은</p>
+                <h2>회의 인원: {{participantCount}}</h2>
+                <p class="names">
+                    {{#meetingParticipants}}
+                    {{user.name}}<br> <!-- User 객체의 name 필드에 접근 -->
+                    {{/meetingParticipants}}
+                </p>
             </div>
 
             <div class="control-buttons">

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -49,16 +50,25 @@ public class MeetingController {
             );
         }
     }
-    
+
     @GetMapping("/host/{meetingId}")
-    public String meetingRecorder(@PathVariable("meetingId") Integer meetingId, Model model){
-        System.out.println("[MeetingController] 하이 호스트입니다.");
-        //참여자와 createAt 가져오기--url의 meetingId가져다 meeting과 meetingParticipant에서 조회하면됨
+    public String meetingRecorder(@PathVariable("meetingId") Integer meetingId, Model model) {
+        System.out.println("[MeetingController] 들어옴.");
         Meeting meeting = meetingService.getMeetingByMeetingId(meetingId);
-        model.addAttribute("meetingParticipants",meeting.getMeetingParticipants());
-        model.addAttribute("meetingName",meeting.getMeetingName());
-        model.addAttribute("meetingCreatedAt",meeting.getCreatedAt());
-        System.out.println(">>> : "+meeting.getMeetingName());
+
+        // 날짜 포맷팅
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
+
+        String formattedDate = meeting.getCreatedAt().format(dateFormatter);
+        String formattedTime = meeting.getCreatedAt().format(timeFormatter);
+
+        model.addAttribute("meetingParticipants", meeting.getMeetingParticipants());
+        model.addAttribute("meetingName", meeting.getMeetingName());
+        model.addAttribute("meetingDate", formattedDate);
+        model.addAttribute("meetingTime", formattedTime);
+        model.addAttribute("participantCount", meeting.getMeetingParticipants().size()); // 참여자 수 추가
+
         return "meeting/host";
     }
 
