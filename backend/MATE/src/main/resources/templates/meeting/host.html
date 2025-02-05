@@ -36,25 +36,45 @@
             left: 50%;
             transform: translate(-50%, -50%);
             width: 600px;
-            max-height: 600px; /* 최대 높이 설정 */
-<!--            padding: 20px;-->
+            max-height: 600px;
             border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(147, 112, 219, 0.2);
             text-align: center;
             z-index: 2000;
-            overflow-y: auto; /* 세로 스크롤 */
+            overflow-y: auto;
+            background: #f8f6ff; /* 연한 라벤더 배경 */
+            border: 1px solid #e6e1ff;
         }
-
-<!--        #summaryPopup button {-->
-<!--            margin-top: 10px;-->
-<!--            margin-bottom: 10px;-->
-<!--            padding: 5px 10px;-->
-<!--            background: #007bff;-->
-<!--            color: white;-->
-<!--            border: none;-->
-<!--            border-radius: 5px;-->
-<!--            cursor: pointer;-->
-<!--        }-->
+        
+        /* 탭 스타일 */
+        #summaryPopup .tab {
+            background: #b8a6db; /* 연보라색 탭 배경 */
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        #summaryPopup .tab.active {
+            background: #9780c9; /* 활성 탭의 더 진한 보라색 */
+        }
+        
+        /* 버튼 스타일 */
+        #summaryPopup button {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding: 5px 10px;
+            background: #9780c9; /* 보라색 버튼 */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        #summaryPopup button:hover {
+            background: #8670b9; /* 호버 시 더 진한 보라색 */
+        }
 
         .meeting-card {
             background: #50bcdf;
