@@ -77,7 +77,7 @@
     }
 
     let checkUrl = false;
-    //회의 URL 조회
+    //회의 URL 조회 및 제목넣기
     async function checkMeeting() {
         const meetingUrlInputNew = document.getElementById("meetingUrl-input-new");
         const meetingTitleInput = document.getElementById("meetingTitle-input"); // 회의 제목 입력 필드
@@ -104,7 +104,6 @@
                 if (response.status === 409) {
                     const result = await response.json();
                     console.log("서버 응답 (409):", result);
-                    selectButton.classList.add("checkedUrl");
                     checkUrl = true;
                     meetingTitleInput.value = result.meetingName || ""; // meetingName이 있으면 입력, 없으면 빈 값
                     console.log(result.message);
@@ -114,6 +113,7 @@
                     console.error("서버 오류 응답:", errorText);
                     console.log(`서버 오류 발생: ${errorText}`);
                     selectButton.classList.remove("checkedUrl");
+                    meetingTitleInput.value = "";
                 }
             } else {
                 // 사용 가능한 URL (200 OK)

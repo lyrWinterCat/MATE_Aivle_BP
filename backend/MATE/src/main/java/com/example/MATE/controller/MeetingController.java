@@ -148,11 +148,12 @@ public class MeetingController {
         }
 
         String meetingName = meetingService.getMeetingNameByUrl(meetingUrl);
+        System.out.println("[meetingName] : "+meetingName);
+        Map<String, String> response = new HashMap<>();
 
         if( meetingName == "" ){
             return ResponseEntity.ok("사용 가능한 회의 URL입니다. 회의 제목을 입력하고 접속을 클릭하세요.");
         }else{
-            Map<String, String> response = new HashMap<>();
             response.put("message", "이미 저장된 회의 URL입니다. 처음 참가하시는 회의라면 접속을 클릭하세요.");
             response.put("meetingName", meetingName); // 회의 이름 추가
             return ResponseEntity.status(409).body(response); // JSON 형태로 반환
