@@ -57,4 +57,5 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
             @Param("endDate") LocalDateTime endDate,
             Pageable pageable);
 
+
 }

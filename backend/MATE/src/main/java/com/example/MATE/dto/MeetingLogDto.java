@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 @Data
 @AllArgsConstructor
 public class MeetingLogDto {
+    private Integer meetingId;
     private String meetingName;
     private String meetingTime;
     private String participants;
@@ -23,6 +24,7 @@ public class MeetingLogDto {
         String participantNames = participants.stream().map(User::getName).collect(Collectors.joining(", "));
 
         return new MeetingLogDto(
+                meeting.getMeetingId(),
                 meeting.getMeetingName(),
                 meeting.getCreatedAt().format(formatter),
                 participantNames

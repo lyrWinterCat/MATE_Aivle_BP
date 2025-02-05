@@ -1,5 +1,6 @@
 package com.example.MATE.service;
 
+import com.example.MATE.dto.MeetingDetailDto;
 import com.example.MATE.dto.MeetingDto;
 import com.example.MATE.model.Meeting;
 import com.example.MATE.model.MeetingParticipant;
@@ -90,5 +91,15 @@ public class MeetingService {
         System.out.println("[MeetingService/createMeeting] 회의 및 참가자 저장 완료");
         //entity->Dto 반환
         return MeetingDto.fromEntity(meeting);
+    }
+
+    @Transactional(readOnly = true)
+    public MeetingDetailDto getMeetingDetailById(Integer meetingId) {
+        Optional<Meeting> meetingOptional = meetingRepository.findById(meetingId);
+        if (meetingOptional.isEmpty()) {
+            return null;
+        }
+        Meeting meeting = meetingOptional.get();
+        return MeetingDetailDto.fromEntity(meeting);
     }
 }
