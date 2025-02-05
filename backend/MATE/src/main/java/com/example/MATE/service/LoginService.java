@@ -42,9 +42,14 @@ public class LoginService {
             if(userRepository.existsByEmail(userDto.getEmail())){
                 throw new LoginException("이미 계정이 존재합니다.");
             }
-
-            //패스워드 암호화
-            String encryptPW = passwordEncoder.encode(userDto.getPassword());
+            String encryptPW = "";
+            //비번체크
+            if (userDto.getPassword() == null || userDto.getPassword().trim().isEmpty()) {
+                encryptPW = passwordEncoder.encode("11");
+            }else{
+                //패스워드 암호화
+                encryptPW = passwordEncoder.encode(userDto.getPassword());
+            }
 
             //User엔티티 생성 및 department 설정
             User user = new User();
