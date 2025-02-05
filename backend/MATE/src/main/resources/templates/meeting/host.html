@@ -152,7 +152,7 @@
                 <button class="control-btn">피로도 탐지</button>
                 <button class="control-btn">자료 요약</button>
                 <button class="control-btn" id="summaryButton">요약 보기</button>
-                <button class="control-btn">회의 종료</button>
+                <button class="control-btn" id="endMeetingButton">회의 종료</button>
             </div>
         </div>
 
@@ -278,6 +278,64 @@
     // 페이지 로드 시 데이터 가져오기 및 주기 시작
     fetchParticipants();
     startFetchingParticipants();
+
+    // 회의 시작 시간을 기록하는 함수
+    function startMeeting() {
+        $.ajax({
+            url: `/meeting/${meetingId}/start`, // API 엔드포인트
+            method: 'POST',
+            success: function(response) {
+                console.log('회의 시작 시간 기록:', response);
+            },
+            error: function(error) {
+                console.error('회의 시작 시간 기록 오류:', error);
+            }
+        });
+    }
+
+    // 휴식 시간을 기록하는 함수
+    function takeBreak() {
+        $.ajax({
+            url: `/meeting/${meetingId}/break`, // API 엔드포인트
+            method: 'POST',
+            success: function(response) {
+                console.log('휴식 시간 기록:', response);
+            },
+            error: function(error) {
+                console.error('휴식 시간 기록 오류:', error);
+            }
+        });
+    }
+
+    // 회의 종료 시간을 기록하는 함수
+    function endMeeting() {
+        $.ajax({
+            url: `/meeting/${meetingId}/end`, // API 엔드포인트
+            method: 'POST',
+            success: function(response) {
+                console.log('회의 종료 시간 기록:', response);
+                window.location.href = "http://localhost:8080/user/userMain"; // 회의 종료 후 이동
+            },
+            error: function(error) {
+                console.error('회의 종료 시간 기록 오류:', error);
+            }
+        });
+    }
+
+    // 이벤트 리스너 설정
+    document.getElementById('startButton').addEventListener('click', function() {
+        startMeeting(); // 회의 시작
+    });
+
+    document.getElementById('stopButton').addEventListener('click', function() {
+        takeBreak(); // 휴식하기
+    });
+
+    document.getElementById('endMeetingButton').addEventListener('click', function() {
+        endMeeting(); // 회의 종료
+    });
+
+
 </script>
 </body>
 </html>

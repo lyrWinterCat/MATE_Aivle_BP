@@ -159,4 +159,24 @@ public class MeetingController {
             return ResponseEntity.status(409).body(response); // JSON 형태로 반환
         }
     }
+
+    @PostMapping("/{meetingId}/start")
+    public ResponseEntity<?> startMeeting(@PathVariable Integer meetingId) {
+        meetingService.startMeeting(meetingId);
+        return ResponseEntity.ok().body("회의 시작 시간이 기록되었습니다.");
+    }
+
+    @PostMapping("/{meetingId}/break")
+    public ResponseEntity<?> takeBreak(@PathVariable Integer meetingId) {
+        meetingService.takeBreak(meetingId);
+        return ResponseEntity.ok().body("휴식 시간이 기록되었습니다.");
+    }
+
+    @PostMapping("/{meetingId}/end")
+    public ResponseEntity<?> endMeeting(@PathVariable Integer meetingId) {
+        meetingService.endMeeting(meetingId);
+        return ResponseEntity.ok().body("회의 종료 시간이 기록되었습니다.");
+    }
+
+
 }

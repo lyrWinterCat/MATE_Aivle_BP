@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,7 +63,7 @@ public class MeetingService {
         }else{
             //Dto-> entity 변환 후 DB 저장
             meeting = meetingDto.toEntity();
-            meeting.setStartTime(LocalDateTime.now());
+//            meeting.setStartTime(LocalDateTime.now());
             meeting.setCreatedAt(LocalDateTime.now());
             meeting.setEndTime(null);
             meeting.setLastBreakTime(null);
@@ -133,4 +134,68 @@ public class MeetingService {
 
         return meetingName;
     }
+
+    public void startMeeting(Integer meetingId) {
+        Meeting meeting = meetingRepository.findById(meetingId).orElse(new Meeting());
+
+        // 현재 시간으로 시작 시간 설정
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedStartTime = now.format(formatter);
+
+        // 문자열을 LocalDateTime으로 변환
+        meeting.setStartTime(LocalDateTime.parse(formattedStartTime, formatter));
+
+        meetingRepository.save(meeting); // 저장 또는 업데이트
+    }
+
+    public void takeBreak(Integer meetingId) {
+        Meeting meeting = meetingRepository.findById(meetingId).orElse(new Meeting());
+
+        // 현재 시간으로 마지막 휴식 시간 설정
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedBreakTime = now.format(formatter);
+
+        // 문자열을 LocalDateTime으로 변환
+        meeting.setLastBreakTime(LocalDateTime.parse(formattedBreakTime, formatter));
+
+        meetingRepository.save(meeting); // 저장 또는 업데이트
+    }
+
+    public void endMeeting(Integer meetingId) {
+        Meeting meeting = meetingRepository.findById(meetingId).orElse(new Meeting());
+
+        // 현재 시간으로 종료 시간 설정
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedEndTime = now.format(formatter);
+
+        // 문자열을 LocalDateTime으로 변환
+        meeting.setEndTime(LocalDateTime.parse(formattedEndTime, formatter));
+
+        meetingRepository.save(meeting); // 저장 또는 업데이트
+    }
+
+//    public void startMeeting(Integer meetingId) {
+//        Meeting meeting = meetingRepository.findById(meetingId).orElse(new Meeting());
+//        meeting.setStartTime(LocalDateTime.now()); // 현재 시간으로 시작 시간 설정
+////        meeting.setCreatedAt(LocalDateTime.now()); // 생성 시간 설정 (새 회의인 경우)
+//        meetingRepository.save(meeting); // 저장 또는 업데이트
+//    }
+//
+//    public void takeBreak(Integer meetingId) {
+//        Meeting meeting = meetingRepository.findById(meetingId).orElse(new Meeting());
+//        meeting.setLastBreakTime(LocalDateTime.now()); // 현재 시간으로 마지막 휴식 시간 설정
+//        meetingRepository.save(meeting); // 저장 또는 업데이트
+//    }
+//
+//    public void endMeeting(Integer meetingId) {
+//        Meeting meeting = meetingRepository.findById(meetingId).orElse(new Meeting());
+//        meeting.setEndTime(LocalDateTime.now()); // 현재 시간으로 종료 시간 설정
+//        meetingRepository.save(meeting); // 저장 또는 업데이트
+//    }
+
+
+
 }
