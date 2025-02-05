@@ -1,14 +1,13 @@
 package com.example.MATE.controller;
 
 import com.example.MATE.dto.AdminFeedbackDto;
+import com.example.MATE.dto.MeetingDetailDto;
 import com.example.MATE.dto.MeetingLogDto;
 import com.example.MATE.dto.SpeechLogDto;
-import com.example.MATE.model.AdminFeedback;
-import com.example.MATE.model.SpeechLog;
-import com.example.MATE.model.ToxicityLog;
-import com.example.MATE.model.User;
+import com.example.MATE.model.*;
 import com.example.MATE.repository.UserRepository;
 import com.example.MATE.service.AdminService;
+import com.example.MATE.service.MeetingService;
 import com.example.MATE.service.UserService;
 import com.example.MATE.utils.DateUtil;
 import com.example.MATE.utils.PaginationUtils;
@@ -37,6 +36,7 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final AdminService adminService;
+    private final MeetingService meetingService;
 
     //유저메인페이지
     @GetMapping("/userMain")
@@ -104,6 +104,32 @@ public class UserController {
 
         return "user/meetingList";
     }
+
+    // "상세보기" 버튼을 누르면 해당 회의의 정보, 요약, todolist 를 보여줌
+    @GetMapping("/meetingDetail")
+    @PreAuthorize("hasAuthority('USER')")
+    public String meetingDetail(@RequestParam("meetingId") Integer meetingId, Model model, HttpSession session) {
+
+        String email = SecurityUtils.getCurrentUserEmail();
+        if (email != null) {
+            Optional<User> userOptional = userService.findByEmail(email);
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                model.addAttribute("userName", user.getName());
+            }
+        }
+
+        MeetingDetailDto meetingDetail = meetingService.getMeetingDetailById(meetingId);
+        if (meetingDetail == null) {
+            throw new IllegalArgumentException("유효하지 않은 회의 ID: " + meetingId);
+        }
+        model.addAttribute("meetingDetail", meetingDetail);
+
+        return "user/meetingDetail";
+    }
+
+
+
     //마이페이지 로그
     @GetMapping("/speechLog")
     @PreAuthorize("hasAuthority('USER')")

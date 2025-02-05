@@ -1,12 +1,11 @@
 package com.example.MATE.service;
 
+import com.example.MATE.dto.MeetingDetailDto;
 import com.example.MATE.dto.MeetingDto;
-import com.example.MATE.model.Meeting;
-import com.example.MATE.model.MeetingParticipant;
-import com.example.MATE.model.ScreenData;
-import com.example.MATE.model.User;
+import com.example.MATE.model.*;
 import com.example.MATE.repository.MeetingParticipantRepository;
 import com.example.MATE.repository.MeetingRepository;
+import com.example.MATE.repository.SummaryRepository;
 import com.example.MATE.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +28,7 @@ public class MeetingService {
     private final MeetingRepository meetingRepository;
     private final UserRepository userRepository;
     private final MeetingParticipantRepository meetingParticipantRepository;
+    private final SummaryRepository summaryRepository;
 
     public List<Meeting> getAllMeetings() {
         return meetingRepository.findAllMeetings();
@@ -95,7 +95,22 @@ public class MeetingService {
         return MeetingDto.fromEntity(meeting);
     }
 
+
     public List<MeetingParticipant> getParticipantsByMeetingId(Integer meetingId) {
         return meetingParticipantRepository.findByMeeting_MeetingId(meetingId);
+    }
+
+    @Transactional(readOnly = true)
+    public MeetingDetailDto getMeetingDetailById(Integer meetingId) {
+        Optional<Meeting> meetingOptional = meetingRepository.findById(meetingId);
+        if (meetingOptional.isEmpty()) {
+            return null;
+        }
+        Meeting meetingDetail = meetingOptional.get();
+
+        Optional<Summary> summary = summaryRepository.findByMeeting(meetingDetail);
+
+        return MeetingDetailDto.fromEntity(meetingDetail, summary.orElse(null));
+
     }
 }
