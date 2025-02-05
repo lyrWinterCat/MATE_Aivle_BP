@@ -53,24 +53,14 @@ public class AdminController {
         Long toxicityCounts = adminService.getToxicityLogCount();
 
         // 부서별 독성 발언 횟수
-        Map<String, Integer> departmentToxicityLogs =  adminService.getToxicityLogsCountByDepartment();
-
-        // JSON 변환
-        ObjectMapper objectMapper = new ObjectMapper();
-        String departmentToxicityLogsJson = "{}"; // 기본값 (빈 객체)
-        try {
-            departmentToxicityLogsJson = objectMapper.writeValueAsString(departmentToxicityLogs);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // departmentToxicityLogsJson 로깅
-        System.out.println("departmentToxicityLogsJson = " + departmentToxicityLogsJson);
+        String departmentToxicityLogs =  adminService.getToxicityLogsCountByDepartment();
+        String dailyToxicityLogsJson = adminService.getDailyToxicityLogs();
 
         model.addAttribute("meetingCounts", meetingCounts);
         model.addAttribute("averageMeetingDuration", formattedDuration);
         model.addAttribute("toxicityCounts", toxicityCounts);
-        model.addAttribute("departmentToxicityLogs", departmentToxicityLogsJson);
+        model.addAttribute("departmentToxicityLogs", departmentToxicityLogs);
+        model.addAttribute("dailyToxicityLogs", dailyToxicityLogsJson);
         return "admin/adminMain";
     }
 

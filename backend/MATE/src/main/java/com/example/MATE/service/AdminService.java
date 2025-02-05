@@ -7,6 +7,7 @@ import com.example.MATE.model.AdminFeedback;
 import com.example.MATE.model.AdminFeedbackComments;
 import com.example.MATE.model.User;
 import com.example.MATE.repository.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -163,7 +164,7 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
-    public Map<String, Integer> getToxicityLogsCountByDepartment() {
+    public String getToxicityLogsCountByDepartment() {
 
         // 원소[0] 에는 부서명, 원소[1] 에는 해당 부서명의 독성 발언 횟수가 담김
         List<Object[]> results = meetingRepository.findToxicityLogsCountByDepartment();
@@ -194,6 +195,39 @@ public class AdminService {
             toxicityData.put(departmentMap.getOrDefault(departmentName, "기타"), toxicityCount);
         }
 
-        return toxicityData;
+        // JSON 변환
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(toxicityData);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "{}";
+        }
+    }
+
+    // 일별 독성 발언 추이
+    public String getDailyToxicityLogs() {
+        // 최근 한 달
+        LocalDateTime startDate = LocalDateTime.now().minusDays(29).withHour(0).withMinute(0).withSecond(0);
+        LocalDateTime endDate = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
+
+        List<Object[]> results = meetingRepository.findDailyToxicityLogCount(startDate, endDate);
+
+        // LinkedHashMap을 사용하여 순서 유지
+        Map<String, Integer> dailyToxicityData = new LinkedHashMap<>();
+        for (Object[] row : results) {
+            String date = row[0].toString(); // 날짜
+            int count = ((Number) row[1]).intValue();
+            dailyToxicityData.put(date, count);
+        }
+
+        // JSON 변환
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(dailyToxicityData);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "{}";
+        }
     }
 }

@@ -78,4 +78,17 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
     """)
     List<Object[]> findToxicityLogsCountByDepartment();
 
+
+    @Query("""
+    SELECT FUNCTION('DATE', s.timestamp), COUNT(t.toxicityId) 
+    FROM ToxicityLog t
+    JOIN SpeechLog s ON t.speechLog.logId = s.logId
+    WHERE s.timestamp >= :startDate AND s.timestamp <= :endDate
+    GROUP BY FUNCTION('DATE', s.timestamp)
+    ORDER BY FUNCTION('DATE', s.timestamp) ASC
+""")
+    List<Object[]> findDailyToxicityLogCount(@Param("startDate") LocalDateTime startDate,
+                                             @Param("endDate") LocalDateTime endDate);
+
+
 }

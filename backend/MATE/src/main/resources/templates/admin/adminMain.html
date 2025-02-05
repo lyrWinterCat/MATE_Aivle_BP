@@ -202,6 +202,7 @@
 
 <!-- JSON 데이터를 저장하는 숨겨진 요소 -->
 <div id="departmentToxicityLogsData" style="display: none">{{departmentToxicityLogs}}</div>
+<div id="dailyToxicityLogsData" style="display: none">{{dailyToxicityLogs}}</div>
 
 <script>
     window.onload = function() {
@@ -243,31 +244,37 @@
             plugins: [ChartDataLabels]
         });
 
-        // 월별 추이 (막대 그래프, 10일 단위)
-        var monthlyTrendCtx = document.getElementById("monthlyTrendChart").getContext("2d");
-        new Chart(monthlyTrendCtx, {
+        var dailyDataElement = document.getElementById('dailyToxicityLogsData');
+        var dailyLogsJson = dailyDataElement.innerText.trim();
+        var dailyToxicityData = JSON.parse(dailyLogsJson);
+
+        console.log("일별 독성 발언 데이터:", dailyToxicityData);
+
+        var dailyLabels = Object.keys(dailyToxicityData); // 날짜 목록
+        var dailyValues = Object.values(dailyToxicityData); // 독성 발언 수
+
+        var dailyTrendCtx = document.getElementById("monthlyTrendChart").getContext("2d");
+        new Chart(dailyTrendCtx, {
             type: 'bar',
             data: {
-                labels: ['D-4', 'D-3', 'D-2', 'D-1', 'Today'],
+                labels: dailyLabels,
                 datasets: [{
-                    label: '독성발언',
-                    data: [3, 6, 9, 12, 15],
-                    backgroundColor: '#9B97B2',
-                    borderColor: '#9B97B2',
+                    label: '독성 발언 수',
+                    data: dailyValues,
+                    backgroundColor: 'rgba(255, 51, 51, 0.7)',
+                    borderColor: '#B22222',
                     borderWidth: 1
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        display: false  // ✅ 범례 제거
-                    }
-                },
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
                     }
                 }
             }
