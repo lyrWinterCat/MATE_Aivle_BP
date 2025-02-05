@@ -113,4 +113,24 @@ public class MeetingService {
         return MeetingDetailDto.fromEntity(meetingDetail, summary.orElse(null));
 
     }
+
+    // 회의 URL로 Meeting 조회
+    @Transactional
+    public String getMeetingNameByUrl(String meetingUrl) {
+        System.out.println(">>> [MeetingService/getMeetingByUrl] 실행! : " + meetingUrl);
+
+        Optional<Meeting> meetingOptional = meetingRepository.findByUrl(meetingUrl);
+        String meetingName = "";
+
+        if (meetingOptional.isPresent()) {
+            Meeting meeting = meetingOptional.get();
+            System.out.println(">>> [MeetingService] 기존 회의 정보 찾음: " + meeting);
+            meetingName = meeting.getMeetingName();
+        } else {
+            System.out.println(">>> [MeetingService] 해당 URL의 회의가 없음. 기본값 반환");
+            meetingName = "";
+        }
+
+        return meetingName;
+    }
 }
