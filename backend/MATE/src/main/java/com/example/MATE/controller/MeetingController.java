@@ -10,6 +10,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,12 +51,26 @@ public class MeetingController {
     }
     
     @GetMapping("/host/{meetingId}")
-    public String meetingRecorder(){
+    public String meetingRecorder(@PathVariable("meetingId") Integer meetingId, Model model){
+        System.out.println("[MeetingController] 하이 호스트입니다.");
+        //참여자와 createAt 가져오기--url의 meetingId가져다 meeting과 meetingParticipant에서 조회하면됨
+        Meeting meeting = meetingService.getMeetingByMeetingId(meetingId);
+        model.addAttribute("meetingParticipants",meeting.getMeetingParticipants());
+        model.addAttribute("meetingName",meeting.getMeetingName());
+        model.addAttribute("meetingCreatedAt",meeting.getCreatedAt());
+        System.out.println(">>> : "+meeting.getMeetingName());
         return "meeting/host";
     }
 
     @GetMapping("/client/{meetingId}")
-    public String meetingUser(){
+    public String meetingUser(@PathVariable("meetingId") Integer meetingId, Model model){
+        System.out.println("[MeetingController] 하이 클라이언트입니다.");
+        //참여자와 createAt 가져오기? 여기도 필요한가
+        Meeting meeting = meetingService.getMeetingByMeetingId(meetingId);
+        model.addAttribute("meetingParticipants",meeting.getMeetingParticipants());
+        model.addAttribute("meetingName",meeting.getMeetingName());
+        model.addAttribute("meetingCreatedAt",meeting.getCreatedAt());
+        System.out.println(">>> : "+meeting.getMeetingName());
         return "meeting/client";
     }
 

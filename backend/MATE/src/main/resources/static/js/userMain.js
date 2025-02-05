@@ -161,7 +161,7 @@
             .catch(error => { //400, 500
                 console.error("회의 생성 요청 실패:", error);
                 if(error.message.includes("500")){
-                    alert("이미 저장된 회의 URL입니다.");
+                    alert("이미 저장된 회의 URL입니다. 이어 참가하기를 통해 회의에 참여바랍니다.");
                 }else{
                     alert(`네트워크 오류 또는 서버 문제로 회의 생성에 실패했습니다.\n오류 메시지: ${error.message}`);
                 }
