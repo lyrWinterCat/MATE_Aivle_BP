@@ -20,6 +20,9 @@ public class Meeting {
     @Column(name = "meeting_name", nullable = false, length = 100)
     private String meetingName;
 
+    @Column(name = "start_time", nullable = false)
+    private LocalDateTime startTime;
+
     @Column(name = "end_time")
     private LocalDateTime endTime;
 

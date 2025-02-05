@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
-
+    // Meeting 정보를 불러오기 위한 query derived method 작성
+    @Query(value = "SELECT * FROM meeting ORDER BY start_time DESC", nativeQuery = true) // JPQL 이 아닌 native query 사용
+    List<Meeting> findAllMeetings();
     // 유저 ID 를 받아 해당 유저가 참여한 모든 미팅 ID 를 반환
     @Query(value = "SELECT meeting_id FROM meeting_participant WHERE user_id = ?1", nativeQuery = true)
     List<Integer> findMeetingIdsByUserId(Integer userId);
@@ -47,9 +49,9 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
             "    WHERE (:employeeName = '' OR mp2.user.name LIKE CONCAT('%', :employeeName, '%')) " +
             ") " +
 
-            "AND (:startDate IS NULL OR m.createdAt >= :startDate) " +
-            "AND (:endDate IS NULL OR m.createdAt <= :endDate) " +
-            "ORDER BY m.createdAt DESC")
+            "AND (:startDate IS NULL OR m.startTime >= :startDate) " +
+            "AND (:endDate IS NULL OR m.startTime <= :endDate) " +
+            "ORDER BY m.startTime DESC")
     Page<Meeting> findMeetingsByUserIdSSF(
             @Param("userId") Integer userId,
             @Param("employeeName") String employeeName,

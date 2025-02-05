@@ -101,10 +101,11 @@
         console.log(statusValue);
         if(statusValue.trim() === "승인"){
             document.getElementById("approved").checked = true;
+            document.getElementById("submitBtn").style.display="none";
         }else if(statusValue.trim() === "반려"){
             document.getElementById("rejected").checked = true;
+            document.getElementById("submitBtn").style.display="none";
         }
-
     });
 
     function goback(){
