@@ -3,23 +3,19 @@ package com.example.MATE.service;
 import com.example.MATE.dto.MeetingDto;
 import com.example.MATE.model.Meeting;
 import com.example.MATE.model.MeetingParticipant;
-import com.example.MATE.model.ScreenData;
 import com.example.MATE.model.User;
 import com.example.MATE.repository.MeetingParticipantRepository;
 import com.example.MATE.repository.MeetingRepository;
 import com.example.MATE.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -55,25 +51,18 @@ public class MeetingService {
 
         Meeting meeting;
         //url 중복여부확인
-        if( meetingRepository.existsByUrl(meetingDto.getMeetingUrl()) ){
-            System.out.println(">>> [MeetingService] 기존 회의가 존재하므로 새로 생성하지 않고 기존 회의 사용");
-            meeting = meetingRepository.findByUrl(meetingDto.getMeetingUrl())
-                    .orElseThrow(() -> new IllegalArgumentException("회의 데이터를 찾을 수 없음"));
-        }else{
-            //Dto-> entity 변환 후 DB 저장
-            meeting = meetingDto.toEntity();
-            meeting.setStartTime(LocalDateTime.now());
-            meeting.setCreatedAt(LocalDateTime.now());
-            meeting.setEndTime(null);
-            meeting.setLastBreakTime(null);
-            meeting.setFilepath("");
+        //Dto-> entity 변환 후 DB 저장
+        meeting = meetingDto.toEntity();
+        meeting.setStartTime(LocalDateTime.now());
+        meeting.setCreatedAt(LocalDateTime.now());
+        meeting.setEndTime(null);
+        meeting.setLastBreakTime(null);
+        meeting.setFilepath("");
+        //저장
+        meeting = meetingRepository.save(meeting);
 
-            //저장
-            meeting = meetingRepository.save(meeting);
-
-            if (meeting.getMeetingId() == null) {
-                throw new IllegalArgumentException("회의가 정상적으로 저장되지 않음");
-            }
+        if (meeting.getMeetingId() == null) {
+            throw new IllegalArgumentException("회의가 정상적으로 저장되지 않음");
         }
         //사용자 조회
         User user = userRepository.findByUserId(userId)
@@ -93,5 +82,20 @@ public class MeetingService {
         System.out.println("[MeetingService/createMeeting] 회의 및 참가자 저장 완료");
         //entity->Dto 반환
         return MeetingDto.fromEntity(meeting);
+    }
+    // 회의 URL로 Meeting 조회
+    @Transactional
+    public Meeting getMeetingByUrl(String meetingUrl) {
+        System.out.println(">>> [MeetingService/getMeetingByUrl] 실행! : " + meetingUrl);
+
+        Meeting meeting = meetingRepository.findByUrl(meetingUrl);
+
+        if (meeting != null) {
+            System.out.println(">>> [MeetingService] 기존 회의 정보 찾음: " + meeting);
+        } else {
+            System.out.println(">>> [MeetingService] 해당 URL의 회의가 없음");
+        }
+
+        return meeting; // 존재하면 Meeting 객체, 없으면 null 반환
     }
 }

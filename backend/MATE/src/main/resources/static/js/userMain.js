@@ -15,9 +15,13 @@
         const meetingUrlInputNew = document.getElementById("meetingUrl-input-new");
         const meetingUrlInputSelect = document.getElementById("meetingUrl-input-select");
         const connectButton = document.querySelector(".connect-button");
-
         const radioClient = document.getElementById("client");
         const radioHost = document.getElementById("host");
+
+        const meetingTitle = document.getElementById("meetingTitle");
+        const meetingUrl = document.getElementById("meetingUrl");
+        const meetingCard = document.querySelector(".meeting-card");
+        const meetingSelectBtn = document.getElementById("meeting-select-button");
 
         tabs.forEach(tab => {
             tab.addEventListener("click", function () {
@@ -35,6 +39,8 @@
                     meetingUrlInputSelect.style.display = "none";
                     meetingTitleInput.style.display = "block"; // 입력 필드 보이기
                     meetingTitleSelect.style.display = "none"; // 셀렉트 숨기기
+                    meetingCard.insertBefore(meetingUrl, meetingTitle);
+                    meetingSelectBtn.style.display = "block";
                 } else {
                     isNewMeeting = false;
                     meetingUrlInputSelect.value="";
@@ -42,6 +48,8 @@
                     meetingUrlInputSelect.style.display = "block";
                     meetingTitleInput.style.display = "none"; // 입력 필드 보이기
                     meetingTitleSelect.style.display = "block"; // 셀렉트 보이기
+                    meetingCard.insertBefore(meetingTitle, meetingUrl);
+                    meetingSelectBtn.style.display = "none";
                     //회의 리스트 세팅
                     loadMeetings();
                 }
@@ -66,6 +74,46 @@
             updateMeetingDropdown(data);
         })
         .catch(error => console.error("회의 데이터 로드 실패:", error));
+    }
+
+    let checkUrl = false;
+    //회의 URL 조회
+    async function checkMeeting() {
+         const meetingUrlInputNew = document.getElementById("meetingUrl-input-new");
+         const meetingUrl = meetingUrlInputNew.value.trim();
+         console.log(">>> ", meetingUrl);
+         const selectButton = document.getElementById("meeting-select-button");
+
+        if(meetingUrl == "" || meetingUrl == null){
+            alert("회의 URL을 입력하세요.");
+            event.preventDefault();
+            return;
+        }
+         try {
+             // 서버로 이메일 중복 확인 요청
+             const response = await fetch('/meeting/checkMeetingUrl', {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json',
+                 },
+                 body: JSON.stringify({ meetingUrl: meetingUrl })
+             })
+             const result = await response.json();
+             console.log("서버 응답:", result);
+             if (result.meetingName){
+                checkUrl = false;
+                document.getElementById("meetingTitle-input").value = result.meetingName;
+             }else if(response.ok){
+                //중복체크 결과 여기
+                selectButton.classList.add("checkedUrl");
+                checkUrl = true;
+             } else {
+                checkUrl = false;
+             }
+         } catch (error) {
+             console.error('URL 중복 확인 중 오류 발생:', error);
+             alert('이미 등록된 회의URL입니다. 회의에 첫 참가시라면 접속을 눌러 참가바랍니다.');
+         }
     }
     //회의 리스트 셋팅
     function updateMeetingDropdown(meetings){
@@ -112,15 +160,21 @@
         const clientUrl = "";
 
         if (isNewMeeting) {
-            // 회의 제목, 회의URL입력확인
-            if (!meetingTitleInput) {
-                alert("회의 제목을 입력하세요.");
+            if(!checkUrl){
+                alert("회의 URL을 먼저 조회해주세요.");
+                event.preventDefault();
                 return;
             }
             if (!meetingUrlInputNew) {
                 alert("새 회의를 만들려면 회의 생성 URL을 입력해주세요.");
                 return;
             }
+            // 회의 제목, 회의URL입력확인
+            if (!meetingTitleInput) {
+                alert("회의 제목을 입력하세요.");
+                return;
+            }
+
 
             // 새 회의데이터 생성
             fetch("/meeting/create", {
@@ -161,7 +215,7 @@
             .catch(error => { //400, 500
                 console.error("회의 생성 요청 실패:", error);
                 if(error.message.includes("500")){
-                    alert("이미 저장된 회의 URL입니다. 이어 참가하기를 통해 회의에 참여바랍니다.");
+                    alert("이미 생성된 회의입니다.");
                 }else{
                     alert(`네트워크 오류 또는 서버 문제로 회의 생성에 실패했습니다.\n오류 메시지: ${error.message}`);
                 }

@@ -29,7 +29,7 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
     Boolean existsByUrl(String url);
 
     //미팅있니?
-    Optional<Meeting> findByUrl(String url);
+    Meeting findByUrl(String url);
 
     // 서버 사이드 필터링을 사용
     // meetingList 에 정보를 바인딩하기 위한 JPQL 문
