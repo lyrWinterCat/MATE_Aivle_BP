@@ -123,7 +123,7 @@ public class UserController {
         if (meetingDetail == null) {
             throw new IllegalArgumentException("유효하지 않은 회의 ID: " + meetingId);
         }
-        model.addAttribute("meeting", meetingDetail);
+        model.addAttribute("meetingDetail", meetingDetail);
 
         return "user/meetingDetail";
     }

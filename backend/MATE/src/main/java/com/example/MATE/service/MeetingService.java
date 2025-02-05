@@ -2,12 +2,10 @@ package com.example.MATE.service;
 
 import com.example.MATE.dto.MeetingDetailDto;
 import com.example.MATE.dto.MeetingDto;
-import com.example.MATE.model.Meeting;
-import com.example.MATE.model.MeetingParticipant;
-import com.example.MATE.model.ScreenData;
-import com.example.MATE.model.User;
+import com.example.MATE.model.*;
 import com.example.MATE.repository.MeetingParticipantRepository;
 import com.example.MATE.repository.MeetingRepository;
+import com.example.MATE.repository.SummaryRepository;
 import com.example.MATE.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +28,7 @@ public class MeetingService {
     private final MeetingRepository meetingRepository;
     private final UserRepository userRepository;
     private final MeetingParticipantRepository meetingParticipantRepository;
+    private final SummaryRepository summaryRepository;
 
 
     // 유저 ID 를 받아 해당 유저가 참여한 모든 미팅 ID 를 반환
@@ -99,7 +98,10 @@ public class MeetingService {
         if (meetingOptional.isEmpty()) {
             return null;
         }
-        Meeting meeting = meetingOptional.get();
-        return MeetingDetailDto.fromEntity(meeting);
+        Meeting meetingDetail = meetingOptional.get();
+
+        Optional<Summary> summary = summaryRepository.findByMeeting(meetingDetail);
+
+        return MeetingDetailDto.fromEntity(meetingDetail, summary.orElse(null));
     }
 }

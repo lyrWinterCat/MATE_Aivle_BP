@@ -33,37 +33,57 @@
     <form>
         <div class="read-group">
             <label for="meetingName">회의명</label>
-            <input type="text" id="meetingName" name="meetingName" value="{{meeting.meetingName}}" readonly>
+            <input type="text" id="meetingName" name="meetingName" value="{{meetingDetail.meetingName}}" readonly>
         </div>
 
         <div class="read-group">
             <label for="meetingTime">회의 시작 시간</label>
-            <input type="text" id="meetingTime" name="meetingTime" value="{{meeting.meetingTime}}" readonly>
+            <input type="text" id="meetingTime" name="meetingTime" value="{{meetingDetail.meetingTime}}" readonly>
         </div>
 
         <div class="read-group">
             <label for="endTime">회의 종료 시간</label>
-            <input type="text" id="endTime" name="endTime" value="{{meeting.endTime}}" readonly>
+            <input type="text" id="endTime" name="endTime" value="{{meetingDetail.endTime}}" readonly>
         </div>
 
         <div class="read-group">
             <label for="createdAt">회의 생성 시간</label>
-            <input type="text" id="createdAt" name="createdAt" value="{{meeting.createdAt}}" readonly>
+            <input type="text" id="createdAt" name="createdAt" value="{{meetingDetail.createdAt}}" readonly>
         </div>
 
         <div class="read-group">
             <label for="url">회의 URL</label>
-            <input type="text" id="url" name="url" value="{{meeting.url}}" readonly>
+            <input type="text" id="url" name="url" value="{{meetingDetail.url}}" readonly>
         </div>
 
         <div class="read-group">
             <label for="filepath">첨부 파일</label>
-            <input type="text" id="filepath" name="filepath" value="{{meeting.filepath}}" readonly>
+            <input type="text" id="filepath" name="filepath" value="{{meetingDetail.filepath}}" readonly>
         </div>
 
         <div class="read-group">
             <label for="participants">참여자</label>
-            <textarea id="participants" name="participants" readonly>{{meeting.participants}}</textarea>
+            <textarea id="participants" name="participants" readonly>{{meetingDetail.participants}}</textarea>
+        </div>
+
+        <div class="read-group">
+            <label for="summaryTopic">주제별 요약</label>
+            <textarea id="summaryTopic" name="summaryTopic" readonly>{{meetingDetail.summaryTopic}}</textarea>
+        </div>
+
+        <div class="read-group">
+            <label for="positiveNegative">긍정부정 요약</label>
+            <textarea id="positiveNegative" name="positiveNegative" readonly>{{meetingDetail.summaryPositiveNegative}}</textarea>
+        </div>
+
+        <div class="read-group">
+            <label for="todoList">Todo List</label>
+            <textarea id="todoList" name="todoList" readonly>{{meetingDetail.todoList}}</textarea>
+        </div>
+
+        <div class="read-group">
+            <label for="summaryTotal">전체 요약</label>
+            <textarea id="summaryTotal" name="summaryTotal" readonly>{{meetingDetail.summaryTotal}}</textarea>
         </div>
 
         <div class="btnArea">
