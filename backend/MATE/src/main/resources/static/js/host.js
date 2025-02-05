@@ -47,13 +47,26 @@ function startScreenCapture() {
             formData.append('image', blob, sanitizedFilename);
 
             try {
-                const response = await fetch('http://127.0.0.1:8000/post_image', {
+                const response = await fetch('http://121.166.170.167:3000/detect_fatigue', {
                     method: 'POST',
                     body: formData
                 });
 
                 if (response.ok) {
-                    console.log('이미지 업로드 성공');
+                    const data = await response.json()
+
+                    if (data.image){
+                        const imageElement = document.getElementById("imageDisplay");
+                        imageElement.src = `data:image/png;base64,${data.image}`;
+                        imageElement.style.display = "block";
+
+                        setTimeout(() => {
+                            imageElement.style.display = "none";
+                        }, 5000);
+                    }
+
+                    console.log("이미지 업로드 성공");
+
                 } else {
                     console.error('이미지 업로드 실패');
                 }
@@ -99,7 +112,7 @@ function startAudioRecording() {
             if (audioChunks.length > 0 && mediaRecorder.state === 'recording') {
                 mediaRecorder.stop();
             }
-        }, 60000);
+        }, 600000);
     } else {
         console.error('오디오 트랙을 찾을 수 없습니다.');
     }
@@ -175,14 +188,49 @@ async function saveAudioToWav(chunks) {
             const sanitizedFilename = sanitizeFilename(`audio-${new Date().toISOString()}.wav`);
             const formData = new FormData();
             formData.append('audio', wavBlob, sanitizedFilename);
+            formData.append('meeting_name', "test");
+            formData.append('status', "ing");
 
-            const response = await fetch('http://127.0.0.1:8000/post_audio', {
+//            const response = await fetch('http://121.166.170.167:3000/summarize_meeting', {
+            const response = await fetch('http://121.166.170.167:3000/summarize_meeting', {
                 method: 'POST',
                 body: formData
             });
 
             if (response.ok) {
-                console.log('오디오 업로드 성공');
+//                const responseData = await response.json();
+                const summary = await response.json();
+
+                const totalSumm =  document.getElementById("totalSumm");
+                const topicwiseSumm =  document.getElementById("topicwiseSumm");
+                const posnegSumm =  document.getElementById("posnegSumm");
+                const TODOListSumm =  document.getElementById("TODOLISTSumm");
+
+                if (summary.total && summary.total.trim() !== "") {
+                    totalSumm.innerHTML = summary.total.replace(/●/g, "&nbsp;●").replace(/\n -/g, "\n &nbsp;&nbsp;-").replace(/\n-/g, "\n &nbsp;&nbsp;-"); // 🔥 JSON에서 "summary" 값을 가져와서 삽입
+                } else {
+                    totalSumm.textContent = "요약이 존재하지 않습니다."; // 데이터가 없을 경우 기본 메시지
+                }
+
+                if (summary.topicwise && summary.topicwise.trim() !== "") {
+                    topicwiseSumm.innerHTML = summary.topicwise.replace(/●/g, "&nbsp;●").replace(/\n -/g, "\n &nbsp;&nbsp;-").replace(/\n-/g, "\n &nbsp;&nbsp;-"); // 🔥 JSON에서 "summary" 값을 가져와서 삽입
+                } else {
+                    topicwiseSumm.textContent = "요약이 존재하지 않습니다."; // 데이터가 없을 경우 기본 메시지
+                }
+
+                if (summary.posneg && summary.posneg.trim() !== "") {
+                    posnegSumm.innerHTML = summary.posneg.replace(/●/g, "&nbsp;●").replace(/\n -/g, "\n &nbsp;&nbsp;-").replace(/\n-/g, "\n &nbsp;&nbsp;-"); // 🔥 JSON에서 "summary" 값을 가져와서 삽입
+                } else {
+                    posnegSumm.textContent = "요약이 존재하지 않습니다."; // 데이터가 없을 경우 기본 메시지
+                }
+
+                if (summary.todo && summary.todo.trim() !== "") {
+                    TODOListSumm.innerHTML = summary.todo.replace(/●/g, "&nbsp;●").replace(/\n -/g, "\n &nbsp;&nbsp;-").replace(/\n-/g, "\n &nbsp;&nbsp;-"); // 🔥 JSON에서 "summary" 값을 가져와서 삽입
+                } else {
+                    TODOListSumm.textContent = "요약이 존재하지 않습니다."; // 데이터가 없을 경우 기본 메시지
+                }
+
+                console.log('오디오 업로드 성공', summary);
             } else {
                 console.error('오디오 업로드 실패');
             }
@@ -227,4 +275,3 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('startButton').addEventListener('click', startCapture);
     document.getElementById('stopButton').addEventListener('click', stopCapture);
 });
-
