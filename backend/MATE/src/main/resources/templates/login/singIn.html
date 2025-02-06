@@ -187,11 +187,6 @@
 </head>
 <body>
 
-<!-- ✅ 수정된 헤더 -->
-<div id="errorMessageContainer" style="display:none;">
-    {{#errorMessage}}{{errorMessage}}{{/errorMessage}}
-</div>
-
 <div class="left-container">
     <img src="/img/logo.png" alt="Mate Logo">
     <h1>Mate</h1>
@@ -237,6 +232,11 @@
     <span class="footer-separator">|</span>
     <span class="footer-item">Address : 성남시 분당구 불정로 90 (정자동)</span>
 </div>
+<!-- ✅ 수정된 헤더 -->
+<div id="errorMessageContainer" style="display:none;">
+    {{#errorMessage}}{{errorMessage}}{{/errorMessage}}
+</div>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         setTimeout(() => {

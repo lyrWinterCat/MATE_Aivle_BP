@@ -52,7 +52,7 @@ header {
 .header-right {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 10px;
 }
 
 .header-right span {

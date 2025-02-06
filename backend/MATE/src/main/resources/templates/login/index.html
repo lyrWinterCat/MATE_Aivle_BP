@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mate - 서비스 소개</title>
+    <title>Mate</title>
     <style>
         body {
             background: linear-gradient(90deg, #5b5fc7, #6B2399);
@@ -104,17 +104,65 @@
             color: #F7C600;
             margin: 0 5px;
         }
+
+        /*서비스 이동 버튼 */
+        .controlBtn {
+            display:flex;
+            justify-content:center;
+            align-items : center;
+            margin-top:30px;
+        }
+        .serviceButton {
+            width: 250px;
+            padding: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            background: white;
+            color: #5b5fc7;
+            cursor: pointer;
+            border:2px solid white;
+            transition: background 0.3s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .serviceButton:hover {
+            background: #5b5fc7; /* ✅ 보라색 배경 */
+            color: white; /* ✅ 글씨 색상 흰색 */
+            border:2px solid white;
+        }
+        strong {
+            font-size:16px;
+            color:black;
+        }
+        .service-title {
+            display:flex;
+            width:50%;
+            height:120px;
+            gap:20px;
+        }
+        .logo {
+            width:100px;
+            height:100px;
+        }
     </style>
 </head>
 <body>
 
 <div class="header">
     <a href="/aboutus">About us</a>
-    <a href="/signIn">Sign In</a>
+<!--    <a href="/signIn">Sign In</a>-->
 </div>
 
 <div class="container">
-    <h1>Mate</h1>
+    <div class="service-title">
+        <img src="/img/logo.png" class="logo" alt="Mate Logo">
+        <h1>Mate</h1>
+    </div>
+
     <p>Meeting Assistant for team efficiency</p>
     <p>스마트한 협업을 위한 AI 기반 화상회의 어시스턴트, Mate와 함께하세요</p>
 
@@ -122,19 +170,22 @@
         <div class="feature-item">
             <div class="icon">📝</div>
             <h2>회의 요약</h2>
-            <p>AI가 자동으로 회의 내용을 분석하여 핵심 내용을 요약합니다.</p>
+            <p><strong>AI</strong>가 자동으로 회의 내용을 분석하여<strong>핵심 내용을 요약</strong>합니다.</p>
         </div>
         <div class="feature-item">
-            <div class="icon">📂</div>
-            <h2>회의 기록 저장</h2>
-            <p>회의 로그를 저장하여 언제든지 다시 확인할 수 있습니다.</p>
+            <div class="icon">🔄</div>
+            <h2>피곤도 탐지</h2>
+            <p><strong>AI</strong>가 회의 참여자의 <strong>피곤함 정도를 탐지</strong>하고 휴식시간을 권장하여 효율적인 회의를 보장합니다.</p>
         </div>
         <div class="feature-item">
             <div class="icon">✅</div>
             <h2>To-Do List 관리</h2>
-            <p>회의 내용을 분석하여 사용자에게 알맞은 To-Do List를 추천합니다.</p>
+            <p><strong>AI</strong>가 회의 내용을 분석하여 회의 참여자들에게 <strong>To-Do List를 추천</strong>합니다.</p>
         </div>
     </div>
+</div>
+<div class="controlBtn">
+    <button class="serviceButton" id="serviceButton" onclick="goService()">서비스 이용하기➡️</button>
 </div>
 <div class="footer">
     <span class="footer-item">©copyright Aivle06기 빅프로젝트 07조</span>
@@ -144,4 +195,9 @@
     <span class="footer-item">Address : 성남시 분당구 불정로 90 (정자동)</span>
 </div>
 </body>
+<script>
+    function goService(){
+        window.location.href="/signIn";
+    }
+</script>
 </html>

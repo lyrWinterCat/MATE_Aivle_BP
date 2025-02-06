@@ -122,7 +122,7 @@ public class SecurityConfig {
         //로그아웃
         http.logout(logout -> logout
                 .logoutUrl("/signOut")
-                .logoutSuccessUrl("/signIn")
+                .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .clearAuthentication(true)
@@ -131,10 +131,10 @@ public class SecurityConfig {
         //세션관리
         http.sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                .invalidSessionUrl("/signIn")
+                .invalidSessionUrl("/")
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(false)
-                .expiredUrl("/signIn?error=session_expired")
+                .expiredUrl("/error=session_expired")
         );
         //SpringSecurity exception 잡기
         http.exceptionHandling(exception -> exception
