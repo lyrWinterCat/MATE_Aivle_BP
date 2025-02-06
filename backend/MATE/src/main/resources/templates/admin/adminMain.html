@@ -148,6 +148,26 @@
             width: 100% !important;
             height: 90% !important;
         }
+
+        /* 카드 hover 효과 */
+        .card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-10px); /* 위로 10px 떠오름 */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* 그림자 강조 */
+        }
+
+        /* 차트 hover 효과 */
+        .chart-container {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .chart-container:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
     </style>
 </head>
 <body>
