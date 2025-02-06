@@ -1,5 +1,5 @@
 from fastapi import FastAPI, File, UploadFile, BackgroundTasks, Form, Depends
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 # from functions.audio_recording import *
 from functions.speaker_diarization import *
@@ -12,8 +12,12 @@ import librosa
 import soundfile as sf
 from fastapi.middleware.cors import CORSMiddleware  # 추가된 import
 from fastapi.responses import JSONResponse, Response
+
+from sqlalchemy.future import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from database import get_db
-from models import Meeting, Summary
+from models import Meeting, Summary, User, SpeechLog, ToxicityLog
 app = FastAPI()
 
 app.add_middleware(
@@ -121,7 +125,7 @@ async def detect_fatigue(image: UploadFile=File(...)):
 
 @app.post("/summarize_meeting")
 async def summarize_meeting(audio:UploadFile=File(...), meeting_name:str = Form(...), status:str=Form("ing"), 
-                            background_task:BackgroundTasks = BackgroundTasks(), db: Session = Depends(get_db)):
+                            background_task:BackgroundTasks = BackgroundTasks(), db: AsyncSession = Depends(get_db)):
     if not os.path.exists(meeting_name):
         os.mkdir(meeting_name)
         
@@ -133,16 +137,100 @@ async def summarize_meeting(audio:UploadFile=File(...), meeting_name:str = Form(
         buffer.write(await audio.read())
 
     if status == "ing":
-        summ_topicwise, summ_posneg, summ_todo, summ_total = summarize_and_insert(meeting_name, db)
+        summ_topicwise, summ_posneg, summ_todo, summ_total, summ_all = summarize_audio(meeting_name)
+        # return {"summ_all": summ_all}
         return {"topicwise": summ_topicwise, "posneg": summ_posneg, "todo": summ_todo, "total": summ_total}
     elif status == "end":
         background_task.add_task(summarize_and_insert, meeting_name, db)
-        background_task.add_task(audio_to_text_by_pyannote, file_location, meeting_name)
+        background_task.add_task(speakerDiarization_and_insert, file_location, meeting_name, db)
         return "회의 고생하셨습니다."
 
 ###########################################################################
 ####################### functions #########################################
 ###########################################################################
+async def speakerDiarization_and_insert(file_location, meeting_name, db):
+    result = await db.execute(select(Meeting).filter(Meeting.meeting_name == meeting_name))
+    meeting = result.scalars().first()
+    meeting_id = meeting.meeting_id
+
+    if not meeting:
+        return {"error": "Meeting not found"}
+    
+    voice_dir = "voice"
+
+    output_dir = str(f"temp_{meeting_name}")
+
+    pyannote_result = predict_by_pyannote(output_dir, voice_dir, meeting_name)
+
+    user_id_dict = {}
+    user_speechs = {}
+    for pyannote_prediction in pyannote_result.values():
+        speaker = pyannote_prediction["predict"]
+        script = pyannote_prediction["script"]
+        start = pyannote_prediction["start"]
+        toxicity = pyannote_prediction["toxicity"]
+
+        if speaker in user_id_dict:
+            user_id = user_id_dict[speaker]
+            user_speechs[speaker].append(script)
+        else:
+            result_user = await db.execute(select(User).filter(User.name == speaker))
+            user_id = result_user.scalars().first().user_id
+
+            del result_user
+
+            user_id_dict[speaker] = user_id
+            user_speechs[speaker] = [script]
+
+        speech = SpeechLog(
+            meeting_id=meeting_id,
+            user_id = user_id,
+            timestamp = meeting.start_time + timedelta(seconds=int(start)),
+            content = script,
+            is_off_topic = 0,
+        )
+
+        db.add(speech)
+
+        if toxicity:
+            await db.flush()
+            log_id = speech.log_id
+
+            toxicity_log = ToxicityLog(
+                log_id = log_id,
+                meeting_id = meeting_id,
+                user_id = user_id,
+                corrected = 0
+            )
+
+            db.add(toxicity_log)
+
+    result_summary = await db.execute(select(Summary).filter(Summary.meeting_id == meeting.meeting_id))
+    summary = result_summary.scalars().first()
+
+    total_summary = summary.summary_total
+
+    total_summary = f"""
+        전체 요약입니다.\n\n
+        {total_summary}\n\n\n\n\n
+        화자별 요약입니다.\n\n
+    """
+
+    user_speechs = {name:text_summ_total(" ".join([x[0] for x in speechs]), "gpt-4o") for name, speechs in user_speechs.items()}
+
+    for name, speaker_summ in user_speechs.items():
+        text = f"{name}:\n{eval(speaker_summ)['summary']}\n\n\n"
+        total_summary = total_summary + text
+
+    summary.summary_total = total_summary
+    
+    await db.commit()
+
+
+        
+
+
+
 def audio_to_text_by_pyannote(file_location, meeting_name):
     recording_start_time = datetime.now()
 
@@ -158,22 +246,39 @@ def audio_to_text_by_pyannote(file_location, meeting_name):
         toxicity = pyannote_value["toxicity"]
         print(f"{name}: script {script} // speaker {pyannote_predict} // toxicity {toxicity}")    
 
-def summarize_and_insert(meeting_name, db:Session):
+    print('end')
+
+async def summarize_and_insert(meeting_name, db : AsyncSession):
     summ_topicwise, summ_posneg, summ_todo, summ_total, summ_all = summarize_audio(meeting_name)
-    
-    meeting = db.query(Meeting).filter(Meeting.meeting_name == meeting_name).first()
+
+    result = await db.execute(select(Meeting).filter(Meeting.meeting_name == meeting_name))
+    meeting = result.scalars().first()
+
     if not meeting:
         return {"error": "Meeting not found"}
-    
-    summary = db.query(Summary).filter(Summary.meeting_id == meeting.meeting_id).first()
-    
+
+    # Summary 조회
+    result = await db.execute(select(Summary).filter(Summary.meeting_id == meeting.meeting_id))
+    summary = result.scalars().first()
+
     if summary:
-        summary.summary_text = summ_all
+        summary.summary_topic = summ_topicwise
+        summary.summary_positive_negative = summ_posneg
+        summary.todo_list = summ_todo
+        summary.summary_total = summ_total
+        # summary.summary_text = summ_all
     else:
-        new_summary = Summary(meeting_id=meeting.meeting_id, summary_text=summ_all)
+        new_summary = Summary(
+            meeting_id=meeting.meeting_id,
+            summary_topic = summ_topicwise,
+            summary_positive_negative = summ_posneg,
+            todo_list = summ_todo,
+            summary_total = summ_total,
+        )
+        # new_summary = Summary(meeting_id=meeting.meeting_id, summary_text=summ_all)
         db.add(new_summary)
-        
-    db.commit()
+
+    await db.commit()
     
     return summ_topicwise, summ_posneg, summ_todo, summ_total
 

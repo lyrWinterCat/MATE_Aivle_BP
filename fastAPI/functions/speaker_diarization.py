@@ -58,7 +58,7 @@ fine_tuned_pipeline = fine_tuned_pipeline.to(torch.device(DEVICE))
 
 
 # fine_tuned_inference = Inference(pipeline, window="whole")
-inference = Inference(fine_tuned_model, window="sliding") # embedding 모델이라고 생각하면 됨. 음성파일을 하나의 벡터로 만들기 위한 함수.  
+inference = Inference(model_pyannote, window="sliding") # embedding 모델이라고 생각하면 됨. 음성파일을 하나의 벡터로 만들기 위한 함수.  
 # RESEMBLYZER_MODEL = joblib.load("diarization_model/resemblyzer.pkl")
 
 diarization_pipeline = pretrained_model.to(torch.device(DEVICE))
@@ -108,7 +108,7 @@ def merge_audio_files(audio_files, meeting_name):
     return file_location
     
 
-def predict_by_pyannote(file_location, output_dir, voice_dir, meeting_name, diarization_pipeline=fine_tuned_pipeline):
+def predict_by_pyannote(output_dir, voice_dir, meeting_name, diarization_pipeline=pretrained_model):
     print("하나의 파일로 만들겠습니다")
     audio_files = [audio_file for audio_file in os.listdir(meeting_name) if audio_file.endswith("wav")]
     if "total.wav" in audio_files:
@@ -137,10 +137,17 @@ def predict_by_pyannote(file_location, output_dir, voice_dir, meeting_name, diar
         try:
             segment_embedding = inference.crop(file_location, segment, duration=inference.duration)
             
-            similarity = {
-                name: float(cosine(segment_embedding[0,:,0], ref_embedding[0,:,0]))
-                for name, ref_embedding in reference_embeddings.items() if ref_embedding is not None
-            }
+            try:
+                similarity = {
+                    name: float(cosine(segment_embedding[0,:,0], ref_embedding[0,:,0]))
+                    for name, ref_embedding in reference_embeddings.items() if ref_embedding is not None
+                }
+            except:
+                similarity = {
+                    name: float(cosine(segment_embedding[0,:], ref_embedding[0,:]))
+                    for name, ref_embedding in reference_embeddings.items() if ref_embedding is not None
+                }
+            
 
             similarity = dict(sorted(similarity.items(), key=lambda x: x[1], reverse=True))
 
@@ -163,7 +170,7 @@ def predict_by_pyannote(file_location, output_dir, voice_dir, meeting_name, diar
                 toxicity = 1
             else:
                 toxicity = 0
-            result_dict[speaker_audio_file] = {"predict": predict, "script": transcript, "toxicity": toxicity}
+            result_dict[speaker_audio_file] = {"predict": predict, "script": transcript, "toxicity": toxicity, "start": segment_start}
 
             idx = idx + 1
         except Exception as e:
