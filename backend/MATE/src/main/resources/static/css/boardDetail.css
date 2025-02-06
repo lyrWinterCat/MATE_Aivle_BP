@@ -97,8 +97,18 @@
 }
 
 .form-group textarea,
-.read-group textarea{
-    resize: none;
+
+.read-group textarea {
+    width: 100%; /* 전체 너비 차지 */
+    min-height: 150px; /* 최소 높이 */
+    max-height: 500px; /* 최대 높이 설정 */
+    resize: vertical; /* 사용자가 세로 크기 조절 가능 */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    overflow-y: auto; /* 내용이 많을 경우 자동 스크롤 */
 }
 
 .btnArea {
