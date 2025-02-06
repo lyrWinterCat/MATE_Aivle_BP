@@ -43,7 +43,7 @@
         }
 
         .welcome-text {
-            color: white;
+            color: black;
             font-size: 24px;
         }
 
@@ -295,21 +295,6 @@
         <!-- 라디오 버튼 그룹 -->
         <div class="radio-groups">
             <div class="radio-container">
-                <h3 class="radio-title">피로도 탐지 주기</h3>
-                <label class="radio-option">
-                    <input type="radio" name="time" id="10second" value="10">
-                    <span>10초마다 피로도 탐지</span>
-                </label>
-                <label class="radio-option">
-                    <input type="radio" name="time" id="20second" value="20">
-                    <span>20초마다 피로도 탐지</span>
-                </label>
-                <label class="radio-option">
-                    <input type="radio" name="time" id="30second" value="30" checked>
-                    <span>30초마다 피로도 탐지 (default)</span>
-                </label>
-            </div>
-            <div class="radio-container">
                 <h3 class="radio-title" id="meetingMode">회의 모드</h3>
                 <label class="radio-option">
                     <input type="radio" name="mode" id="client" value="client">
@@ -318,6 +303,41 @@
                 <label class="radio-option">
                     <input type="radio" name="mode" id="host" value="host" checked>
                     <span>기록자용</span>
+                </label>
+            </div>
+        </div>
+        <div class="radio-groups">
+            <div class="radio-container">
+                <h5 class="radio-title">실시간<br>피로도 탐지 기능</h5>
+                <label class="radio-option">
+                    <input type="radio" name="tired" id="tired-on" value="on">
+                    <span>ON</span>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="tired" id="tired-off" value="off">
+                    <span>OFF</span>
+                </label>
+            </div>
+            <div class="radio-container">
+                <h5 class="radio-title">실시간<br>요약 기능</h5>
+                <label class="radio-option">
+                    <input type="radio" name="summary" id="summary-on" value="on">
+                    <span>ON</span>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="summary" id="summary-off" value="off">
+                    <span>OFF</span>
+                </label>
+            </div>
+            <div class="radio-container">
+                <h5 class="radio-title">실시간<br>독성 탐지 기능</h5>
+                <label class="radio-option">
+                    <input type="radio" name="toxicity" id="toxicity-on" value="on">
+                    <span>ON</span>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="toxicity" id="toxicity-off" value="off">
+                    <span>OFF</span>
                 </label>
             </div>
         </div>
