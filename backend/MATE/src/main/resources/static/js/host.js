@@ -186,9 +186,10 @@ async function saveAudioToWav(chunks) {
 
             // WAV 파일을 서버로 전송
             const sanitizedFilename = sanitizeFilename(`audio-${new Date().toISOString()}.wav`);
+            const meetingName = document.querySelector("#meetingTitle p").textContent.split(" : ")[1]
             const formData = new FormData();
             formData.append('audio', wavBlob, sanitizedFilename);
-            formData.append('meeting_name', "test");
+            formData.append('meeting_name', meetingName);
             formData.append('status', "ing");
 
 //            const response = await fetch('http://121.166.170.167:3000/summarize_meeting', {
