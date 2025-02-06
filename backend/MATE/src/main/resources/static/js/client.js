@@ -113,10 +113,7 @@ function endMeeting() {
         method: 'POST',
         success: function(response) {
             console.log('회의 종료 시간 기록:', response);
-            fetchDomain().then(domain => {
-                console.log('도메인:', domain); // 도메인 로그 추가
-                window.location.href = "/user/userMain";
-            });
+            window.location.href = "/user/userMain";
         },
         error: function(error) {
             console.error('회의 종료 시간 기록 오류:', error);
