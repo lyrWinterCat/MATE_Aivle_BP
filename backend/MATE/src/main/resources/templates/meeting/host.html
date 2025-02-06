@@ -185,7 +185,82 @@
             cursor: pointer;
             border-radius: 4px;
         }
+        /* Modern Meeting Info Section */
+        .meeting-info {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            width: 200px;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+        }
 
+        /* Meeting Title, Time, and Participants */
+        .meeting-title,
+        .meeting-time,
+        .participants {
+            width: 100%;
+            border-radius: 8px;
+            background: #f1ebfa;
+            margin-bottom: 12px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Text Styling */
+        .meeting-info h2 {
+            color: #444;
+            font-size: 1.3em;
+            margin-bottom: 12px;
+        }
+
+        .meeting-title p,
+        .meeting-time p,
+        .participants p
+        .names p {
+            font-size: 1em;
+            color: #444;
+            margin: 5px 0;
+            font-weight: 500;
+        }
+        .participants h3 {
+            color:#444;
+        }
+        /* Buttons - Minimalist Look */
+        .control-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 2px;
+            width:100%;
+        }
+
+        .control-btn {
+            height:5vh;
+            box-sizing: border-box;
+            background: #5b5fc7;
+            color: white;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            outline: none;
+            width:100%;
+            box-sizing: border-box;
+        }
+
+        .control-btn:hover {
+            transition: background-color 0.3s ease-in-out;
+            background-color: #3b3e8f;
+            color:white;
+        }
     </style>
 </head>
 <body>
@@ -205,15 +280,16 @@
 
     <div class="content-wrapper">
         <div class="meeting-info">
+            <h2>회의 정보</h2>
             <div class="meeting-title" id="meetingTitle">
-                <p> 회의 제목 : {{meetingName}}</p>
+                <p>제목 : {{meetingName}}</p>
             </div>
             <div class="meeting-time">
-                <p>{{meetingDate}}</p>
-                <p>{{meetingTime}} 회의시작</p>
+                <p>날짜: {{meetingDate}}</p>
+                <p>시작 시간: {{meetingTime}}</p>
             </div>
             <div class="participants">
-                <h2>회의 인원: {{participantCount}}</h2>
+                <h2>참여자 ({{participantCount}}명)</h2>
                 <p class="names">
                     {{#meetingParticipants}}
                     {{user.name}}<br> <!-- User 객체의 name 필드에 접근 -->
