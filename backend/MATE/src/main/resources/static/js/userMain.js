@@ -214,11 +214,11 @@
                     const clientUrl = `/meeting/client/${data.meetingId}`;
 
                     if (selectedMode === "host") {
-                        alert("기록자로 새 회의를 시작합니다: ");
+                        confirm("기록자로 새 회의를 시작합니다: ");
                         console.log("host > "+hostUrl);
                         window.location.href = hostUrl; // 기록자 페이지로 이동
                     } else {
-                        alert("참여자로 새 회의에 참가합니다. :  " + clientUrl);
+                        confirm("참여자로 새 회의에 참가합니다. :  " + clientUrl);
                         console.log("client > "+clientUrl);
                         window.location.href = clientUrl; // 참여자 페이지로 이동
                     }
@@ -247,11 +247,11 @@
             const hostUrl = `/meeting/host/${meetingId}`;
             const clientUrl = `/meeting/client/${meetingId}`;
             if (selectedMode === "host"){
-                alert("기록자로 회의를 이어 진행합니다.: ");
+                confirm("기록자로 회의를 이어 진행합니다.: ");
                 console.log("host > "+hostUrl);
                 window.location.href = hostUrl;
             }else{
-                alert("참여자로 이어 참가합니다");
+                confirm("참여자로 이어 참가합니다");
                 console.log("client > "+clientUrl);
                 window.location.href = clientUrl;
             }
