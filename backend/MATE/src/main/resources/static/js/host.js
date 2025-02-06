@@ -162,6 +162,42 @@ function writeString(view, offset, string) {
     }
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    const tabs = document.querySelectorAll(".tab-button");
+    const summaries = document.querySelectorAll(".summaryContent");
+
+    tabs.forEach(tab => {
+        tab.addEventListener("click", function() {
+            // 모든 탭 비활성화
+            tabs.forEach(t => t.classList.remove("active"));
+            // 모든 요약 내용 숨기기
+            summaries.forEach(summary => {
+                summary.style.display = "none";
+            });
+            // 모든 로딩 GIF 숨기기
+            document.querySelectorAll('[id^="loadingGif"]').forEach(gif => {
+                gif.style.display = "none";
+            });
+
+            // 현재 탭 활성화
+            this.classList.add("active");
+
+            // 현재 탭에 해당하는 컨텐츠 표시
+            const currentContent = document.getElementById(`${this.id}Summ`);
+            const loadingGifId = `loadingGif${Array.from(tabs).indexOf(this) + 1}`;
+            const currentLoadingGif = document.getElementById(loadingGifId);
+
+            if (currentContent.textContent.includes("불러오는 중입니다")) {
+                currentLoadingGif.style.display = "block";
+                currentContent.style.display = "none";
+            } else {
+                currentLoadingGif.style.display = "none";
+                currentContent.style.display = "block";
+            }
+        });
+    });
+});
+
 // 오디오 WAV 파일 저장 코드 FastAPI로 전송
 async function saveAudioToWav(chunks) {
     if (!chunks || chunks.length === 0) {
@@ -171,7 +207,6 @@ async function saveAudioToWav(chunks) {
 
     try {
         const blob = new Blob(chunks, { type: 'audio/webm' });
-
         if (blob.size === 0) {
             console.log('빈 오디오 데이터입니다.');
             return;
@@ -179,72 +214,87 @@ async function saveAudioToWav(chunks) {
 
         const arrayBuffer = await blob.arrayBuffer();
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+        const wavBlob = await convertToWav(audioBuffer);
+
+        // WAV 파일을 서버로 전송
+        const sanitizedFilename = sanitizeFilename(`audio-${new Date().toISOString()}.wav`);
+        const meetingName = document.querySelector("#meetingTitle p").textContent.split(" : ")[1];
+        const formData = new FormData();
+        formData.append('audio', wavBlob, sanitizedFilename);
+        formData.append('meeting_name', meetingName);
+        formData.append('status', "ing");
+
+        // 로딩 GIF 표시 및 요약 내용 숨기기
+        const loadingGifs = document.querySelectorAll('[id^="loadingGif"]');
+        const summaryContents = document.querySelectorAll('.summaryContent');
+
+        summaryContents.forEach(content => content.style.display = 'none');
+        loadingGifs.forEach(gif => gif.style.display = 'block');
+
 
         try {
-            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-            const wavBlob = await convertToWav(audioBuffer);
-
-            // WAV 파일을 서버로 전송
-            const sanitizedFilename = sanitizeFilename(`audio-${new Date().toISOString()}.wav`);
-            const meetingName = document.querySelector("#meetingTitle p").textContent.split(" : ")[1]
-            const formData = new FormData();
-            formData.append('audio', wavBlob, sanitizedFilename);
-            formData.append('meeting_name', meetingName);
-            formData.append('status', "ing");
-
-//            const response = await fetch('http://121.166.170.167:3000/summarize_meeting', {
             const response = await fetch('http://121.166.170.167:3000/summarize_meeting', {
                 method: 'POST',
                 body: formData
             });
 
             if (response.ok) {
-//                const responseData = await response.json();
                 const summary = await response.json();
 
-                const totalSumm =  document.getElementById("totalSumm");
-                const topicwiseSumm =  document.getElementById("topicwiseSumm");
-                const posnegSumm =  document.getElementById("posnegSumm");
-                const TODOListSumm =  document.getElementById("TODOLISTSumm");
+                // 로딩 GIF 숨기기
+                loadingGifs.forEach(gif => gif.style.display = 'none');
 
-                if (summary.total && summary.total.trim() !== "") {
-                    totalSumm.innerHTML = summary.total.replace(/●/g, "&nbsp;●").replace(/\n -/g, "\n &nbsp;&nbsp;-").replace(/\n-/g, "\n &nbsp;&nbsp;-"); // 🔥 JSON에서 "summary" 값을 가져와서 삽입
-                } else {
-                    totalSumm.textContent = "요약이 존재하지 않습니다."; // 데이터가 없을 경우 기본 메시지
-                }
+                // 현재 활성화된 탭 찾기
+                const activeTab = document.querySelector('.tab-button.active');
+                const activeContentId = `${activeTab.id}Summ`;
 
-                if (summary.topicwise && summary.topicwise.trim() !== "") {
-                    topicwiseSumm.innerHTML = summary.topicwise.replace(/●/g, "&nbsp;●").replace(/\n -/g, "\n &nbsp;&nbsp;-").replace(/\n-/g, "\n &nbsp;&nbsp;-"); // 🔥 JSON에서 "summary" 값을 가져와서 삽입
-                } else {
-                    topicwiseSumm.textContent = "요약이 존재하지 않습니다."; // 데이터가 없을 경우 기본 메시지
-                }
+                // 각 요약 내용 업데이트
+                updateSummaryContent('total', summary.total);
+                updateSummaryContent('topicwise', summary.topicwise);
+                updateSummaryContent('posneg', summary.posneg);
+                updateSummaryContent('TODOList', summary.todo);
 
-                if (summary.posneg && summary.posneg.trim() !== "") {
-                    posnegSumm.innerHTML = summary.posneg.replace(/●/g, "&nbsp;●").replace(/\n -/g, "\n &nbsp;&nbsp;-").replace(/\n-/g, "\n &nbsp;&nbsp;-"); // 🔥 JSON에서 "summary" 값을 가져와서 삽입
-                } else {
-                    posnegSumm.textContent = "요약이 존재하지 않습니다."; // 데이터가 없을 경우 기본 메시지
-                }
-
-                if (summary.todo && summary.todo.trim() !== "") {
-                    TODOListSumm.innerHTML = summary.todo.replace(/●/g, "&nbsp;●").replace(/\n -/g, "\n &nbsp;&nbsp;-").replace(/\n-/g, "\n &nbsp;&nbsp;-"); // 🔥 JSON에서 "summary" 값을 가져와서 삽입
-                } else {
-                    TODOListSumm.textContent = "요약이 존재하지 않습니다."; // 데이터가 없을 경우 기본 메시지
-                }
+                // 현재 활성화된 탭의 내용만 표시
+                document.getElementById(activeContentId).style.display = 'block';
 
                 console.log('오디오 업로드 성공', summary);
             } else {
-                console.error('오디오 업로드 실패');
+                handleSummaryError('데이터를 불러오는 중 오류가 발생했습니다.');
             }
-
-            console.log('오디오 파일이 저장되었습니다.');
-        } catch (decodeError) {
-            console.error('오디오 디코딩 중 오류 발생:', decodeError);
-            throw decodeError;
+        } catch (error) {
+            handleSummaryError('데이터를 불러오는 중 오류가 발생했습니다.');
+            console.error('오디오 업로드 중 오류 발생:', error);
         }
     } catch (error) {
         console.error('오디오 저장 중 오류 발생:', error);
         throw error;
     }
+}
+
+// 요약 내용 업데이트 헬퍼 함수
+function updateSummaryContent(type, content) {
+    const summaryElement = document.getElementById(`${type}Summ`);
+    if (content && content.trim() !== "") {
+        summaryElement.innerHTML = content
+            .replace(/●/g, "&nbsp;●")
+            .replace(/\n -/g, "\n &nbsp;&nbsp;-")
+            .replace(/\n-/g, "\n &nbsp;&nbsp;-");
+    } else {
+        summaryElement.textContent = "요약이 존재하지 않습니다.";
+    }
+}
+
+// 에러 처리 헬퍼 함수
+function handleSummaryError(errorMessage) {
+    const loadingGifs = document.querySelectorAll('[id^="loadingGif"]');
+    const summaryContents = document.querySelectorAll('.summaryContent');
+
+    loadingGifs.forEach(gif => gif.style.display = 'none');
+    summaryContents.forEach(content => {
+        content.style.display = 'block';
+        content.textContent = errorMessage;
+    });
 }
 
 // 캡처 중지

@@ -42,7 +42,7 @@
             text-align: center;
             z-index: 2000;
             overflow-y: auto;
-            background: #f8f6ff; /* 연한 라벤더 배경 */
+            background: #f8f6ff;
             border: 1px solid #e6e1ff;
         }
         
@@ -87,6 +87,16 @@
             margin-top:3%;
         }
 
+        [id^="loadingGif"] {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px !important;
+            height: 100px !important;
+        }
+
         /* 탭 버튼 컨테이너 - 카드 내부로 이동 */
         .meeting-header {
             display: flex;
@@ -120,6 +130,11 @@
             border-bottom: none; /* 아래쪽 테두리 없앰 */
         }
 
+        #summary {
+            position: relative;
+            min-height: 480px;
+        }
+
         .summaryContent{
             text-align: left;
             padding-left: 20px;
@@ -128,6 +143,7 @@
             height: 480px;
             overflow-y: auto;
             white-space: pre-line;
+            display: none; /* 기본적으로 숨김 처리 */
         }
 
         #summary{
@@ -208,9 +224,8 @@
             <div class="control-buttons">
                 <button class="control-btn" id="startButton">기록하기</button>
                 <button class="control-btn" id="stopButton">휴식하기</button>
-                <button class="control-btn">피로도 탐지</button>
-                <button class="control-btn" id="screenSummaryButton">공유 화면 요약</button>
-                <button class="control-btn" id="summaryButton">요약 보기</button>
+                <button class="control-btn" id="summaryButton" disabled>요약 보기</button>
+                <button class="control-btn" id="screenSummaryButton">자료 요약</button>
                 <button class="control-btn" id="endMeetingButton">회의 종료</button>
             </div>
 
@@ -227,7 +242,6 @@
         </div>
         <div class="screen-container">
             <video id="localVideo" autoplay muted playsinline></video>
-<!--            <video id="remoteVideo" autoplay></video>-->
         </div>
     </div>
 </div>
@@ -242,10 +256,14 @@
         <button id="TODOList" class="tab-button">TODO List</button>
     </div>
     <div id="summary">
-        <p id="totalSumm" class="summaryContent">통합 요약이 존재하지 않습니다</p>
-        <p id="topicwiseSumm" class="summaryContent" style="display:none">주제별 요약이 존재하지 않습니다</p>
-        <p id="posnegSumm" class="summaryContent" style="display:none">긍정부정 요약이 존재하지 않습니다</p>
-        <p id="TODOLISTSumm" class="summaryContent" style="display:none">TODO List가 존재하지 않습니다</p>
+        <p id="totalSumm" class="summaryContent">통합 요약을 불러오는 중입니다.</p>
+        <img id="loadingGif1" src="/img/loading.gif" alt="로딩 중">
+        <p id="topicwiseSumm" class="summaryContent">주제별 요약을 불러오는 중입니다.</p>
+        <img id="loadingGif2" src="/img/loading.gif" alt="로딩 중">
+        <p id="posnegSumm" class="summaryContent">긍정부정 요약을 불러오는 중입니다.</p>
+        <img id="loadingGif3" src="/img/loading.gif" alt="로딩 중">
+        <p id="TODOListSumm" class="summaryContent">TODO List를 불러오는 중입니다.</p>
+        <img id="loadingGif4" src="/img/loading.gif" alt="로딩 중">
     </div>
     <button onclick="closeSummaryPopup()">닫기</button>
 </div>
@@ -410,6 +428,7 @@
 
     document.getElementById('stopButton').addEventListener('click', function() {
         takeBreak(); // 휴식하기
+        document.getElementById('summaryButton').disabled = false; // 요약 보기 버튼 활성화
     });
 
     document.getElementById('endMeetingButton').addEventListener('click', function() {
