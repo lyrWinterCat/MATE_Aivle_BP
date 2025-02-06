@@ -133,6 +133,43 @@
         #summary{
             background: white;
         }
+
+        #screenSummary{
+            margin-top: 40px;
+            background: #cfd0ff;
+            border-radius: 8px;
+            height: 300px;
+            text-align: center;
+            display: none;
+        }
+
+        #screenSummaryHeader{
+            background: black;
+            border-radius: 8px 8px 0px 0px;
+            color: white;
+            font-size: 20px;
+            height: 40px;
+            line-height: 40px;
+        }
+
+        #screenSummaryContent{
+            overflow: hidden;
+            height: 225px;
+            text-align: left;
+            overflow-y: scroll;
+            margin: 0px;
+}
+        }
+
+        #screenSummaryCloseButton{
+            position: relative;
+            top: 8px;
+            background-color: white;
+            border: 0px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
     </style>
 </head>
 <body>
@@ -172,9 +209,20 @@
                 <button class="control-btn" id="startButton">기록하기</button>
                 <button class="control-btn" id="stopButton">휴식하기</button>
                 <button class="control-btn">피로도 탐지</button>
-                <button class="control-btn">자료 요약</button>
+                <button class="control-btn" id="screenSummaryButton">공유 화면 요약</button>
                 <button class="control-btn" id="summaryButton">요약 보기</button>
                 <button class="control-btn" id="endMeetingButton">회의 종료</button>
+            </div>
+
+            <div id="screenSummary">
+                <div id="screenSummaryHeader">
+                    공유 화면 요약
+                </div>
+                <p id="screenSummaryContent">
+
+                </p>
+
+                <button id="screenSummaryCloseButton">공유 화면 요약 닫기</button>
             </div>
         </div>
         <div class="screen-container">
@@ -243,6 +291,7 @@
     });
 </script>
 <script src="/js/host.js"></script>
+<script src="/js/captureScreenShare.js"></script>
 
 <script>
     const meetingId = "{{meetingId}}"; // Mustache에서 전달된 meetingId
