@@ -156,18 +156,56 @@
             justify-content: space-between;
             margin-top:2px;
         }
+        .radio-groups2 {
+            justify-content: space-between;
+            margin-top:2px;
+            margin-bottom:10px;
+        }
+        .radio-content {
+            display:flex;
+        }
+        .radio-content label {
+            width:50%;
+            justify-content: center;
+            font-size:20px;
+            font-weight:bold;
+        }
         /* 라디오 버튼 박스 */
         .radio-container {
             background: #e6e3fc;
-            padding: 20px;
-            width: 48%;
-            padding-top:1%;
+            padding-right: 20px;
+            padding-left:20px;
+            width: 30%;
+            padding-bottom:4px;
+        }
+        .radio-container-mode {
+            background: #e6e3fc;
+            padding-right: 20px;
+            padding-left:20px;
+            box-sizing:border-box;
+            padding-top:1px;
+            border-radius : 10px;
+            margin-left:4px;
+            margin-right:4px;
+            padding-bottom:4px;
+        }
+        .radio-container-mode .radio-title{
+            text-align:center;
+            background:#564fb0;
+            border-radius:4px;
+            color:white;
+            margin-top:10px;
+            padding-top:2px;
+            padding-bottom:2px;
         }
         .radio-container .radio-title {
             text-align:center;
             background:#564fb0;
             border-radius:4px;
             color:white;
+            margin-top:12px;
+            padding-top:2px;
+            padding-bottom:2px;
         }
         .radio-container:first-child {
             border-radius: 10px 0 0 10px;
@@ -177,8 +215,13 @@
             border-radius: 0 10px 10px 0;
             margin-right:3px;
         }
-        .radio-title {
+        .radio-title.main {
             font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .radio-title.sub {
+            font-size: 15px;
             font-weight: bold;
             margin-bottom: 10px;
         }
@@ -259,8 +302,11 @@
             display:block;
             background-color: #3b3e8f;
         }
+        .radio-span:hover {
+            text-decoration: underline;
+            text-decoration-color:#7803ff;
+        }
     </style>
-
 </head>
 <body>
 <header class="header">
@@ -273,6 +319,9 @@
         <div class="nav-buttons">
             <form action="/user/meetingList" method="get" style="display:inline;">
                 <button type="submit" class="nav-button">마이페이지</button>
+            </form>
+            <form action="/user/speechLog" method="get" style="display:inline;">
+                <button type="submit" class="nav-button">로그조회</button>
             </form>
             <form action="/user/userFix" method="get" style="display:inline;">
                 <button type="submit" class="nav-button">정정게시판</button>
@@ -293,51 +342,53 @@
             <button id="continueRoom" class="tab-button">이어 참가하기</button>
         </div>
         <!-- 라디오 버튼 그룹 -->
-        <div class="radio-groups">
-            <div class="radio-container">
-                <h3 class="radio-title" id="meetingMode">회의 모드</h3>
-                <label class="radio-option">
-                    <input type="radio" name="mode" id="client" value="client">
-                    <span>일반</span>
-                </label>
-                <label class="radio-option">
-                    <input type="radio" name="mode" id="host" value="host" checked>
-                    <span>기록자용</span>
-                </label>
+        <div class="radio-groups2">
+            <div class="radio-container-mode">
+                <h4 class="radio-title main" id="meetingMode">회의 모드</h4>
+                <div class="radio-content">
+                    <label class="radio-option">
+                        <input type="radio" name="mode" id="client" value="client">
+                        <span class="radio-span">일반</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="mode" id="host" value="host" checked>
+                        <span class="radio-span">기록자용</span>
+                    </label>
+                </div>
             </div>
         </div>
         <div class="radio-groups">
             <div class="radio-container">
-                <h5 class="radio-title">실시간<br>피로도 탐지 기능</h5>
+                <h4 class="radio-title sub">실시간<br>피로도 탐지 기능</h4>
                 <label class="radio-option">
-                    <input type="radio" name="tired" id="tired-on" value="on">
-                    <span>ON</span>
+                    <input type="radio" name="tired" id="tired-on" value="on" checked>
+                    <span class="radio-span">ON</span>
                 </label>
                 <label class="radio-option">
                     <input type="radio" name="tired" id="tired-off" value="off">
-                    <span>OFF</span>
+                    <span class="radio-span">OFF</span>
                 </label>
             </div>
             <div class="radio-container">
-                <h5 class="radio-title">실시간<br>요약 기능</h5>
+                <h4 class="radio-title sub">실시간<br>요약 기능</h4>
                 <label class="radio-option">
-                    <input type="radio" name="summary" id="summary-on" value="on">
-                    <span>ON</span>
+                    <input type="radio" name="summary" id="summary-on" value="on" checked>
+                    <span class="radio-span">ON</span>
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="summary" id="summary-off" value="off">
-                    <span>OFF</span>
+                    <input type="radio" name="summary" id="summary-off" value="off" >
+                    <span class="radio-span">OFF</span>
                 </label>
             </div>
             <div class="radio-container">
-                <h5 class="radio-title">실시간<br>독성 탐지 기능</h5>
+                <h4 class="radio-title sub">실시간<br>독성 탐지 기능</h4>
                 <label class="radio-option">
-                    <input type="radio" name="toxicity" id="toxicity-on" value="on">
-                    <span>ON</span>
+                    <input type="radio" name="toxicity" id="toxicity-on" value="on"checked>
+                    <span class="radio-span">ON</span>
                 </label>
                 <label class="radio-option">
                     <input type="radio" name="toxicity" id="toxicity-off" value="off">
-                    <span>OFF</span>
+                    <span class="radio-span">OFF</span>
                 </label>
             </div>
         </div>

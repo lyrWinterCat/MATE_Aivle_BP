@@ -2,7 +2,7 @@
     let isNewMeeting = true;
 
     function moveMain(){
-        window.location.href="/user/userMain";
+        window.location.href="/";
     }
     document.addEventListener("DOMContentLoaded", function () {
         //탭버튼 동작

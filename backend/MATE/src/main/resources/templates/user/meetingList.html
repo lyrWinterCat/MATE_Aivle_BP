@@ -14,13 +14,16 @@
 <body>
 <header>
     <div class="header-left">
-        <a href="/user/userMain">
+        <a href="/">
             <img src="/img/logo.png" alt="Mate Logo" class="logo-img">
         </a>
         <h1>Mate</h1>
     </div>
     <div class="header-right">
         <span>{{userName}}님 반갑습니다.</span>
+        <form action="/user/userMain" method="get" style="display:inline;">
+            <button type="submit">회의 참가</button>
+        </form>
         <form action="/user/speechLog" method="get" style="display:inline;">
             <button type="submit">로그조회</button>
         </form>

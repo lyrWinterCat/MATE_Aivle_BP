@@ -49,13 +49,16 @@
 <header>
     <div class="header-left">
         <!-- Mate 로고 (상대경로로 수정했습니다)-->
-        <a href="/user/userMain">
+        <a href="/">
             <img src="/img/logo.png" alt="Mate Logo" class="logo-img">
         </a>
         <h1>Mate</h1>
     </div>
     <div class="header-right">
         <span>{{userName}}님 반갑습니다.</span>
+        <form action="/user/userMain" method="get" style="display:inline;">
+            <button type="submit">회의 참가</button>
+        </form>
         <form action="/user/meetingList" method="get" style="display:inline;">
             <button type="submit">마이페이지</button>
         </form>

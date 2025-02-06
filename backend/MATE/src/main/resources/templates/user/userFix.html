@@ -19,8 +19,14 @@
     </div>
     <div class="header-right">
         <span>{{userName}}님 반갑습니다.</span>
+        <form action="/user/userMain" method="get" style="display:inline;">
+            <button type="submit" class="nav-button">회의 참가</button>
+        </form>
         <form action="/user/meetingList" method="get" style="display:inline;">
             <button type="submit" class="nav-button">마이페이지</button>
+        </form>
+        <form action="/user/speechLog" method="get" style="display:inline;">
+            <button type="submit" class="nav-button">로그조회</button>
         </form>
         <form action="/signOut" method="post" style="display:inline;">
             <button type="submit" class="nav-button">로그아웃</button>
@@ -101,7 +107,7 @@
 
 <script>
     function moveMain(){
-        window.location.href="/user/userMain";
+        window.location.href="/";
     }
     document.addEventListener("DOMContentLoaded", () => {
         // URL에서 필터 값 가져오기
