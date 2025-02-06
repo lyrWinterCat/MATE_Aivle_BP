@@ -1,7 +1,25 @@
 let meetingId;
 let previousParticipants = []; // 이전 참여자 리스트 저장
 let participantFetchInterval;
-function fetchParticipants() {
+
+//meetingId 셋팅 대기
+function waitForMeetingId() {
+    const checkInterval = setInterval(() => {
+        meetingId = document.getElementById("meetingId").value;
+
+        if(meetingId && meetingId != "undefined"){
+            console.log("meetingId 설정됨 : "+meetingId);
+            clearInterval(checkInterval);
+            startMeetingUpdates(); //fetchParticipants 및 eventSource 설정
+        }
+    }, 500);
+}
+//참여자 목록 새로고침
+function fetchParticipants(meetingId) {
+    if(!meetingId || meetingId == "undefined"){
+        console.warn("meeingId가 undefined로 떨어짐");
+        return;
+    }
     $.ajax({
         url: `/meeting/${meetingId}/participants`, // API 엔드포인트
         method: 'GET',
@@ -28,7 +46,7 @@ function fetchParticipants() {
 function updateParticipantList(newParticipants) {
     console.log("UI 업데이트");
     const participantList = $('#participants');
-    //participantList.empty(); // 기존 목록 초기화
+    participantList.empty(); // 기존 목록 초기화
 
     if (newParticipants.length > 0) {
         newParticipants.forEach(name => {
@@ -40,13 +58,30 @@ function updateParticipantList(newParticipants) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    meetingId = document.getElementById("meetingId").value;
-    console.log(">>> meetingId : "+meetingId);
+//실시간 업데이트 SSE 설정
+function startEventSource() {
+    if(!meetingId) return;
+    const eventSource = new EventSource(`/meeting/${meetingId}/participants`);
 
-    participantFetchInterval = setInterval(function(){
-        fetchParticipants(); //실시간 회의 참여자 업데이트
-    }, 5000);
+    eventSource.onmessage = function(event) {
+        const updatedParticipants = JSON.parse(event.data);
+        console.log("실시간 업뎅이트 감지...", updatedParticipants);
+        updatedParticipants(updatedParticipants);
+    }
+    eventSource.onerror = function() {
+        console.log("sse 연결종료");
+        eventSource.close();
+    }
+}
+
+function startMeetingUpdates(){
+    console.log("회의 참여자 갱신");
+    participantFetchInterval = setInterval(() => fetchParticipants(meetingId),5000);
+    startEventSource();
+}
+document.addEventListener("DOMContentLoaded", function () {
+    //미팅ID확인 시 참여자 목록 갱신 기능
+    waitForMeetingId();
 
     //탭버튼 이벤트
     const tabs = document.querySelectorAll(".tab");
@@ -70,18 +105,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
-
-const eventSource = new EventSource(`/meeting/${meetingId}/participants`);
-
-eventSource.onmessage = function(event) {
-    const updatedParticipants = JSON.parse(event.data);
-    console.log("실시간 업데이트 감지:", updatedParticipants);
-    updateParticipantList(updatedParticipants);
-};
-
-eventSource.onerror = function() {
-    console.error("SSE 연결 종료됨");
-};
 
 //회의 종료하기 - 회의 종료 시간을 기록하는 함수
 function endMeeting() {

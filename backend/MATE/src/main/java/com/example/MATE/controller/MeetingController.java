@@ -57,18 +57,10 @@ public class MeetingController {
     @GetMapping("/host/{meetingId}")
     public String meetingRecorder(@PathVariable("meetingId") Integer meetingId, Model model) {
         Meeting meeting = meetingService.getMeetingByMeetingId(meetingId);
-
-        // 날짜 포맷팅
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
-
-        String formattedDate = meeting.getCreatedAt().format(dateFormatter);
-        String formattedTime = meeting.getCreatedAt().format(timeFormatter);
-
         model.addAttribute("meetingParticipants", meeting.getMeetingParticipants());
         model.addAttribute("meetingName", meeting.getMeetingName());
-        model.addAttribute("meetingDate", formattedDate);
-        model.addAttribute("meetingTime", formattedTime);
+        model.addAttribute("meetingDate", DateUtil.dateFormat(meeting.getCreatedAt()));
+        model.addAttribute("meetingTime", DateUtil.timeFormat(meeting.getCreatedAt()));
         model.addAttribute("participantCount", meeting.getMeetingParticipants().size()); // 참여자 수 추가
         model.addAttribute("meetingId", meetingId);
         return "meeting/host";

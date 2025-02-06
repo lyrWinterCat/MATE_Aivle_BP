@@ -77,6 +77,25 @@
         align-items: center;
         justify-content: center;
     }
+    .second-tab {
+        height: 40px;
+        background-color: #D0C4FF;
+        padding: 10px;
+        text-align: center;
+        font-weight: bold;
+        flex: 1;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        border-left:1px solid white;
+        border-top:1px solid white;
+        border-right:1px solid white;
+        cursor: pointer;
+
+        /* Center align text vertically */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
     .tab.active {
         background-color: white;
     }
@@ -137,7 +156,8 @@
 
     .meeting-title p,
     .meeting-time p,
-    .participants p {
+    .participants p
+    ..names p {
         font-size: 1em;
         color: #444;
         margin: 5px 0;
@@ -206,12 +226,10 @@
             </div>
             <div class="participants">
                 <h3>참여자 ({{participantCount}}명)</h3>
-                <div id="participants">
-                    <p class="names">
-                        {{#meetingParticipants}}
-                        {{user.name}}<br> <!-- User 객체의 name 필드에 접근 -->
-                        {{/meetingParticipants}}
-                    </p>
+                <div class="names" id="participants">
+                    {{#meetingParticipants}}
+                    {{user.name}}<br> <!-- User 객체의 name 필드에 접근 -->
+                    {{/meetingParticipants}}
                 </div>
                 <br>
             </div>
@@ -244,7 +262,7 @@
 
                 <!-- Right Section: Document Summary -->
                 <div class="right-section">
-                    <div class="tab document-tab">자료화면 요약</div>
+                    <div class="second-tab document-tab">자료화면 요약</div>
                     <div class="document-summary">요청 시</div>
                 </div>
             </div>
