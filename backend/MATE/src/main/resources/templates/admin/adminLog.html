@@ -96,7 +96,7 @@
                 <th>분류</th>
                 <th>발언자</th>
                 <th>내용</th>
-                <th>요약보기</th>
+                <th>회의명</th>
             </tr>
             </thead>
             <tbody id="table-body">
@@ -106,7 +106,7 @@
                 <td class="type">{{speechType}}</td>
                 <td>{{userName}}</td>
                 <td>{{content}}</td>
-                <td><button class="summary-button" onclick="openModal()">요약보기</button></td>
+                <td>{{meetingName}}</td>
             </tr>
             {{/speechLogs}}
             </tbody>

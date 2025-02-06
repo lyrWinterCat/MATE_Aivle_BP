@@ -193,12 +193,14 @@ public class UserService {
         return results.map(row -> {
             SpeechLog speechLog = (SpeechLog) row[0];
             String toxicity = (String) row[1]; // "일반" 혹은 "독성"
+            String meetingName = (String) speechLog.getMeeting().getMeetingName();
 
             Map<String, Object> logMap = new HashMap<>();
             logMap.put("timestamp", speechLog.getTimestamp().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             logMap.put("userName", speechLog.getUser().getName());
             logMap.put("content", speechLog.getContent());
             logMap.put("speechType", toxicity);
+            logMap.put("meetingName", meetingName);
 
             return logMap;
         });
