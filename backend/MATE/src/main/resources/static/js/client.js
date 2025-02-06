@@ -1,186 +1,105 @@
-let stompClient = null;
-let peerConnection = null;
-const remoteVideo = document.getElementById('remoteVideo');
-
-const configuration = {
-    iceServers: [
-        { urls: 'stun:stun.l.google.com:19302' }
-    ]
-};
-
-function connect() {
-    console.log('연결 시도 중...');
-    const socket = new SockJS('/ws-endpoint');
-    stompClient = Stomp.over(socket);
-
-    stompClient.debug = function(str) {
-        console.log('STOMP: ', str);
-    };
-
-    stompClient.connect({},
-        frame => {
-            console.log('Connected:', frame);
-            onConnected();
+let meetingId;
+let previousParticipants = []; // 이전 참여자 리스트 저장
+let participantFetchInterval;
+function fetchParticipants() {
+    $.ajax({
+        url: `/meeting/${meetingId}/participants`, // API 엔드포인트
+        method: 'GET',
+        success: function(data) {
+            console.log(data); // 응답을 콘솔에 출력
+            const newParticipants = data.meetingParticipants.map(p => p.userName).sort();
+            if (JSON.stringify(previousParticipants) !== JSON.stringify(newParticipants)) {
+                console.log("참여자 변경 감지: UI 업데이트 중...");
+                updateParticipantList(newParticipants); // UI 업데이트
+                previousParticipants = newParticipants; // 변경 사항 저장
+            } else {
+                console.log("참여자 목록 변경 없음");
+            }
+            // 참여자 수 업데이트
+            $('#participantCount').text(data.participantCount);
         },
-        error => {
-            console.error('STOMP error:', error);
-            onError(error);
+        error: function(error) {
+            console.error('참여자 정보 가져오기 오류:', error);
         }
-    );
-}
-
-function onConnected() {
-    console.log('WebSocket 연결 성공');
-    stompClient.subscribe('/topic/public', onMessageReceived, {
-        'id': 'viewer-subscription'
     });
-    console.log('토픽 구독 완료');
-
-    initializePeerConnection();
-
-    // 시청 준비 완료 알림 전송
-    const readyMessage = {
-        type: 'viewer-ready'
-    };
-    console.log('시청 준비 메시지 전송:', readyMessage);
-    stompClient.send("/app/signal", {}, JSON.stringify(readyMessage));
 }
 
-function onError(error) {
-    console.error('WebSocket 연결 실패:', error);
-    setTimeout(() => {
-        console.log('재연결 시도...');
-        connect();
-    }, 3000);
-}
+// UI 업데이트 함수
+function updateParticipantList(newParticipants) {
+    console.log("UI 업데이트");
+    const participantList = $('#participants');
+    //participantList.empty(); // 기존 목록 초기화
 
-//function initializePeerConnection() {
-//    console.log('PeerConnection 초기화 시작');
-//    if (peerConnection) {
-//        peerConnection.close();
-//    }
-//    peerConnection = new RTCPeerConnection(configuration);
-//
-//    peerConnection.ontrack = (event) => {
-//        console.log('트랙 수신됨:', event);
-//        if (event.streams && event.streams[0]) {
-//            console.log('비디오 스트림 설정');
-//            remoteVideo.srcObject = event.streams[0];
-//            remoteVideo.play().catch(e => console.error('비디오 재생 실패:', e));
-//        }
-//    };
-//
-//    peerConnection.onicecandidate = (event) => {
-//        if (event.candidate) {
-//            console.log('ICE candidate 전송:', event.candidate);
-//            stompClient.send("/app/ice-candidate", {}, JSON.stringify(event.candidate));
-//        }
-//    };
-//
-//    peerConnection.onconnectionstatechange = () => {
-//        console.log('Connection state 변경:', peerConnection.connectionState);
-//        if (peerConnection.connectionState === 'failed') {
-//            console.log('연결 실패, 재시도...');
-//            initializePeerConnection();
-//        }
-//    };
-//
-//    peerConnection.oniceconnectionstatechange = () => {
-//        console.log('ICE connection state 변경:', peerConnection.iceConnectionState);
-//    };
-//
-//    console.log('PeerConnection 초기화 완료');
-//}
-
-function initializePeerConnection() {
-    peerConnection = new RTCPeerConnection(configuration);
-
-    // ICE Candidate 처리 (3번 수정사항)
-    peerConnection.onicecandidate = (event) => {
-        if (event.candidate) {
-            console.log('Sending ICE candidate:', event.candidate);
-            stompClient.send("/app/ice-candidate",
-                {},
-                JSON.stringify({
-                    type: 'ice-candidate',
-                    payload: event.candidate
-                })
-            );
-        }
-    };
-
-    // 연결 상태 모니터링 (4번 수정사항)
-    peerConnection.onconnectionstatechange = () => {
-        console.log('Connection State:', peerConnection.connectionState);
-        if (peerConnection.connectionState === 'failed') {
-            console.error('Connection failed - reinitializing');
-            initializePeerConnection(); // 재연결 시도
-        }
-    };
-
-    peerConnection.oniceconnectionstatechange = () => {
-        console.log('ICE Connection State:', peerConnection.iceConnectionState);
-    };
-
-    console.log('PeerConnection 초기화 완료');
-}
-
-async function onMessageReceived(payload) {
-    console.log('메시지 수신:', payload.body);
-    const message = JSON.parse(payload.body);
-
-    switch(message.type) {
-        case 'offer':
-            console.log('Offer 수신');
-            try {
-                await peerConnection.setRemoteDescription(new RTCSessionDescription(message.payload));
-                console.log('Remote description 설정 완료');
-
-                const answer = await peerConnection.createAnswer();
-                console.log('Answer 생성');
-
-                await peerConnection.setLocalDescription(answer);
-                console.log('Local description 설정 완료');
-
-                stompClient.send("/app/signal", {}, JSON.stringify({
-                    type: 'answer',
-                    payload: answer
-                }));
-                console.log('Answer 전송 완료');
-            } catch (error) {
-                console.error('Offer 처리 중 에러:', error);
-            }
-            break;
-
-        case 'ice-candidate':
-            console.log('ICE candidate 수신');
-            try {
-                await peerConnection.addIceCandidate(new RTCIceCandidate(message));
-                console.log('ICE candidate 추가 완료');
-            } catch (error) {
-                console.error('ICE candidate 추가 중 에러:', error);
-            }
-            break;
-
-        default:
-            console.log('알 수 없는 메시지 타입:', message.type);
+    if (newParticipants.length > 0) {
+        newParticipants.forEach(name => {
+            participantList.append(`<p>${name}</p>`); // 참여자 리스트 추가
+        });
+        console.log("UI 업데이트 > 완료");
+    } else {
+        participantList.append('<p>참여자가 없습니다.</p>'); // 참여자가 없을 경우 메시지 표시
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('페이지 로드됨, 연결 시작');
-    connect();
+document.addEventListener("DOMContentLoaded", function () {
+    meetingId = document.getElementById("meetingId").value;
+    console.log(">>> meetingId : "+meetingId);
 
-    // 비디오 엘리먼트 준비 상태 확인
-    remoteVideo.addEventListener('loadedmetadata', () => {
-        console.log('비디오 메타데이터 로드됨');
-    });
+    participantFetchInterval = setInterval(function(){
+        fetchParticipants(); //실시간 회의 참여자 업데이트
+    }, 5000);
 
-    remoteVideo.addEventListener('play', () => {
-        console.log('비디오 재생 시작');
-    });
+    //탭버튼 이벤트
+    const tabs = document.querySelectorAll(".tab");
+    tabs.forEach(tab => {
+        tab.addEventListener("click", function () {
+            // 모든 탭에서 active 클래스 제거
+            tabs.forEach(t => t.classList.remove("active"));
 
-    remoteVideo.addEventListener('error', (e) => {
-        console.error('비디오 에러:', e);
+            // 클릭한 탭에 active 클래스 추가
+            this.classList.add("active");
+
+            if (this.id === "summary") {
+
+            } else if (this.id === "summary-categori") {
+
+            } else if (this.id === "summary-yesno") {
+
+            } else if (this.id === "summary-total") {
+
+            }
+        });
     });
+});
+
+const eventSource = new EventSource(`/meeting/${meetingId}/participants`);
+
+eventSource.onmessage = function(event) {
+    const updatedParticipants = JSON.parse(event.data);
+    console.log("실시간 업데이트 감지:", updatedParticipants);
+    updateParticipantList(updatedParticipants);
+};
+
+eventSource.onerror = function() {
+    console.error("SSE 연결 종료됨");
+};
+
+//회의 종료하기 - 회의 종료 시간을 기록하는 함수
+function endMeeting() {
+    $.ajax({
+        url: `/meeting/${meetingId}/end`,
+        method: 'POST',
+        success: function(response) {
+            console.log('회의 종료 시간 기록:', response);
+            fetchDomain().then(domain => {
+                console.log('도메인:', domain); // 도메인 로그 추가
+                window.location.href = "/user/userMain";
+            });
+        },
+        error: function(error) {
+            console.error('회의 종료 시간 기록 오류:', error);
+        }
+    });
+}
+document.getElementById('endMeetingButton').addEventListener('click', function() {
+    endMeeting(); // 회의 종료
 });

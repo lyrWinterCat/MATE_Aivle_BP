@@ -103,7 +103,7 @@ public class MeetingController {
     public String meetingUser(@PathVariable("meetingId") Integer meetingId, Model model){
         System.out.println("[MeetingController] 들어옴.");
         Meeting meeting = meetingService.getMeetingByMeetingId(meetingId);
-
+        model.addAttribute("meetingId",meeting.getMeetingId());
         model.addAttribute("meetingParticipants", meeting.getMeetingParticipants());
         model.addAttribute("meetingName", meeting.getMeetingName());
         model.addAttribute("meetingDate", DateUtil.dateFormat(meeting.getCreatedAt()));
@@ -188,6 +188,5 @@ public class MeetingController {
     public ResponseEntity<String> getDomain() {
         return ResponseEntity.ok(domain);
     }
-
 
 }
