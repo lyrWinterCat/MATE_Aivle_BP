@@ -7,6 +7,7 @@ import com.example.MATE.model.MeetingParticipant;
 import com.example.MATE.service.MeetingService;
 import com.example.MATE.utils.DateUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -176,6 +177,16 @@ public class MeetingController {
     public ResponseEntity<?> endMeeting(@PathVariable Integer meetingId) {
         meetingService.endMeeting(meetingId);
         return ResponseEntity.ok().body("회의 종료 시간이 기록되었습니다.");
+    }
+
+    // host에서 회의 종료 시 user/userMain으로 가기 위한 도메인 받아오기
+    // client에서도 이거 받아다 쓰시면 됩니다
+    @Value("${server.domain}")
+    private String domain;
+
+    @GetMapping("/domain")
+    public ResponseEntity<String> getDomain() {
+        return ResponseEntity.ok(domain);
     }
 
 

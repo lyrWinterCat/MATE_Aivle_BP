@@ -328,6 +328,15 @@
         });
     }
 
+
+    // 도메인 값을 가져오는 함수
+    function fetchDomain() {
+        return $.ajax({
+            url: '/meeting/domain',
+            method: 'GET'
+        });
+    }
+
     // 회의 종료 시간을 기록하는 함수
     function endMeeting() {
         $.ajax({
@@ -335,7 +344,9 @@
             method: 'POST',
             success: function(response) {
                 console.log('회의 종료 시간 기록:', response);
-                window.location.href = "http://localhost:8080/user/userMain"; // 회의 종료 후 이동
+                fetchDomain().then(domain => {
+                    window.location.href = `${domain}/user/userMain`; // 회의 종료 후 이동
+                });
             },
             error: function(error) {
                 console.error('회의 종료 시간 기록 오류:', error);
