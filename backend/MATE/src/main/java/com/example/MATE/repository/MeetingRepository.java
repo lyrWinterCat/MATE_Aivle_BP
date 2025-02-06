@@ -49,6 +49,8 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
             "    WHERE (:employeeName = '' OR mp2.user.name LIKE CONCAT('%', :employeeName, '%')) " +
             ") " +
 
+            "AND (m.startTime IS NOT NULL) " +
+
             "AND (:startDate IS NULL OR m.startTime >= :startDate) " +
             "AND (:endDate IS NULL OR m.startTime <= :endDate) " +
             "ORDER BY m.startTime DESC")
