@@ -11,11 +11,46 @@
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
             margin: 0;
             padding-bottom: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+        }
+        .header {
+            position: absolute;
+            top: 20px;
+            right: 120px;
+            display: flex;
+            gap: 30px;
+        }
+        .header a {
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 300;
+            color: white;
+        }
+        .logo-section {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .logo-img {
+            width: 80px;
+            height: 80px;
+        }
+        .logo-text {
+            color: white;
+            font-size: 42px;
+            font-weight: bold;
         }
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 50px;
+            max-width: 1000px;
+            width: 80%;
+            padding: 10px 40px;
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
             border-radius: 20px;
@@ -23,10 +58,11 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            margin-top: 50px;
         }
         .about-us {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 30px;
         }
         .about-us h1 {
             font-size: 56px;
@@ -36,11 +72,12 @@
         .team {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 40px;
+            gap: 30px;
             width: 100%;
         }
         .team-member {
             display: flex;
+            flex-direction: column;
             align-items: center;
             color: #fff;
             transition: transform 0.3s ease-in-out;
@@ -49,16 +86,17 @@
             transform: translateY(-10px);
         }
         .team-member img {
-            width: 180px;
-            height: 180px;
+            width: 160px;
+            height: 160px;
             border-radius: 50%;
             background-color: rgba(255, 255, 255, 0.3);
-            padding: 10px;
-            margin-right: 20px;
+            padding: 8px;
+            margin-bottom: 10px;
         }
         .team-member p {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: bold;
+            white-space: nowrap;
         }
         .footer {
             position: fixed;
@@ -85,43 +123,50 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="about-us">
-        <h1>About us</h1>
+    <div class="header">
+        <a href="/signIn">Sign-in</a>
     </div>
-    <div class="team">
-        <div class="team-member">
-            <img src="/img/1.jpg" alt="이예림">
-            <p>이예림(조장)</p>
+    <div class="logo-section" onclick="moveMain()">
+        <img src="/img/logo.png" alt="Mate Logo" class="logo-img">
+        <span class="logo-text">Mate</span>
+    </div>
+    <div class="container">
+        <div class="about-us">
+            <h1>About us</h1>
         </div>
-        <div class="team-member">
-            <img src="/img/2.jpg" alt="안지홍">
-            <p>안지홍(FE)</p>
-        </div>
-        <div class="team-member">
-            <img src="/img/3.jpg" alt="이승은">
-            <p>이승은(SE)</p>
-        </div>
-        <div class="team-member">
-            <img src="/img/4.jpg" alt="고수현">
-            <p>고수현(DB)</p>
-        </div>
-        <div class="team-member">
-            <img src="/img/5.jpg" alt="윤찬혁">
-            <p>윤찬혁(AI)</p>
-        </div>
-        <div class="team-member">
-            <img src="/img/6.jpg" alt="박언용">
-            <p>박언용(BE)</p>
+        <div class="team">
+            <div class="team-member">
+                <img src="/img/1.jpg" alt="이예림">
+                <p>이예림(조장)</p>
+            </div>
+            <div class="team-member">
+                <img src="/img/2.jpg" alt="안지홍">
+                <p>안지홍(FE)</p>
+            </div>
+            <div class="team-member">
+                <img src="/img/3.jpg" alt="이승은">
+                <p>이승은(SE)</p>
+            </div>
+            <div class="team-member">
+                <img src="/img/4.jpg" alt="고수현">
+                <p>고수현(DB)</p>
+            </div>
+            <div class="team-member">
+                <img src="/img/5.jpg" alt="윤찬혁">
+                <p>윤찬혁(AI)</p>
+            </div>
+            <div class="team-member">
+                <img src="/img/6.jpg" alt="박언용">
+                <p>박언용(BE)</p>
+            </div>
         </div>
     </div>
-</div>
-<div class="footer">
-    <span class="footer-item">©copyright Aivle06기 빅프로젝트 07조</span>
-    <span class="footer-separator">|</span>
-    <span class="footer-item">Contact : 010-5256-5459</span>
-    <span class="footer-separator">|</span>
-    <span class="footer-item">Address : 성남시 분당구 불정로 90 (정자동)</span>
-</div>
+    <div class="footer">
+        <span class="footer-item">©copyright Aivle06기 빅프로젝트 07조</span>
+        <span class="footer-separator">|</span>
+        <span class="footer-item">Contact : 010-5256-5459</span>
+        <span class="footer-separator">|</span>
+        <span class="footer-item">Address : 성남시 분당구 불정로 90 (정자동)</span>
+    </div>
 </body>
 </html>
