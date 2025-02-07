@@ -26,4 +26,7 @@ public class MeetingParticipant {
 
     @Column(name = "is_recording", nullable = false, columnDefinition = "TinyInt DEFAULT 0")
     private boolean isRecording;
+
+    @Column(name = "is_attending", nullable = false, columnDefinition = "TinyInt DEFAULT 1")
+    private boolean isAttending;
 }
