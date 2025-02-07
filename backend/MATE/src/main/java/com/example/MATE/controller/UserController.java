@@ -154,7 +154,7 @@ public class UserController {
 
                 model.addAttribute("startDate", startDate !=null ? startDate : "");
                 model.addAttribute("endDate", endDate !=null ? endDate : "");
-                model.addAttribute("speechType", speechType);
+                model.addAttribute("speechType", speechType !=null ? speechType :  "");
 
                 PaginationUtils.addPaginationAttributes(model, speechLogs, page);
             }

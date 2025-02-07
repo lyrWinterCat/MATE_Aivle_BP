@@ -117,20 +117,20 @@
         <div class="pagination">
             <!-- 이전 페이지가 존재하면 이전 버튼을 생성 -->
             {{#speechLogs.hasPrevious}}
-            <a href="/user/speechLog?page={{previousPage}}">이전</a>
+            <a href="/user/speechLog?page={{previousPage}}&startDate={{startDate}}&endDate={{endDate}}&speechType={{speechType}}">이전</a>
             {{/speechLogs.hasPrevious}}
 
             <!-- 페이지 번호 버튼들 -->
             <!-- 만약 현재 페이지라면 current 클래스를 붙여서 강조해준다 -->
             {{#pageNumbers}}
-            <a href="/user/speechLog?page={{pageIndex}}">
+            <a href="/user/speechLog?page={{pageIndex}}&startDate={{startDate}}&endDate={{endDate}}&speechType={{speechType}}">
                 {{displayIndex}}
             </a>
             {{/pageNumbers}}
 
             <!-- 다음 페이지가 존재하면 다음 버튼을 생성 -->
             {{#speechLogs.hasNext}}
-            <a href="/user/speechLog?page={{nextPage}}">다음</a>
+            <a href="/user/speechLog?page={{nextPage}}&startDate={{startDate}}&endDate={{endDate}}&speechType={{speechType}}">다음</a>
             {{/speechLogs.hasNext}}
         </div>
     </div>
