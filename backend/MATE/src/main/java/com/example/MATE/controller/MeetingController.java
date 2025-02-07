@@ -4,8 +4,11 @@ import com.example.MATE.dto.MeetingDto;
 import com.example.MATE.dto.MeetingParticipantDto;
 import com.example.MATE.model.Meeting;
 import com.example.MATE.model.MeetingParticipant;
+import com.example.MATE.service.MeetingParticipantService;
 import com.example.MATE.service.MeetingService;
+import com.example.MATE.service.UserService;
 import com.example.MATE.utils.DateUtil;
+import com.example.MATE.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -27,6 +30,8 @@ import java.util.stream.Collectors;
 public class MeetingController {
 
     private final MeetingService meetingService;
+    private final UserService userService;
+    private final MeetingParticipantService meetingParticipantService;
     
     //회의 데이터 생성
     @PostMapping("/create")
@@ -70,7 +75,9 @@ public class MeetingController {
     @GetMapping("/{meetingId}/participants")
     public ResponseEntity<Map<String, Object>> getMeetingParticipants(@PathVariable Integer meetingId) {
         try {
-            List<MeetingParticipant> participants = meetingService.getParticipantsByMeetingId(meetingId);
+//            List<MeetingParticipant> participants = meetingService.getParticipantsByMeetingId(meetingId);
+            List<MeetingParticipant> participants = meetingParticipantService.getAttendingParticipantsByMeetingId(meetingId);
+
             List<MeetingParticipantDto> participantDtos = participants.stream()
                     .map(participant -> new MeetingParticipantDto(
                             participant.getParticipantId(),
@@ -167,6 +174,14 @@ public class MeetingController {
 
     @PostMapping("/{meetingId}/end")
     public ResponseEntity<?> endMeeting(@PathVariable Integer meetingId) {
+        String email = SecurityUtils.getCurrentUserEmail();
+        Integer userId = userService.findUserByEmail(email);
+
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자가 인증되지 않았습니다.");
+        }
+
+        meetingParticipantService.updateIsAttending(meetingId, userId);
         meetingService.endMeeting(meetingId);
         return ResponseEntity.ok().body("회의 종료 시간이 기록되었습니다.");
     }

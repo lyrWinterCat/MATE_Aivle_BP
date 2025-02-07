@@ -5,6 +5,7 @@ import com.example.MATE.model.User;
 import com.example.MATE.repository.MeetingParticipantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,6 +22,20 @@ public class MeetingParticipantService {
                                            .stream()
                                            .map(MeetingParticipant::getUser)
                                            .toList();
+    }
+
+//    @Transactional
+    public void updateIsAttending(Integer meetingId, Integer userId) {
+        MeetingParticipant participant = meetingParticipantRepository.findByMeeting_MeetingIdAndUser_UserId(meetingId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("참여자를 찾을 수 없습니다."));
+
+        participant.setAttending(false); // is_attending을 false로 설정
+        meetingParticipantRepository.save(participant); // 저장
+    }
+
+
+    public List<MeetingParticipant> getAttendingParticipantsByMeetingId(Integer meetingId) {
+        return meetingParticipantRepository.findByMeeting_MeetingIdAndIsAttendingTrue(meetingId);
     }
 }
 

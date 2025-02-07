@@ -11,6 +11,7 @@ import com.example.MATE.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.jdbc.Expectation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +42,11 @@ public class UserService {
     private final AdminRepository adminRepository;
     private final MeetingRepository meetingRepository;
 
+    public Integer findUserByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        return user.getUserId(); // 사용자 ID 반환
+    }
 
     //회원조회
     public Optional<User> findByEmail(String email){

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 // 한 회의에 참여한 사람을 모두 가져옴
 public interface MeetingParticipantRepository extends JpaRepository<MeetingParticipant, Integer> {
@@ -17,4 +18,8 @@ public interface MeetingParticipantRepository extends JpaRepository<MeetingParti
     boolean existsByMeetingAndUser(Meeting meeting, User user);
 
     List<MeetingParticipant> findByMeeting_MeetingId(Integer meetingId);
+
+    Optional<MeetingParticipant> findByMeeting_MeetingIdAndUser_UserId(Integer meetingId, Integer userId);
+
+    List<MeetingParticipant> findByMeeting_MeetingIdAndIsAttendingTrue(Integer meetingId);
 }

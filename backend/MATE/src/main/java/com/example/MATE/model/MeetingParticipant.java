@@ -28,5 +28,5 @@ public class MeetingParticipant {
     private boolean isRecording;
 
     @Column(name = "is_attending", nullable = false, columnDefinition = "TinyInt DEFAULT 1")
-    private boolean isAttending;
+    private boolean isAttending = true;
 }
