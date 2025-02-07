@@ -29,9 +29,8 @@ function captureShareScreen(){
                     const screenSummaryBox = document.getElementById("screenSummary");
                     const screenSummaryContent = document.getElementById("screenSummaryContent");
 
-                    screenSummaryBox.style.display = "block";
-
-                    screenSummaryContent.textContent = data;
+                    screenSummaryBox.style.display = "flex";
+                    screenSummaryContent.innerHTML = JSON.parse(data);
 
                 }
             }

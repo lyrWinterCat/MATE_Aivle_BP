@@ -164,41 +164,6 @@
             background: white;
         }
 
-        #screenSummary{
-            margin-top: 40px;
-            background: #cfd0ff;
-            border-radius: 8px;
-            height: 300px;
-            text-align: center;
-            display: none;
-        }
-
-        #screenSummaryHeader{
-            background: black;
-            border-radius: 8px 8px 0px 0px;
-            color: white;
-            font-size: 20px;
-            height: 40px;
-            line-height: 40px;
-        }
-
-        #screenSummaryContent{
-            overflow: hidden;
-            height: 225px;
-            text-align: left;
-            overflow-y: scroll;
-            margin: 0px;
-}
-        }
-
-        #screenSummaryCloseButton{
-            position: relative;
-            top: 8px;
-            background-color: white;
-            border: 0px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
         /* Modern Meeting Info Section */
         .meeting-info {
             background: #ffffff;
@@ -282,10 +247,59 @@
             cursor: not-allowed; /* 비활성 상태 커서 */
         }
 
-.control-btn:not(:disabled):hover {
-    background-color: #3b3e8f; /* 활성화 상태에서의 호버 색상 */
-    color: white; /* 활성화 상태에서의 호버 텍스트 색상 */
-}
+        .control-btn:not(:disabled):hover {
+            background-color: #3b3e8f; /* 활성화 상태에서의 호버 색상 */
+            color: white; /* 활성화 상태에서의 호버 텍스트 색상 */
+        }
+
+        .bottom-bar{
+            position: absolute;
+            bottom: 0px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 60px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 8px;
+            color: white;
+            text-align: center;
+            display: none;
+        }
+
+        .left-box{
+            width: 5%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #5b5fc7;
+            color: white;
+            font-size: 14px;
+            border-radius: 5px 0px 0px 5px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        #screenSummaryContent{
+            padding-right: 15px;
+            overflow: hidden;
+            overflow-y: auto;
+            width: 90%;
+            text-align: left;
+            line-height: 30px;
+            white-space: pre-line;
+        }
+
+        #screenSummaryCloseButton{
+            background-color: #5b5fc7;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 5%;
+        }
     </style>
 </head>
 <body>
@@ -329,20 +343,14 @@
                 <button class="control-btn" id="screenSummaryButton">자료 요약</button>
                 <button class="control-btn" id="endMeetingButton">회의 종료</button>
             </div>
-
-            <div id="screenSummary">
-                <div id="screenSummaryHeader">
-                    공유 화면 요약
-                </div>
-                <p id="screenSummaryContent">
-
-                </p>
-
-                <button id="screenSummaryCloseButton">공유 화면 요약 닫기</button>
-            </div>
         </div>
         <div class="screen-container">
             <video id="localVideo" autoplay muted playsinline></video>
+            <div class="bottom-bar" id="screenSummary">
+                <div class="left-box">화면 요약</div>
+                <span id="screenSummaryContent"></span>
+                <button class="action-button" id="screenSummaryCloseButton">닫기</button>
+            </div>
         </div>
     </div>
 </div>
