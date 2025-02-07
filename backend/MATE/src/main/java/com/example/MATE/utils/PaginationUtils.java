@@ -4,6 +4,7 @@ import com.example.MATE.dto.PageItemDto;
 import org.springframework.ui.Model;
 import org.springframework.data.domain.Page;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -26,10 +27,42 @@ public class PaginationUtils {
 
         // 페이지 번호 리스트 생성
         int totalPages = pagedData.getTotalPages();
-        List<PageItemDto> pageNumbers = IntStream.range(0, totalPages)
-                .mapToObj(idx -> new PageItemDto(idx, idx + 1))
-                .collect(Collectors.toList());
+        List<PageItemDto> pageItems = new ArrayList<>();
 
-        model.addAttribute("pageNumbers", pageNumbers);
+        // 총 페이지 수가 7 이하인 경우 모든 페이지 번호를 표시
+        if (totalPages <= 7) {
+            for (int i = 0; i < totalPages; i++) {
+                pageItems.add(new PageItemDto(i, String.valueOf(i + 1), false));
+            }
+        } else {
+            // 현재 페이지가 초반에 위치하는 경우 (인덱스 0 ~ 3)
+            if (currentPage <= 3) {
+                for (int i = 0; i <= 3; i++) {
+                    pageItems.add(new PageItemDto(i, String.valueOf(i + 1), false));
+                }
+                pageItems.add(new PageItemDto(-1, "...", true));
+                pageItems.add(new PageItemDto(totalPages - 1, String.valueOf(totalPages), false));
+            }
+            // 현재 페이지가 후반에 위치하는 경우 (마지막 4페이지)
+            else if (currentPage >= totalPages - 4) {
+                pageItems.add(new PageItemDto(0, "1", false));
+                pageItems.add(new PageItemDto(-1, "...", true));
+                for (int i = totalPages - 4; i < totalPages; i++) {
+                    pageItems.add(new PageItemDto(i, String.valueOf(i + 1), false));
+                }
+            }
+            // 현재 페이지가 중간에 위치하는 경우
+            else {
+                pageItems.add(new PageItemDto(0, "1", false));
+                pageItems.add(new PageItemDto(-1, "...", true));
+                for (int i = currentPage - 1; i <= currentPage + 1; i++) {
+                    pageItems.add(new PageItemDto(i, String.valueOf(i + 1), false));
+                }
+                pageItems.add(new PageItemDto(-1, "...", true));
+                pageItems.add(new PageItemDto(totalPages - 1, String.valueOf(totalPages), false));
+            }
+        }
+
+        model.addAttribute("pageNumbers", pageItems);
     }
 }
