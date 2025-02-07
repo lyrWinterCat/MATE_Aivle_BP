@@ -173,11 +173,11 @@
         /* 라디오 버튼 박스 */
         .radio-container {
             background: #e6e3fc;
-            padding-right: 20px;
-            padding-left:20px;
+            padding: 15px 20px;
             width: 30%;
-            padding-bottom:4px;
+            border-radius: 0;
         }
+
         .radio-container-mode {
             background: #e6e3fc;
             padding-right: 20px;
@@ -209,11 +209,10 @@
         }
         .radio-container:first-child {
             border-radius: 10px 0 0 10px;
-            margin-left:3px;
         }
+
         .radio-container:last-child {
             border-radius: 0 10px 10px 0;
-            margin-right:3px;
         }
         .radio-title.main {
             font-size: 18px;
@@ -306,6 +305,78 @@
             text-decoration: underline;
             text-decoration-color:#7803ff;
         }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 110px;
+            height: 24px;
+            margin: 10px 0;
+        }
+
+        /* 실제 체크박스는 숨김 */
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* 토글 스위치의 배경 */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        /* 토글 스위치의 동그라미 부분 */
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        /* 체크됐을 때의 배경 색상 */
+        input:checked + .slider {
+            background: linear-gradient(90deg, #5b5fc7, #6B2399);
+        }
+
+        /* 체크됐을 때의 동그라미 위치 */
+        input:checked + .slider:before {
+            transform: translateX(85px);
+        }
+
+        /* 토글 텍스트 스타일 */
+<!--        .toggle-text {-->
+<!--            display: flex;-->
+<!--            justify-content: center;-->
+<!--            gap: 10px;-->
+<!--            margin-top: 5px;-->
+<!--            font-size: 14px;-->
+<!--            color: #333;-->
+<!--        }-->
+
+        .radio-container .radio-title {
+            margin-bottom: 15px;
+        }
+
+        /* 토글 컨테이너 중앙 정렬 */
+        .toggle-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -360,36 +431,30 @@
         <div class="radio-groups">
             <div class="radio-container">
                 <h4 class="radio-title sub">실시간<br>피로도 탐지 기능</h4>
-                <label class="radio-option">
-                    <input type="radio" name="tired" id="tired-on" value="on" checked>
-                    <span class="radio-span">ON</span>
-                </label>
-                <label class="radio-option">
-                    <input type="radio" name="tired" id="tired-off" value="off">
-                    <span class="radio-span">OFF</span>
-                </label>
+                <div class="toggle-container">
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="tired" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
             </div>
             <div class="radio-container">
                 <h4 class="radio-title sub">실시간<br>요약 기능</h4>
-                <label class="radio-option">
-                    <input type="radio" name="summary" id="summary-on" value="on" checked>
-                    <span class="radio-span">ON</span>
-                </label>
-                <label class="radio-option">
-                    <input type="radio" name="summary" id="summary-off" value="off" >
-                    <span class="radio-span">OFF</span>
-                </label>
+                <div class="toggle-container">
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="summary" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
             </div>
             <div class="radio-container">
                 <h4 class="radio-title sub">실시간<br>독성 탐지 기능</h4>
-                <label class="radio-option">
-                    <input type="radio" name="toxicity" id="toxicity-on" value="on"checked>
-                    <span class="radio-span">ON</span>
-                </label>
-                <label class="radio-option">
-                    <input type="radio" name="toxicity" id="toxicity-off" value="off">
-                    <span class="radio-span">OFF</span>
-                </label>
+                <div class="toggle-container">
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="toxicity" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
             </div>
         </div>
         <div class="form-group" id="meetingUrl">
@@ -418,4 +483,14 @@
 </main>
 </body>
 <script src="/js/userMain.js"></script>
+<script>
+    // 토글 상태 변경 시 이벤트 처리
+    document.querySelectorAll('.toggle-switch input').forEach(toggle => {
+        toggle.addEventListener('change', function() {
+            const name = this.name;
+            const value = this.checked ? 'on' : 'off';
+            console.log(`${name} is now ${value}`);
+        });
+    });
+</script>
 </html>
