@@ -91,22 +91,27 @@
         <!-- 페이지네이션 -->
         <div class="pagination">
             <!-- 이전 페이지가 존재하면 이전 버튼을 생성 -->
-            {{#feedbackList.hasPrevious}}
+            {{#previousPage}}
             <a href="/admin/adminFix?page={{previousPage}}&employeeName={{employeeName}}&startDate={{startDate}}&endDate={{endDate}}&status={{status}}">이전</a>
-            {{/feedbackList.hasPrevious}}
+            {{/previousPage}}
 
             <!-- 페이지 번호 버튼들 -->
             <!-- 만약 현재 페이지라면 current 클래스를 붙여서 강조해준다 -->
             {{#pageNumbers}}
+            {{#isEllipsis}}
+            <span>{{displayIndex}}</span>
+            {{/isEllipsis}}
+            {{^isEllipsis}}
             <a href="/admin/adminFix?page={{pageIndex}}&employeeName={{employeeName}}&startDate={{startDate}}&endDate={{endDate}}&status={{status}}">
                 {{displayIndex}}
             </a>
+            {{/isEllipsis}}
             {{/pageNumbers}}
 
             <!-- 다음 페이지가 존재하면 다음 버튼을 생성 -->
-            {{#feedbackList.hasNext}}
+            {{#nextPage}}
             <a href="/admin/adminFix?page={{nextPage}}&employeeName={{employeeName}}&startDate={{startDate}}&endDate={{endDate}}&status={{status}}">다음</a>
-            {{/feedbackList.hasNext}}
+            {{/nextPage}}
         </div>
     </div>
 </div>
