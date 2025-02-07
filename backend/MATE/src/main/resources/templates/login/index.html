@@ -14,7 +14,8 @@
         .container {
             max-width: 1000px;
             margin: 50px auto;
-            padding: 30px;
+            padding-left: 30px;
+            padding-right:30px;
         }
         .header {
             position: absolute;
@@ -107,15 +108,14 @@
 
         /*서비스 이동 버튼 */
         .controlBtn {
-            display:flex;
-            justify-content:center;
-            align-items : center;
-            margin-top:30px;
+            margin-top:150px;
+            padding-right:15px;
+            margin-left:auto;
         }
         .serviceButton {
-            width: 250px;
+            width: 200px;
             padding: 15px;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             border: none;
             border-radius: 8px;
@@ -140,7 +140,7 @@
         }
         .service-title {
             display:flex;
-            width:50%;
+            width:100%;
             height:120px;
             gap:20px;
         }
@@ -161,11 +161,13 @@
     <div class="service-title">
         <img src="/img/logo.png" class="logo" alt="Mate Logo">
         <h1>Mate</h1>
+        <div class="controlBtn">
+            <button class="serviceButton" id="serviceButton" onclick="goService()">서비스 이용하기➡️</button>
+        </div>
     </div>
-
     <p>Meeting Assistant for team efficiency</p>
-    <p>스마트한 협업을 위한 AI 기반 화상회의 어시스턴트, Mate와 함께하세요</p>
-
+    <p>스마트한 협업을 위한 AI 기반 화상회의 어시스턴트,</p>
+    <p> Mate와 함께하세요</p>
     <div class="feature">
         <div class="feature-item">
             <div class="icon">📝</div>
@@ -183,9 +185,6 @@
             <p><strong>AI</strong>가 회의 내용을 분석하여 회의 참여자들에게 <strong>To-Do List를 추천</strong>합니다.</p>
         </div>
     </div>
-</div>
-<div class="controlBtn">
-    <button class="serviceButton" id="serviceButton" onclick="goService()">서비스 이용하기➡️</button>
 </div>
 <div class="footer">
     <span class="footer-item">©copyright Aivle06기 빅프로젝트 07조</span>
