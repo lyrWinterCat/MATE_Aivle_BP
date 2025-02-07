@@ -87,14 +87,28 @@
             margin-top:3%;
         }
 
-        [id^="loadingGif"] {
+        .loading-container {
             display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100px !important;
-            height: 100px !important;
+            text-align: center;
+            padding: 20px;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .loading-text {
+            margin-bottom: 15px;
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .summary-loading-container {
+            position: relative;
+        }
+
+        [id^="loadingGif"] {
+            margin-top: 10px
+            width: 150px !important;
+            height: 150px !important;
         }
 
         /* 탭 버튼 컨테이너 - 카드 내부로 이동 */
@@ -261,6 +275,17 @@
             background-color: #3b3e8f;
             color:white;
         }
+
+        .control-btn:disabled {
+            background-color: #d3d3d3; /* 비활성 상태 배경색 */
+            color: #a9a9a9; /* 비활성 상태 텍스트 색상 */
+            cursor: not-allowed; /* 비활성 상태 커서 */
+        }
+
+.control-btn:not(:disabled):hover {
+    background-color: #3b3e8f; /* 활성화 상태에서의 호버 색상 */
+    color: white; /* 활성화 상태에서의 호버 텍스트 색상 */
+}
     </style>
 </head>
 <body>
@@ -332,14 +357,34 @@
         <button id="TODOList" class="tab-button">TODO List</button>
     </div>
     <div id="summary">
-        <p id="totalSumm" class="summaryContent">통합 요약을 불러오는 중입니다.</p>
-        <img id="loadingGif1" src="/img/loading.gif" alt="로딩 중">
-        <p id="topicwiseSumm" class="summaryContent">주제별 요약을 불러오는 중입니다.</p>
-        <img id="loadingGif2" src="/img/loading.gif" alt="로딩 중">
-        <p id="posnegSumm" class="summaryContent">긍정부정 요약을 불러오는 중입니다.</p>
-        <img id="loadingGif3" src="/img/loading.gif" alt="로딩 중">
-        <p id="TODOListSumm" class="summaryContent">TODO List를 불러오는 중입니다.</p>
-        <img id="loadingGif4" src="/img/loading.gif" alt="로딩 중">
+        <div class="summary-loading-container">
+            <p id="totalSumm" class="summaryContent">통합 요약을 불러오는 중입니다.</p>
+            <div id="loadingContainer1" class="loading-container">
+                <p class="loading-text">AI를 사용하여 회의 발언 내용을 통해 통합 요약 중입니다.</p>
+                <img id="loadingGif1" src="/img/loading.gif" alt="로딩 중">
+            </div>
+        </div>
+        <div class="summary-loading-container">
+            <p id="topicwiseSumm" class="summaryContent">주제별 요약을 불러오는 중입니다.</p>
+            <div id="loadingContainer2" class="loading-container">
+                <p class="loading-text">AI를 사용하여 회의 발언 내용을 통해 주제별 요약 중입니다.</p>
+                <img id="loadingGif2" src="/img/loading.gif" alt="로딩 중">
+            </div>
+        </div>
+        <div class="summary-loading-container">
+            <p id="posnegSumm" class="summaryContent">긍정부정 요약을 불러오는 중입니다.</p>
+            <div id="loadingContainer3" class="loading-container">
+                <p class="loading-text">AI를 사용하여 회의 발언 내용을 통해 긍정/부정 요약 중입니다.</p>
+                <img id="loadingGif3" src="/img/loading.gif" alt="로딩 중">
+            </div>
+        </div>
+        <div class="summary-loading-container">
+            <p id="TODOListSumm" class="summaryContent">TODO List를 불러오는 중입니다.</p>
+            <div id="loadingContainer4" class="loading-container">
+                <p class="loading-text">AI를 사용하여 회의 발언 내용을 통해 TODO List 작성 중입니다.</p>
+                <img id="loadingGif4" src="/img/loading.gif" alt="로딩 중">
+            </div>
+        </div>
     </div>
     <button onclick="closeSummaryPopup()">닫기</button>
 </div>
@@ -347,6 +392,7 @@
 <script>
     document.getElementById("summaryButton").addEventListener("click", function() {
         document.getElementById("summaryPopup").style.display = "block";
+        document.querySelector(".tab-button").click();
     });
 
     function closeSummaryPopup() {
@@ -483,13 +529,11 @@
     // 회의 종료 시간을 기록하는 함수
     function endMeeting() {
         $.ajax({
-            url: `/meeting/${meetingId}/end`, // API 엔드포인트
+            url: `/meeting/${meetingId}/end`,
             method: 'POST',
             success: function(response) {
                 console.log('회의 종료 시간 기록:', response);
-                fetchDomain().then(domain => {
-                    window.location.href = `${domain}/user/userMain`; // 회의 종료 후 이동
-                });
+                window.location.href = "/user/userMain";
             },
             error: function(error) {
                 console.error('회의 종료 시간 기록 오류:', error);

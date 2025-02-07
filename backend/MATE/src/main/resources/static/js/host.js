@@ -170,28 +170,28 @@ document.addEventListener('DOMContentLoaded', function() {
         tab.addEventListener("click", function() {
             // 모든 탭 비활성화
             tabs.forEach(t => t.classList.remove("active"));
-            // 모든 요약 내용 숨기기
+
+            // 모든 요약 내용과 로딩 컨테이너 숨기기
             summaries.forEach(summary => {
                 summary.style.display = "none";
             });
-            // 모든 로딩 GIF 숨기기
-            document.querySelectorAll('[id^="loadingGif"]').forEach(gif => {
-                gif.style.display = "none";
+            document.querySelectorAll('.loading-container').forEach(container => {
+                container.style.display = "none";
             });
 
             // 현재 탭 활성화
             this.classList.add("active");
 
-            // 현재 탭에 해당하는 컨텐츠 표시
+            // 현재 탭에 해당하는 컨텐츠와 로딩 컨테이너 찾기
             const currentContent = document.getElementById(`${this.id}Summ`);
-            const loadingGifId = `loadingGif${Array.from(tabs).indexOf(this) + 1}`;
-            const currentLoadingGif = document.getElementById(loadingGifId);
+            const loadingContainerId = `loadingContainer${Array.from(tabs).indexOf(this) + 1}`;
+            const currentLoadingContainer = document.getElementById(loadingContainerId);
 
-            if (currentContent.textContent.includes("불러오는 중입니다")) {
-                currentLoadingGif.style.display = "block";
+            if (currentContent.innerHTML.includes("불러오는 중입니다")) {
+                currentLoadingContainer.style.display = "flex";
                 currentContent.style.display = "none";
             } else {
-                currentLoadingGif.style.display = "none";
+                currentLoadingContainer.style.display = "none";
                 currentContent.style.display = "block";
             }
         });
@@ -275,14 +275,29 @@ async function saveAudioToWav(chunks) {
 // 요약 내용 업데이트 헬퍼 함수
 function updateSummaryContent(type, content) {
     const summaryElement = document.getElementById(`${type}Summ`);
+    const loadingContainer = document.getElementById(`loadingContainer${getTabIndex(type)}`);
+    const isActiveTab = document.getElementById(type).classList.contains('active');
+
     if (content && content.trim() !== "") {
         summaryElement.innerHTML = content
             .replace(/●/g, "&nbsp;●")
             .replace(/\n -/g, "\n &nbsp;&nbsp;-")
             .replace(/\n-/g, "\n &nbsp;&nbsp;-");
+
+        loadingContainer.style.display = "none";
+        summaryElement.style.display = isActiveTab ? "block" : "none";
+
     } else {
         summaryElement.textContent = "요약이 존재하지 않습니다.";
+        loadingContainer.style.display = "none";
+        summaryElement.style.display = isActiveTab ? "block" : "none";
     }
+}
+
+// 탭 인덱스 가져오는 헬퍼 함수
+function getTabIndex(type) {
+    const tabTypes = ['total', 'topicwise', 'posneg', 'TODOList'];
+    return tabTypes.indexOf(type) + 1;
 }
 
 // 에러 처리 헬퍼 함수
