@@ -79,58 +79,33 @@
         </table>
 
         <div class="pagination">
-            <!-- 이전 페이지가 존재하면 이전 버튼을 생성 -->
-            {{#meetingLogs.hasPrevious}}
+            <!-- 이전 페이지 버튼: previousPage 값이 있으면 링크, 없으면 비활성화 -->
+            {{#previousPage}}
             <a href="/user/meetingList?page={{previousPage}}&employeeName={{employeeName}}&startDate={{startDate}}&endDate={{endDate}}">이전</a>
-            {{/meetingLogs.hasPrevious}}
+            {{/previousPage}}
 
             <!-- 페이지 번호 버튼들 -->
             <!-- 만약 현재 페이지라면 current 클래스를 붙여서 강조해준다 -->
             {{#pageNumbers}}
+            {{#isEllipsis}}
+            <span>{{displayIndex}}</span>
+            {{/isEllipsis}}
+            {{^isEllipsis}}
             <a href="/user/meetingList?page={{pageIndex}}&employeeName={{employeeName}}&startDate={{startDate}}&endDate={{endDate}}">
                 {{displayIndex}}
             </a>
+            {{/isEllipsis}}
             {{/pageNumbers}}
 
-            <!-- 다음 페이지가 존재하면 다음 버튼을 생성 -->
-            {{#meetingLogs.hasNext}}
+            <!-- 다음 페이지 버튼: nextPage 값이 있으면 링크, 없으면 비활성화 -->
+            {{#nextPage}}
             <a href="/user/meetingList?page={{nextPage}}&employeeName={{employeeName}}&startDate={{startDate}}&endDate={{endDate}}">다음</a>
-            {{/meetingLogs.hasNext}}
+            {{/nextPage}}
         </div>
     </div>
 </div>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // html 문서가 완전히 로드되면 하단 코드 실행
-        const tableRows = document.querySelectorAll('tbody tr'); // 테이블의 모든 행을 가져옴
-        const filterButton = document.querySelector('.search-bar button'); // 조회 버튼을 가져옴
-        const dateInput = document.getElementById('date-range'); // 날짜 입력 필드를 가져옴
-        const nameInput = document.getElementById('employee-name'); // 사원명 입력 필드를 가져옴
-
-
-        // 필터링 기능
-        filterButton.addEventListener('click', () => { // 조회 버튼 클릭 이벤트 리스너
-            const selectedDate = dateInput.value; // 선택된 날짜
-            const enteredName = nameInput.value.trim().toLowerCase(); // 입력된 사원명 (소문자 변환)
-
-            tableRows.forEach(row => {
-                const timeCell = row.cells[0].textContent.trim(); // 시간 셀
-                const nameCell = row.cells[2].textContent.trim().toLowerCase(); // 사원명 셀 (소문자 변환)
-                const rowDate = timeCell.split(' ')[0]; // 날짜 추출 (YYYY-MM-DD)
-
-                const matchesDate = !selectedDate || rowDate === selectedDate; // 날짜 조건 (선택된 날짜가 없거나, 행의 날짜가 선택된 날짜와 일치하는 경우)
-                const matchesName = !enteredName || nameCell.includes(enteredName); // 사원명 조건 (입력된 사원명이 없거나, 제목 열에 입력된 값이 포함된 경우)
-
-                if (matchesDate && matchesName) {
-                    row.style.display = ''; // 조건에 맞는 행 표시
-                } else {
-                    row.style.display = 'none'; // 조건에 맞지 않는 행 숨김
-                }
-            });
-        });
-    });
-
-    // 현재 페이지 버튼에 current 클래스를 부착하기 위한 이벤트리스너
+    // 페이지가 재렌더링돼도 필터링 필드에 파라미터를 계속해서 바인딩
     document.addEventListener("DOMContentLoaded", () => {
         // 현재 URL의 page 파라미터를 가져옴
         const urlParams = new URLSearchParams(window.location.search);
