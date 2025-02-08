@@ -307,7 +307,8 @@ public class UserController {
         return "user/detail";
     }
 
-    // ✅ 파일 다운로드 API 추가
+    // WebConfig 의 정적 리소스 매핑을 통해 파일 다운로드
+    // 다운로드 버튼 누르면 /file/{{filepath}} URL 로 요청을 보냄
     @GetMapping("/{filename}")
     public void downloadFile(@PathVariable String filename, HttpServletResponse response) {
         File file = new File(UPLOAD_DIR, filename);
@@ -316,10 +317,20 @@ public class UserController {
             return;
         }
 
+        // 클라이언트에게 파일을 보내는 코드
+        // 서버가 클라이언트에게 응답 스트림을 통해 데이터를 보냄
         try (FileInputStream fis = new FileInputStream(file)) {
-            response.setContentType("application/octet-stream");
+
+            // 브라우저가 파일을 바로 열지 않고, 다운로드 창이 뜨도록 설정
+            response.setContentType("application/octet-stream"); // 모든 파일 형식에 적용 가능
+
+            // 파일명 형식 설정
             response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+
+            // 파일을 읽어서 클라이언트에게 전송
             fis.transferTo(response.getOutputStream());
+
+            // 전송 강제 완료
             response.flushBuffer();
         } catch (IOException e) {
             System.out.println(">>> 파일 다운로드 실패: " + e.getMessage());

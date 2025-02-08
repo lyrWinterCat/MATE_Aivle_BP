@@ -1,12 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko"> <!-- 문서의 언어를 한국어로 설정 -->
+<html lang="ko">
 <head>
-    <meta charset="UTF-8"> <!-- 문자 인코딩을 UTF-8로 설정 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 반응형 웹 디자인을 위한 뷰포트 설정 -->
-    <title>정정게시판</title> <!-- 문서 제목 설정 -->
-    <style>
-       
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>정정게시판</title>
     <link rel="stylesheet" type="text/css" href="/css/boardDetail.css" />
     <link rel="stylesheet" type="text/css" href="/css/header.css"/>
     <link rel="stylesheet" type="text/css" href="/css/boardfunction.css" />
@@ -20,7 +17,6 @@
         <h1>Mate</h1>
     </div>
     <div class="header-right">
-        <span></span> <!-- 추후 템플릿 엔진(머스타치, 타임리프)이나 javascript 로 이름 삽입하는 식으로 변경 필요합니다-->
         <form action="/admin/adminMain" method="get" style="display:inline;">
             <button type="submit" class="nav-button">통계</button>
         </form>
@@ -30,9 +26,11 @@
         </form>
     </div>
 </header>
+
 <div class="subtitle-container">
-    <h2>정정 게시글 작성</h2>
+    <h2>정정 게시글 승인/반려</h2>
 </div>
+
 <div class="container">
     <form action="../adminFix/detail" method="post">
         <input type="hidden" id="feedbackId" name="feedbackId">
@@ -40,6 +38,7 @@
             <label for="title">제목</label>
             <input type="text" id="title" value="{{title}}" readonly>
         </div>
+
         <div class="read-group">
             <label for="user-info">사원정보</label>
             <input type="text" id="user-info" value="{{userName}}" readonly>
@@ -49,8 +48,14 @@
             <input type="text" id="reference" value="{{speechLogTimestamp}} / {{toxicityId}}" readonly>
         </div>
         <div class="read-file-upload">
-            <label for="attachment">첨부 파일</label>
-            <input type="text" id="attachment" value="{{filepath}}" readonly>
+            <label for="filepath_read">첨부 파일</label>
+            {{#filepath}}
+            <!-- Controller가 아니라 WebConfig의 정적 리소스 매핑(registry.addResourceHandler)을 통해 '/file/**' 경로로 파일을 직접 제공함 -->
+            <a href="/file/{{filepath}}" target="_blank" id="filepath_read" class="file-download">📂 다운로드</a>
+            {{/filepath}}
+            {{^filepath}}
+            <input type="text" value="업로드된 첨부파일이 없음" readonly>
+            {{/filepath}}
         </div>
         <div class="read-group">
             <label for="content">내용</label>

@@ -31,6 +31,7 @@ public class WebConfig implements WebMvcConfigurer {
                 );
 
         // "file" 폴더의 파일을 정적 리소스로 제공하도록 설정
+        // 클라이언트가 '/file/{파일명}' URL로 접근하면, 서버의 'file/' 폴더에 있는 파일을 제공
         registry.addResourceHandler("/file/**")
                 .addResourceLocations("file:file/");
 
