@@ -17,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -100,7 +101,6 @@ public class MeetingController {
 
     @GetMapping("/client/{meetingId}")
     public String meetingUser(@PathVariable("meetingId") Integer meetingId, Model model){
-        System.out.println("[MeetingController] 들어옴.");
         Meeting meeting = meetingService.getMeetingByMeetingId(meetingId);
         model.addAttribute("meetingId",meeting.getMeetingId());
         model.addAttribute("meetingParticipants", meeting.getMeetingParticipants());
@@ -196,4 +196,40 @@ public class MeetingController {
         return ResponseEntity.ok(domain);
     }
 
+    //client  사용
+    @GetMapping("/{meetingId}/client/participants")
+    public ResponseEntity<Map<String, Object>> getMeetingParticipantsClient(@PathVariable Integer meetingId) {
+        try {
+            List<MeetingParticipant> participants = meetingService.getParticipantsByMeetingId(meetingId);
+            //회의참여자 테이블 참고
+            List<MeetingParticipantDto> participantDtos = participants.stream()
+                    .map(participant -> new MeetingParticipantDto(
+                            participant.getParticipantId(),
+                            participant.getUser().getName() // User의 name 필드
+                    ))
+                    .collect(Collectors.toList());
+            //회의테이블 참고 -시작시간
+            Meeting meeting = meetingService.getMeetingByMeetingId(meetingId);
+            System.out.println(">>meetingController>>>"+meeting.getStartTime());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("participantCount", participantDtos.size());
+            response.put("meetingParticipants", participantDtos);
+            response.put("meetingStartTime", meeting.getStartTime());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", "참여자 정보를 가져오는 중 오류 발생: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    //client  사용
+    @PostMapping("/{meetingId}/summary/client")
+    public ResponseEntity<Map<String, Object>> getSummaryClient(@PathVariable Integer meetingId) {
+       
+        return null;
+    }
 }
