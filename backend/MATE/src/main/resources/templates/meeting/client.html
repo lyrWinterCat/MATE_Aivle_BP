@@ -38,15 +38,16 @@
         width: 90%;
     }
     .left-section {
-        flex: 3;
+        flex: 2;
         border-radius: 10px;
         display: flex;
         flex-direction: column;
+        background-color: white;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     }
 
     .right-section {
-        flex: 1;
+        flex: 2;
         background-color: white;
         border-radius: 10px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
@@ -71,55 +72,52 @@
         border-top:1px solid white;
         border-right:1px solid white;
         cursor: pointer;
-
+        color:#444;
         /* Center align text vertically */
         display: flex;
         align-items: center;
         justify-content: center;
+        font-size:18px;
     }
     .second-tab {
         height: 40px;
-        background-color: #D0C4FF;
         padding: 10px;
         text-align: center;
         font-weight: bold;
-        flex: 1;
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
         border-left:1px solid white;
         border-top:1px solid white;
         border-right:1px solid white;
         cursor: pointer;
-
+        color:#444;
         /* Center align text vertically */
         display: flex;
         align-items: center;
         justify-content: center;
+        font-size:18px;
     }
     .tab.active {
         background-color: white;
     }
-    /* Content Area */
-    .content-area {
+    /* Content */
+    .content {
         flex-grow: 1;
         background-color: white;
         padding: 10px;
         border-radius: 0 0 10px 10px;
         min-height: 200px;
+        box-sizing:border-box;
     }
-
     /* Document Summary Section */
     .document-summary {
-        background-color: #E0E0FF;
-        height: 200px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.2em;
-        color: gray;
-        border-radius: 10px;
+        padding: 10px;
+        height: 100%;
+        box-sizing: border-box;
     }
-
     /* Modern Meeting Info Section */
     .meeting-info {
         background: #ffffff;
@@ -196,17 +194,57 @@
         background-color: #3b3e8f;
         color:white;
     }
+    /* 요약 작성 칸 */
+    .text-area {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        height: 100%;
+        box-sizing: border-box;
+    }
+    .notext-content {
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        text-align:center;
+        margin-top:6%;
+    }
+    #meetingImage {
+        width:100%;
+        height:50%;
+        box-sizing:border-box;
+        text-align:center;
+    }
+    #notext p {
+        font-size: 1.2em;
+        color: #444;
+    }
+    #content-area, #categori-content-area,
+    #yesno-content-area, #total-content-area {
+        display:none;
+    }
+    #noshareImage{
+        width:100%;
+        height:50%;
+        box-sizing:border-box;
+        text-align:center;
+    }
+    .mode-wait {
+        text-align:center;
+        justify-content:center;
+        font-size:18px;
+        color:#444;
+    }
     </style>
 </head>
 <body>
-
 <div id="imageContainer">
     <img id="imageDisplay" src="" alt="Generated Image">
 </div>
-
 <div class="container">
     <header>
-        <div class="logo">
+        <div class="logo" onclick="moveMain()">
             <img src="/img/mate-icon.png" alt="Mate Icon">
             <h1>Mate</h1>
         </div>
@@ -216,7 +254,6 @@
     <div class="content-wrapper">
         <div class="meeting-info">
             <h2>회의 정보</h2>
-
             <div class="meeting-title">
                 <p><strong>제목:</strong> {{meetingName}}</p>
             </div>
@@ -225,7 +262,7 @@
                 <p><strong>시작 시간:</strong> {{meetingTime}}</p>
             </div>
             <div class="participants">
-                <h3>참여자 ({{participantCount}}명)</h3>
+                <h3>참여자 (<span id="participantCount">{{participantCount}}</span>명)</h3>
                 <div class="names" id="participants">
                     {{#meetingParticipants}}
                     {{user.name}}<br> <!-- User 객체의 name 필드에 접근 -->
@@ -242,28 +279,55 @@
                 <button class="control-btn" id="endMeetingButton">회의 종료</button>
             </div>
         </div>
-
         <div class="meeting-client-container">
-
             <div class="summary-container">
-                <!-- Left Section: Summaries with Tabs -->
+                <!-- Right Section: Document Summary -->
                 <div class="left-section">
-                    <div class="tab-container">
-                        <div id="summary" class="tab active">회의 요약</div>
-                        <div id="summary-categori" class="tab">주제별 요약</div>
-                        <div id="summary-yesno" class="tab">긍정/부정 요약</div>
-                        <div id="summary-total" class="tab">전체 요약</div>
-                    </div>
-                    <div class="content-area">
-                        <!-- Dynamic content goes here -->
-                        <p>(회의 내용 요약 표시)</p>
+                    <div class="second-tab document-tab">자료화면 요약</div>
+                    <div class="document-summary">
+                        <div class="notext-content">
+                            <img id="noshareImage" src="/img/noshare.png" alt="">
+                            <p class="mode-wait">[자료요약] 버튼을 클릭하면<br> 공유된 자료에 대한 요약을 제공합니다.</p>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Right Section: Document Summary -->
+                <!-- Left Section: Summaries with Tabs -->
                 <div class="right-section">
-                    <div class="second-tab document-tab">자료화면 요약</div>
-                    <div class="document-summary">요청 시</div>
+                    <div class="tab-container">
+                        <div id="summary-categori" class="tab">주제별 요약</div>
+                        <div id="summary-yesno" class="tab">긍정/부정 요약</div>
+                        <div id="summary-todo" class="tab">Todo List</div>
+                        <div id="summary-total" class="tab">전체 요약</div>
+                    </div>
+                    <div class="content">
+                        <!-- Dynamic content goes here -->
+                        <div class="text-area active" id="notext" >
+                            <div class="notext-content">
+                                <img id="meetingImage" src="/img/meeting.png">
+                                <p class="mode-wait">기록자가 회의 종료 시, 회의 요약을 제공합니다.</p>
+                            </div>
+                        </div>
+                        <div class="text-area" id="categori-content-area">
+                            <p>● 점심 메뉴
+                                - 여러 음식 종류 논의: 초밥, 간장게장, 돈가스, 제육
+                                - 최종 결정 후보: 하나우쿠
+                                - 관심 음식: 햄버거, 피자, 쌈밥
+                                ● 예산 고려
+                                - 예산 상한: 15,000원 </p>
+                        </div>
+                        <div class="text-area" id="yesno-content-area">
+                            <div class="text-content">
+                            </div>
+                        </div>
+                        <div class="text-area" id="todo-content-area">
+                            <div class="text-content">
+                            </div>
+                        </div>
+                        <div class="text-area" id="total-content-area">
+                            <div class="text-content">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
