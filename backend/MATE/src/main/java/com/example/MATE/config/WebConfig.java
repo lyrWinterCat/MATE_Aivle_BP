@@ -30,6 +30,10 @@ public class WebConfig implements WebMvcConfigurer {
                         "classpath:/META-INF/resources/"
                 );
 
+        // "file" 폴더의 파일을 정적 리소스로 제공하도록 설정
+        registry.addResourceHandler("/file/**")
+                .addResourceLocations("file:file/");
+
     }
 
     @Override

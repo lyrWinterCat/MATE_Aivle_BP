@@ -12,6 +12,7 @@ import com.example.MATE.service.UserService;
 import com.example.MATE.utils.DateUtil;
 import com.example.MATE.utils.PaginationUtils;
 import com.example.MATE.utils.SecurityUtils;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.*;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -217,7 +220,10 @@ public class UserController {
             }
         }
 
-        return "user/detail";
+        // return "user/detail";
+
+        // detail.html 과 write.html 은 분리될 필요가 있음
+        return "user/write";
     }
 
     //정정게시판 -  정정 요청하기 글 제출(DB저장)
@@ -242,9 +248,10 @@ public class UserController {
             if (file != null && !file.isEmpty()) {
                 String originalFileName = file.getOriginalFilename();
 
-                // 파일 확장자 검증 (MP3만 허용)
-                if (originalFileName == null || !originalFileName.toLowerCase().endsWith(".mp3")) {
-                    throw new IllegalArgumentException("MP3 파일만 업로드 가능합니다.");
+
+                // 파일 확장자 검증 (MP3, wav, m4a 허용)
+                if (originalFileName == null || !originalFileName.matches(".*\\.(mp3|wav|m4a)$")) {
+                    throw new IllegalArgumentException("MP3, WAV, M4A 파일만 업로드 가능합니다.");
                 }
 
                 // 저장 폴더 생성 (없으면 생성)
@@ -256,9 +263,7 @@ public class UserController {
                 // 저장할 파일 경로 지정
                 Path filePath = Paths.get(UPLOAD_DIR, originalFileName);
                 Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-                // DB에 저장될 파일 경로 설정
-                feedbackDto.setFilepath(filePath.toString());
+                feedbackDto.setFilepath(originalFileName); // DB에는 파일명만 저장
             }
             userService.writeFeedBack(feedbackDto);
             return "redirect:/user/userFix";
@@ -295,10 +300,29 @@ public class UserController {
         model.addAttribute("toxicitySpeechLog_time", DateUtil.format(speechLog.getTimestamp()));
         model.addAttribute("createdAt_format", DateUtil.format(adminFeedback.getCreatedAt()));
 
-        if (adminFeedback.getFilepath() == null) {
-            adminFeedback.setFilepath("");  // 빈 문자열로 설정하여 Mustache 오류 방지
-        }
+//        if (adminFeedback.getFilepath() == null) {
+//            adminFeedback.setFilepath("");  // 빈 문자열로 설정하여 Mustache 오류 방지
+//        }
         model.addAttribute("feedback", adminFeedback);
         return "user/detail";
+    }
+
+    // ✅ 파일 다운로드 API 추가
+    @GetMapping("/{filename}")
+    public void downloadFile(@PathVariable String filename, HttpServletResponse response) {
+        File file = new File(UPLOAD_DIR, filename);
+        if (!file.exists()) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
+        try (FileInputStream fis = new FileInputStream(file)) {
+            response.setContentType("application/octet-stream");
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+            fis.transferTo(response.getOutputStream());
+            response.flushBuffer();
+        } catch (IOException e) {
+            System.out.println(">>> 파일 다운로드 실패: " + e.getMessage());
+        }
     }
 }
