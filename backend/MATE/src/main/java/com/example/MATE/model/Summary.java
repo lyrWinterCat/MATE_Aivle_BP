@@ -2,6 +2,7 @@ package com.example.MATE.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import net.minidev.json.annotate.JsonIgnore;
 
 @Data
 @Entity
@@ -15,6 +16,7 @@ public class Summary {
 
     @OneToOne
     @JoinColumn(name = "meeting_id", nullable = false)
+    @JsonIgnore
     private Meeting meeting;
 
     @Column(name = "summary_topic", columnDefinition = "TEXT", nullable = false)

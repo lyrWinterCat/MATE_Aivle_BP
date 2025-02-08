@@ -1,11 +1,15 @@
 package com.example.MATE.controller;
 
+import com.example.MATE.dto.MeetingDetailDto;
 import com.example.MATE.dto.MeetingDto;
 import com.example.MATE.dto.MeetingParticipantDto;
+import com.example.MATE.dto.SummaryDto;
 import com.example.MATE.model.Meeting;
 import com.example.MATE.model.MeetingParticipant;
+import com.example.MATE.model.Summary;
 import com.example.MATE.service.MeetingParticipantService;
 import com.example.MATE.service.MeetingService;
+import com.example.MATE.service.SummaryService;
 import com.example.MATE.service.UserService;
 import com.example.MATE.utils.DateUtil;
 import com.example.MATE.utils.SecurityUtils;
@@ -17,11 +21,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -32,6 +38,7 @@ public class MeetingController {
     private final MeetingService meetingService;
     private final UserService userService;
     private final MeetingParticipantService meetingParticipantService;
+    private final SummaryService summaryService;
     
     //회의 데이터 생성
     @PostMapping("/create")
@@ -100,7 +107,6 @@ public class MeetingController {
 
     @GetMapping("/client/{meetingId}")
     public String meetingUser(@PathVariable("meetingId") Integer meetingId, Model model){
-        System.out.println("[MeetingController] 들어옴.");
         Meeting meeting = meetingService.getMeetingByMeetingId(meetingId);
         model.addAttribute("meetingId",meeting.getMeetingId());
         model.addAttribute("meetingParticipants", meeting.getMeetingParticipants());
@@ -196,4 +202,47 @@ public class MeetingController {
         return ResponseEntity.ok(domain);
     }
 
+    //client  사용
+    @GetMapping("/client/{meetingId}/participants")
+    public ResponseEntity<Map<String, Object>> getMeetingParticipantsClient(@PathVariable Integer meetingId) {
+        try {
+            List<MeetingParticipant> participants = meetingService.getParticipantsByMeetingId(meetingId);
+            //회의참여자 테이블 참고
+            List<MeetingParticipantDto> participantDtos = participants.stream()
+                    .map(participant -> new MeetingParticipantDto(
+                            participant.getParticipantId(),
+                            participant.getUser().getName() // User의 name 필드
+                    ))
+                    .collect(Collectors.toList());
+            //회의테이블 참고 -시작시간
+            Meeting meeting = meetingService.getMeetingByMeetingId(meetingId);
+            System.out.println(">>meetingController>>>"+meeting.getStartTime());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("participantCount", participantDtos.size());
+            response.put("meetingParticipants", participantDtos);
+            response.put("meetingStartTime", meeting.getStartTime());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", "참여자 정보를 가져오는 중 오류 발생: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    //client  사용
+    @PostMapping("/client/{meetingId}/summary")
+    public ResponseEntity<?> getSummaryClient(@PathVariable Integer meetingId) {
+        System.out.println(">>> [MeetingController / getSummaryClient] meetingId: " + meetingId);
+
+        try {
+            ResponseEntity<?> summaryDto = summaryService.getSummaryByMeetingId(meetingId);
+            return ResponseEntity.ok(summaryDto);
+        } catch (RuntimeException e) {
+            System.out.println(">>> [MeetingController / getSummaryClient] 요약 데이터 없음: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요약 데이터가 없습니다.");
+        }
+    }
 }
