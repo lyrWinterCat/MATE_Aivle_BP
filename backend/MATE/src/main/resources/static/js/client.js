@@ -2,6 +2,7 @@ let meetingId;
 let previousParticipants = []; // 이전 참여자 리스트 저장
 let participantFetchInterval;
 let previousStartTime = "";
+let summaryFetchInterval;
 
 // meetingId 셋팅 대기
 function waitForMeetingId() {
@@ -52,35 +53,41 @@ function fetchParticipants(meetingId) {
     });
 }
 //회의 요약 가져오기
+let topic = "";
+let yesno = "";
+let todo = "";
+let total = "";
+let isEmpty = 0;
 function fetchSummary(){
-
     $.ajax({
         url: `/meeting/client/${meetingId}/summary`, // API 엔드포인트
         method: 'POST',
+        dataType:'json',
         success: function (data) {
-            console.log(data); // 응답을 콘솔에 출력
+            // data로 상태확인
+            if(data.body==="요약 데이터가 없습니다."){
+                console.log(data.body);
+                isEmpty = 0;
+            }else{
+                
+                console.log(data);
+                 // 응답을 콘솔에 출력
+                yesno = data.body.summaryPositiveNegative;
+                topic = data.body.summaryTopic;
+                todo = data.body.todoList;
+                total = data.body.summaryTotal;
+                isEmpty = 1;
+            }
 
-//            const newParticipants = data.meetingParticipants.map(p => p.userName).sort();
-//            if (JSON.stringify(previousParticipants) !== JSON.stringify(newParticipants)) {
-//                console.log("참여자 변경 감지: UI 업데이트 중...");
-//                updateParticipantList(newParticipants); // UI 업데이트
-//                previousParticipants = [...newParticipants]; // 변경 사항 저장
-//            } else {
-//                console.log("참여자 목록 변경 없음");
-//            }
-//            // 참여자 수 업데이트
-//            $('#participantCount').text(data.participantCount);
-//            const newStartTime = data.meetingStartTime;
-//            if (previousStartTime && previousStartTime !== newStartTime) {
-//                console.warn("회의 시작 시간이 변경됨. 자동 업데이트 중지.");
-//                stopMeetingUpdates(); // 자동 갱신 중지
-//            } else {
-//                previousStartTime = newStartTime; // 기존 값 업데이트
-//            }
-//            console.log(">>> [data.meetingStartTime] :", newStartTime);
+            //clearInterval(summaryFetchInterval);
         },
-        error: function (error) {
-            console.error('요약 가져오기 오류:', error);
+        error: function (xhr) {
+            console.warn("AJAX 요청 실패:", xhr);
+            if (xhr.status === 404) {
+                console.warn("요약 데이터 없음 (404)");
+            } else {
+                console.error("요약 가져오기 오류:", xhr);
+            }
         }
     });
 }
@@ -121,7 +128,6 @@ function startMeetingUpdates() {
 document.addEventListener("DOMContentLoaded", function () {
     // 미팅ID 확인 시 참여자 목록 갱신 기능
     waitForMeetingId();
-
     // 탭 버튼 이벤트
     const tabs = document.querySelectorAll(".tab");
     tabs.forEach(tab => {
@@ -131,44 +137,90 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // 모든 탭 + notext
             const notext = document.getElementById("notext");
-            const categori = document.getElementById("categori-content-area");
-            const yesno = document.getElementById("yesno-content-area");
-            const todo = document.getElementById("todo-content-area");
-            const total = document.getElementById("total-content-area");
-
-            // 클릭한 탭에 active 클래스 추가
-            this.classList.add("active");
+            const topicText = document.getElementById("categori-content-area");
+            const yesnoText = document.getElementById("yesno-content-area");
+            const todoText = document.getElementById("todo-content-area");
+            const totalText = document.getElementById("total-content-area");
 
             if (this.id === "summary-categori") {
-                categori.style.display = "block";
-                todo.style.display = "none";
-                yesno.style.display = "none";
-                total.style.display = "none";
-                notext.style.display = "none";
+                if(isEmpty===0){
+                    this.classList.remove("active");
+                    notext.style.display = "block";
+                    topicText.style.display = "none";
+                    yesnoText.style.display = "none";
+                    todoText.style.display = "none";
+                    totalText.style.display = "none";
+                    return; // 함수 종료
+                }else{
+                    this.classList.add("active");
+                    todoText.style.display = "none";
+                    yesnoText.style.display = "none";
+                    totalText.style.display = "none";
+                    notext.style.display = "none";
+
+                    topicText.style.display = "block";
+                    topicText.textContent = topic;
+                    topicText.innerHTML = topicText.textContent.replace(/\n/g, "<br>");
+                }
             } else if (this.id === "summary-yesno") {
-                yesno.style.display = "block";
-                categori.style.display = "none";
-                todo.style.display = "none";
-                total.style.display = "none";
-                notext.style.display = "none";
+                if(isEmpty===0){
+                    this.classList.remove("active");
+                    notext.style.display = "block";
+                    topicText.style.display = "none";
+                    yesnoText.style.display = "none";
+                    todoText.style.display = "none";
+                    totalText.style.display = "none";
+                    return; // 함수 종료
+                }else{
+                    this.classList.add("active");
+                    topicText.style.display = "none";
+                    todoText.style.display = "none";
+                    totalText.style.display = "none";
+                    notext.style.display = "none";
+
+                    yesnoText.style.display = "block";
+                    yesnoText.textContent = yesno;
+                    yesnoText.innerHTML = yesnoText.textContent.replace(/\n/g, "<br>");
+                }
             } else if (this.id == "summary-todo") {
-                todo.style.display = "block";
-                categori.style.display = "none";
-                total.style.display = "none";
-                yesno.style.display = "none";
-                notext.style.display = "none";
+                if(isEmpty===0){
+                    this.classList.remove("active");
+                    notext.style.display = "block";
+                    topicText.style.display = "none";
+                    yesnoText.style.display = "none";
+                    todoText.style.display = "none";
+                    totalText.style.display = "none";
+                    return; // 함수 종료
+                }else{
+                    this.classList.add("active");
+                    topicText.style.display = "none";
+                    totalText.style.display = "none";
+                    yesnoText.style.display = "none";
+                    notext.style.display = "none";
+
+                    todoText.style.display = "block";
+                    todoText.textContent = todo;
+                    todoText.innerHTML = todoText.textContent.replace(/\n/g, "<br>");
+                }
             } else if (this.id === "summary-total") {
-                total.style.display = "block";
-                categori.style.display = "none";
-                todo.style.display = "none";
-                yesno.style.display = "none";
-                notext.style.display = "none";
-            } else {
-                notext.style.display = "block";
-                todo.style.display = "none";
-                categori.style.display = "none";
-                yesno.style.display = "none";
-                total.style.display = "none";
+                if(isEmpty===0){
+                    this.classList.remove("active");
+                    notext.style.display = "block";
+                    topicText.style.display = "none";
+                    yesnoText.style.display = "none";
+                    todoText.style.display = "none";
+                    totalText.style.display = "none";
+                    return; // 함수 종료
+                }else{
+                    this.classList.add("active");
+                    topicText.style.display = "none";
+                    todoText.style.display = "none";
+                    yesnoText.style.display = "none";
+                    notext.style.display = "none";
+                    totalText.style.display = "block";
+                    totalText.textContent = total;
+                    totalText.innerHTML = totalText.textContent.replace(/\n/g, "<br>");
+                }
             }
         });
     });

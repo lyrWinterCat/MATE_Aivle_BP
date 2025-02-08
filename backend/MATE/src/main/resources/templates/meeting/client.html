@@ -202,6 +202,10 @@
         padding: 10px;
         height: 100%;
         box-sizing: border-box;
+        overflow-y:auto;
+        overflow-y: auto; /* ✅ 스크롤 자동 생성 */
+        max-height: 600px; /* ✅ 최대 높이 지정 */
+        width: 100%;
     }
     .notext-content {
         align-items: center;
@@ -215,6 +219,16 @@
         height:50%;
         box-sizing:border-box;
         text-align:center;
+        display:block;
+    }
+    #loadingGif {
+        width:30%;
+        height:30%;
+        box-sizing:border-box;
+        text-align:center;
+        justify-content:center;
+        margin-top:30%;
+        display:none;
     }
     #notext p {
         font-size: 1.2em;
@@ -304,28 +318,17 @@
                         <div class="text-area active" id="notext" >
                             <div class="notext-content">
                                 <img id="meetingImage" src="/img/meeting.png">
+                                <img id="loadingGif" src="/img/loading.gif">
                                 <p class="mode-wait">기록자가 회의 종료 시, 회의 요약을 제공합니다.</p>
                             </div>
                         </div>
                         <div class="text-area" id="categori-content-area">
-                            <p>● 점심 메뉴
-                                - 여러 음식 종류 논의: 초밥, 간장게장, 돈가스, 제육
-                                - 최종 결정 후보: 하나우쿠
-                                - 관심 음식: 햄버거, 피자, 쌈밥
-                                ● 예산 고려
-                                - 예산 상한: 15,000원 </p>
                         </div>
                         <div class="text-area" id="yesno-content-area">
-                            <div class="text-content">
-                            </div>
                         </div>
                         <div class="text-area" id="todo-content-area">
-                            <div class="text-content">
-                            </div>
                         </div>
                         <div class="text-area" id="total-content-area">
-                            <div class="text-content">
-                            </div>
                         </div>
                     </div>
                 </div>

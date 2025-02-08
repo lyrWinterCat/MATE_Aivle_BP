@@ -234,10 +234,15 @@ public class MeetingController {
 
     //client  사용
     @PostMapping("/client/{meetingId}/summary")
-    public ResponseEntity<SummaryDto> getSummaryClient(@PathVariable Integer meetingId) {
+    public ResponseEntity<?> getSummaryClient(@PathVariable Integer meetingId) {
         System.out.println(">>> [MeetingController / getSummaryClient] meetingId: " + meetingId);
 
-        SummaryDto summaryDto = summaryService.getSummaryByMeetingId(meetingId);
-        return ResponseEntity.ok(summaryDto);
+        try {
+            ResponseEntity<?> summaryDto = summaryService.getSummaryByMeetingId(meetingId);
+            return ResponseEntity.ok(summaryDto);
+        } catch (RuntimeException e) {
+            System.out.println(">>> [MeetingController / getSummaryClient] 요약 데이터 없음: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요약 데이터가 없습니다.");
+        }
     }
 }
