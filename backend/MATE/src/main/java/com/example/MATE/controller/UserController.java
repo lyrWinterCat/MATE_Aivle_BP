@@ -23,6 +23,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.nio.file.*;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -37,6 +39,8 @@ public class UserController {
     private final UserRepository userRepository;
     private final AdminService adminService;
     private final MeetingService meetingService;
+
+    private static final String UPLOAD_DIR = "file"; // 파일 저장 폴더
 
     //유저메인페이지
     @GetMapping("/userMain")
@@ -234,10 +238,27 @@ public class UserController {
             feedbackDto.setTitle(title);
             feedbackDto.setContent(content);
 
-            //파일 저장 로직
-            if(!file.isEmpty()){
-                String filePath = "/img/" + file.getOriginalFilename();
-                feedbackDto.setFilepath(filePath);
+            // 파일 저장 로직 - MP3 파일만 허용
+            if (file != null && !file.isEmpty()) {
+                String originalFileName = file.getOriginalFilename();
+
+                // 파일 확장자 검증 (MP3만 허용)
+                if (originalFileName == null || !originalFileName.toLowerCase().endsWith(".mp3")) {
+                    throw new IllegalArgumentException("MP3 파일만 업로드 가능합니다.");
+                }
+
+                // 저장 폴더 생성 (없으면 생성)
+                File uploadDir = new File(UPLOAD_DIR);
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdirs();
+                }
+
+                // 저장할 파일 경로 지정
+                Path filePath = Paths.get(UPLOAD_DIR, originalFileName);
+                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+                // DB에 저장될 파일 경로 설정
+                feedbackDto.setFilepath(filePath.toString());
             }
             userService.writeFeedBack(feedbackDto);
             return "redirect:/user/userFix";
