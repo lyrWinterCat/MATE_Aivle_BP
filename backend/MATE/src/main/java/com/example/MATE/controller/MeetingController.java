@@ -1,11 +1,15 @@
 package com.example.MATE.controller;
 
+import com.example.MATE.dto.MeetingDetailDto;
 import com.example.MATE.dto.MeetingDto;
 import com.example.MATE.dto.MeetingParticipantDto;
+import com.example.MATE.dto.SummaryDto;
 import com.example.MATE.model.Meeting;
 import com.example.MATE.model.MeetingParticipant;
+import com.example.MATE.model.Summary;
 import com.example.MATE.service.MeetingParticipantService;
 import com.example.MATE.service.MeetingService;
+import com.example.MATE.service.SummaryService;
 import com.example.MATE.service.UserService;
 import com.example.MATE.utils.DateUtil;
 import com.example.MATE.utils.SecurityUtils;
@@ -23,6 +27,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -33,6 +38,7 @@ public class MeetingController {
     private final MeetingService meetingService;
     private final UserService userService;
     private final MeetingParticipantService meetingParticipantService;
+    private final SummaryService summaryService;
     
     //회의 데이터 생성
     @PostMapping("/create")
@@ -197,7 +203,7 @@ public class MeetingController {
     }
 
     //client  사용
-    @GetMapping("/{meetingId}/client/participants")
+    @GetMapping("/client/{meetingId}/participants")
     public ResponseEntity<Map<String, Object>> getMeetingParticipantsClient(@PathVariable Integer meetingId) {
         try {
             List<MeetingParticipant> participants = meetingService.getParticipantsByMeetingId(meetingId);
@@ -227,9 +233,11 @@ public class MeetingController {
     }
 
     //client  사용
-    @PostMapping("/{meetingId}/summary/client")
-    public ResponseEntity<Map<String, Object>> getSummaryClient(@PathVariable Integer meetingId) {
-       
-        return null;
+    @PostMapping("/client/{meetingId}/summary")
+    public ResponseEntity<SummaryDto> getSummaryClient(@PathVariable Integer meetingId) {
+        System.out.println(">>> [MeetingController / getSummaryClient] meetingId: " + meetingId);
+
+        SummaryDto summaryDto = summaryService.getSummaryByMeetingId(meetingId);
+        return ResponseEntity.ok(summaryDto);
     }
 }

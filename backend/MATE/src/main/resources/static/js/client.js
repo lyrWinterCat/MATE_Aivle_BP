@@ -23,7 +23,7 @@ function fetchParticipants(meetingId) {
         return;
     }
     $.ajax({
-        url: `/meeting/${meetingId}/client/participants`, // API 엔드포인트
+        url: `/meeting/client/${meetingId}/participants`, // API 엔드포인트
         method: 'GET',
         success: function (data) {
             console.log(data); // 응답을 콘솔에 출력
@@ -51,7 +51,39 @@ function fetchParticipants(meetingId) {
         }
     });
 }
+//회의 요약 가져오기
+function fetchSummary(){
 
+    $.ajax({
+        url: `/meeting/client/${meetingId}/summary`, // API 엔드포인트
+        method: 'POST',
+        success: function (data) {
+            console.log(data); // 응답을 콘솔에 출력
+
+//            const newParticipants = data.meetingParticipants.map(p => p.userName).sort();
+//            if (JSON.stringify(previousParticipants) !== JSON.stringify(newParticipants)) {
+//                console.log("참여자 변경 감지: UI 업데이트 중...");
+//                updateParticipantList(newParticipants); // UI 업데이트
+//                previousParticipants = [...newParticipants]; // 변경 사항 저장
+//            } else {
+//                console.log("참여자 목록 변경 없음");
+//            }
+//            // 참여자 수 업데이트
+//            $('#participantCount').text(data.participantCount);
+//            const newStartTime = data.meetingStartTime;
+//            if (previousStartTime && previousStartTime !== newStartTime) {
+//                console.warn("회의 시작 시간이 변경됨. 자동 업데이트 중지.");
+//                stopMeetingUpdates(); // 자동 갱신 중지
+//            } else {
+//                previousStartTime = newStartTime; // 기존 값 업데이트
+//            }
+//            console.log(">>> [data.meetingStartTime] :", newStartTime);
+        },
+        error: function (error) {
+            console.error('요약 가져오기 오류:', error);
+        }
+    });
+}
 // 자동 업데이트 중지
 function stopMeetingUpdates() {
     console.log("자동 업데이트 중지");
@@ -59,6 +91,7 @@ function stopMeetingUpdates() {
     if (participantFetchInterval) {
         clearInterval(participantFetchInterval);
         participantFetchInterval = null;
+        //fetchSummary();
     }
 }
 
@@ -82,6 +115,7 @@ function updateParticipantList(newParticipants) {
 function startMeetingUpdates() {
     console.log("회의 참여자 갱신 시작");
     participantFetchInterval = setInterval(() => fetchParticipants(meetingId), 5000);
+    summaryFetchInterval = setInterval(() => fetchSummary(), 5000);
 }
 
 document.addEventListener("DOMContentLoaded", function () {
