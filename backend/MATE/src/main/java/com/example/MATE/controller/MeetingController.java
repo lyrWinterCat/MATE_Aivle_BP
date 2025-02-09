@@ -143,6 +143,31 @@ public class MeetingController {
         return ResponseEntity.ok(meetingInfoList);
     }
 
+    //(종료된 회의 포함) 유저의 모든 미팅 목록 조회(번호, 미팅이름)
+    @PostMapping("/user/meetingInfoAll")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<List<MeetingDto>> getMeetingInfoByUserIdIncludingDone(@RequestBody Map<String, Object> request){
+        System.out.println(">>> [MeetingController/getMeetingInfoByUserIdInCludingDone] request : "+ request);
+        if(!request.containsKey("userId")){
+            throw new IllegalArgumentException("userId가 요청에 없음");
+        }
+        Integer userId;
+        try {
+            userId = Integer.parseInt(request.get("userId").toString());
+        }catch (NumberFormatException e){
+            throw new IllegalArgumentException("userId는 숫자임.");
+        }
+
+        List<Integer> meetingIds = meetingService.getMeetingIdsByUserIdIncludingDone(userId);
+
+        List<MeetingDto> meetingInfoList = meetingIds.stream()
+                .map(meetingService::getMeetingByMeetingId)
+                .map(MeetingDto::fromEntity)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(meetingInfoList);
+    }
+
     @PostMapping("/checkMeetingUrl")
     public ResponseEntity<?> checkUrl(@RequestBody Map<String, String> request, Model model){
         System.out.println("[MeetingController/checkUrl] 실행!");

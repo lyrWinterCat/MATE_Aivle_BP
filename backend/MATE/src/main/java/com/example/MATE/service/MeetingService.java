@@ -34,10 +34,17 @@ public class MeetingService {
     public List<Meeting> getAllMeetings() {
         return meetingRepository.findAllMeetings();
     }
+
     // 유저 ID 를 받아 해당 유저가 참여한 모든 미팅 ID 를 반환
     public List<Integer> getMeetingIdsByUserId(Integer userId) {
         return meetingRepository.findMeetingIdsByUserId(userId);
     }
+
+    // 유저 ID 를 받아 해당 유저가 참여한 모든 미팅 ID 를 반환
+    public List<Integer> getMeetingIdsByUserIdIncludingDone(Integer userId) {
+        return meetingRepository.findMeetingIdsByUserIdIncludingDone(userId);
+    }
+
 
     // 유저 Id를 받아 해당 유저가 참여한 모든 Meeting 객체를 바로 반환 (
     public Page<Meeting> getMeetingsByUserIdWithPaging(Integer userId, Pageable pageable) {
