@@ -54,7 +54,7 @@
             <label for="filepath_read">첨부 파일</label>
             {{#filepath}}
             <!-- Controller가 아니라 WebConfig의 정적 리소스 매핑(registry.addResourceHandler)을 통해 '/file/**' 경로로 파일을 직접 제공함 -->
-            <a href="/file/{{filepath}}" target="_blank" id="filepath_read" class="file-download">📂 다운로드</a>
+            <a href="/file/{{filepath}}" target="_blank" id="filepath_read" class="file-download">📂 {{filepath}}</a>
             {{/filepath}}
             {{^filepath}}
             <input type="text" value="업로드된 첨부파일이 없음" readonly>
