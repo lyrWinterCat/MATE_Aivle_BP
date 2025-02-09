@@ -1,0 +1,213 @@
+.container {
+    max-width: 1000px;
+    padding: 20px;
+    margin:2% auto;
+    text-align: center; /* 내부 요소도 중앙 정렬 */
+}
+
+.content-group {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap; /* 내용이 많을 경우 다음 줄로 넘어감 */
+    gap: 20px; /* 좌우 요소 간격 조정 */
+}
+.form-group,
+.read-group{
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    width:48%;
+}
+.read-group2{
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.form-group label,
+.read-group label,
+.read-group2 label{
+    font-weight: bold;
+    margin-right: 20px;
+    width: 120px;
+    text-align: right;
+    color:#444;
+}
+.file-upload label,
+.read-file-upload label{
+    font-weight: bold;
+    width: 120px;
+    text-align: right;
+    margin-right: 20px;
+    color:#444;
+}
+.form-group label::after,
+.file-upload label::after {
+    content: " *";
+    color: red;
+    font-size: 16px;
+}
+
+.form-group input[type="text"],
+.form-group textarea,
+.form-group input[type="file"],
+.form-group input[type="date"],
+.read-group input[type="text"],
+.read-group input[type="file"],
+.read-group2 input[type="file"],
+.read-group input[type="date"],
+.read-group textarea,
+.read-group2 textarea,
+.read-group .status-options{
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-group .search-btn {
+    background-color: #5b5fc7;
+    color: #FFF;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.form-group .search-btn:hover {
+    transition: background-color 0.3s ease-in-out;
+    background-color: #3b3e8f;
+    color:#ffffff
+}
+
+.file-upload,
+.read-file-upload {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.file-upload input[type="file"] {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.read-file-upload input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color:#444;
+}
+
+.form-group textarea,
+
+.read-group textarea,
+.read-group2 textarea {
+    width: 100%; /* 전체 너비 차지 */
+    min-height: 150px; /* 최소 높이 */
+    max-height: 500px; /* 최대 높이 설정 */
+    resize: vertical; /* 사용자가 세로 크기 조절 가능 */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    overflow-y: auto; /* 내용이 많을 경우 자동 스크롤 */
+}
+#participants {
+    width: 100%; /* 전체 너비 차지 */
+    min-height:15px;
+    max-height: 300px; /* 최대 높이 설정 */
+    resize: vertical; /* 사용자가 세로 크기 조절 가능 */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    overflow-y: auto; /* 내용이 많을 경우 자동 스크롤 */
+}
+.btnArea {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.submit-btn {
+    background-color: #5b5fc7;
+    color: #FFF;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    display: block;
+    margin-right:5px;
+}
+
+.submit-btn:hover {
+    transition: background-color 0.3s ease-in-out;
+    background-color: #3b3e8f;
+    color:#ffffff
+}
+
+/*admin detail 라디오버튼*/
+.read-group .status-options{
+    display: flex;
+    border:none;
+}
+.status-options input[type="radio"] {
+    display: none;
+}
+.read-group .status-label {
+    display: inline-block;
+    padding: 12px 25px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align:center;
+    transition: background-color 0.3s ease-in-out, border 0.3s ease-in-out;
+}
+/* 승인 버튼 */
+.status-label.approved {
+    background-color: #e6f3ff;
+    color: #0066cc;
+    border: 2px solid #0066cc;
+    width:50%;
+}
+/* 반려 버튼 */
+.status-label.rejected {
+    background-color: #ffe6e6;
+    color: #cc0000;
+    border: 2px solid #cc0000;
+    width:50%;
+}
+/* 승인 선택 시 스타일 변경 */
+.status-options input[type="radio"]:checked#approved + .status-label.approved {
+    background-color: #0066cc;
+    color: white;
+    border-color: #004999;
+    box-shadow: 0 0 10px rgba(0, 102, 204, 0.5);
+}
+
+/* 반려 선택 시 스타일 변경 */
+.status-options input[type="radio"]:checked#rejected + .status-label.rejected {
+    background-color: #cc0000;
+    color: white;
+    border-color: #990000;
+    box-shadow: 0 0 10px rgba(204, 0, 0, 0.5);
+}
