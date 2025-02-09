@@ -32,12 +32,15 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
 
     // write.html 모달창에서 회의를 확인하기 위한 용도
     // findMeetingIdsByUserId 와는 다르게, 이미 끝난 회의도 가져올 수 있게 함 & 시작 안되고 생성만 된 회의 안가져옴
+    // 독성발언으로 찍힌 기록이 있는 회의 목록만 가져올 수 있도록 수정
     @Query(
             """
-            SELECT DISTINCT m.id
+            SELECT DISTINCT m.meetingId
             FROM MeetingParticipant mp
             JOIN mp.meeting m
-            WHERE mp.user.id = ?1
+            JOIN SpeechLog s ON s.meeting.meetingId = m.meetingId AND s.user.userId = mp.user.userId
+            JOIN ToxicityLog t ON t.speechLog.logId = s.logId
+            WHERE mp.user.userId = ?1
             AND m.startTime IS NOT NULL
             """
     )
