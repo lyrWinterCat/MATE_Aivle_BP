@@ -1,6 +1,7 @@
 let meetingId;
 let previousParticipants = []; // 이전 참여자 리스트 저장
 let previousStartTime = "";
+let isupdatedStartTime=false;
 //Interval
 let participantFetchInterval;
 let summaryFetchInterval;
@@ -9,6 +10,7 @@ let topic = "";
 let yesno = "";
 let todo = "";
 let total = "";
+let screen = "";
 let isEmpty = 0;
 // meetingId 셋팅 대기
 function waitForMeetingId() {
@@ -54,6 +56,7 @@ function fetchParticipants(meetingId) {
             if (previousStartTime && previousStartTime !== newStartTime) {
                 console.warn("회의 시작 시간이 변경됨. 자동 업데이트 중지.");
                 stopMeetingUpdates(); // 자동 갱신 중지
+                isupdatedStartTime = true;
             } else {
                 previousStartTime = newStartTime; // 기존 값 업데이트
             }
@@ -148,11 +151,37 @@ function activateFirstTab() {
         topicText.innerHTML = topic.replace(/\n/g, "<br>");
         console.log(" 첫 번째 탭 자동 활성화 완료");
 
-        //AI주의문구 표시
-
     }else{
         console.warn("회의 데이터가 없습니다.");
     }
+}
+//자료 요약
+function fetchScreenSummary(){
+    $.ajax({
+        url: `/meeting/client/${meetingId}/imagesummary`, // API 엔드포인트
+        method: 'POST',
+        dataType:'json',
+        success: function (data) {
+            document.getElementById("image-notext").style.display="none";
+            if(data.body === "요약 데이터가 없습니다."){
+                console.warn("전송된 데이터가 없습니다.");
+            }else{
+                console.log(data);
+                console.log("공유자료 요약 완료");
+                screen = data.body.summaryScreen;
+                document.getElementById("document-summary").innerHTML = screen.replace(/\n/g, "<br>");
+            }
+            console.log(data.body);
+        },
+        error: function (xhr) {
+            console.warn("AJAX 요청 실패:", xhr);
+            if (xhr.status === 404) {
+                console.warn("요약 데이터 없음 (404)");
+            } else {
+                console.error("요약 가져오기 오류:", xhr);
+            }
+        }
+    });
 }
 // UI 업데이트 함수
 function updateParticipantList(newParticipants) {
@@ -288,10 +317,15 @@ function endMeeting() {
 document.getElementById('endMeetingButton').addEventListener('click', function () {
     endMeeting(); // 회의 종료
 });
-document.getElementById('endMeetingButton').addEventListener('click', function () {
-    endMeeting(); // 회의 종료
+document.getElementById('screenshareButton').addEventListener('click', function () {
+    if(isupdatedStartTime){
+        //true면 회의가 시작한 것
+        document.getElementById("screeenshareButton").classList.remove("noacitve");
+        fetchScreenSummary(); //자료 요약
+    }else{
+        alert("기록자가 회의 시작 후 클릭 시 공유 자료의 요약을 제공합니다.");
+    }
 });
-
 function moveMain() {
-    window.location.href = "/";
+    window.location.href = "/"; //로고
 }

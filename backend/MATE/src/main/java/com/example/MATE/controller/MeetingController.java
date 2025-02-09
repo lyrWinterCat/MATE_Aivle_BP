@@ -269,6 +269,18 @@ public class MeetingController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요약 데이터가 없습니다.");
         }
     }
+    //client  사용 - 자료화면 요약 가져오기
+    @PostMapping("/client/{meetingId}/imagesummary")
+    public ResponseEntity<?> getImageSummaryClient(@PathVariable Integer meetingId) {
+        System.out.println(">>> [MeetingController / getImageSummaryClient] meetingId: " + meetingId);
+        try {
+            ResponseEntity<?> summaryDto = summaryService.getSummaryByMeetingId(meetingId);
+            return ResponseEntity.ok(summaryDto);
+        } catch (RuntimeException e) {
+            System.out.println(">>> [MeetingController / getImageSummaryClient] 요약 데이터 없음: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요약 데이터가 없습니다.");
+        }
+    }
     //client  사용 - 종료시간 가져오기
     @PostMapping("/client/{meetingId}/endTime")
     public ResponseEntity<Map<String, Object>> getEndTime(@PathVariable Integer meetingId) {

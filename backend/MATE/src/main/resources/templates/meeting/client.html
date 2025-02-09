@@ -261,6 +261,13 @@
         padding-left:10px;
         color:red;
     }
+    #image-notext {
+        display:block;
+    }
+    #screenshareButton.noactive {
+        background-color:#757575;
+        /*#5B5F17*/
+    }
     </style>
 </head>
 <body>
@@ -299,7 +306,7 @@
             <div class="control-buttons">
 <!--                <button class="control-btn" id="startButton">기록하기</button>-->
 <!--                <button class="control-btn" id="stopButton">휴식하기</button>-->
-                <button class="control-btn">자료 요약</button>
+                <button class="control-btn noactive" id="screenshareButton">자료 요약</button>
 <!--                <button class="control-btn" id="summaryButton">요약 보기</button>-->
                 <button class="control-btn" id="endMeetingButton">회의 나가기</button>
             </div>
@@ -309,8 +316,8 @@
                 <!-- Right Section: Document Summary -->
                 <div class="left-section">
                     <div class="second-tab document-tab">자료화면 요약</div>
-                    <div class="document-summary">
-                        <div class="notext-content">
+                    <div class="document-summary" id="document-summary">
+                        <div id="image-notext" class="notext-content">
                             <img id="noshareImage" src="/img/noshare.png" alt="">
                             <p class="mode-wait">[자료요약] 버튼을 클릭하면<br> 공유된 자료에 대한 요약을 실시간으로 제공합니다.</p>
                         </div>

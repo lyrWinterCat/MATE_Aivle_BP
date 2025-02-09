@@ -20,7 +20,7 @@ public class SummaryService {
     private final SummaryRepository summaryRepository;
     private final MeetingRepository meetingRepository;
 
-    // ✅ meetingId를 통해 Summary 조회 (Meeting 객체를 먼저 찾는 방식)
+    //meetingId를 통해 Summary 조회 (Meeting 객체를 먼저 찾는 방식)
     @Transactional(readOnly = true)
     public ResponseEntity<?> getSummaryByMeetingId(Integer meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId)
