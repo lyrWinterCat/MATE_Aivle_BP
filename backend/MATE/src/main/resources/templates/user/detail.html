@@ -66,6 +66,20 @@
             <textarea id="content" rows="6" name="content" readonly>{{content}}</textarea>
         </div>
 
+        {{^response}}
+        <div class="read-group">
+            <label for="response">답변</label>
+            <textarea id="response" name="response" rows="8" placeholder="등록된 답변이 없습니다."></textarea>
+        </div>
+        {{/response}}
+        {{#response}}
+        <div class="read-group">
+            <label for="response">답변</label>
+            <textarea id="response" name="response" rows="8">{{response}}</textarea>
+        </div>
+        {{/response}}
+
+
         <div class="btnArea">
             <button onclick="goback()" id="backbtn" type="button" class="submit-btn">뒤로가기</button>
         </div>

@@ -111,6 +111,9 @@
             document.getElementById("rejected").checked = true;
             document.getElementById("submitBtn").style.display="none";
         }
+
+        // 수정이 가능해야 하므로 한 번 정정 신청해줘도 "승인" 버튼이 사라지지 않도록 처리
+        document.getElementById("submitBtn").style.display = "block";
     });
 
     function goback(){

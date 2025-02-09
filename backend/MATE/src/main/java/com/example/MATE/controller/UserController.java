@@ -315,6 +315,12 @@ public class UserController {
         model.addAttribute("createdAt_format", DateUtil.format(adminFeedback.getCreatedAt()));
 
         model.addAttribute("feedback", adminFeedback);
+
+        String response = adminService.getCommentByFeedbackId(feedbackId)
+                .map(AdminFeedbackComments::getContent)
+                .orElse(null);
+        model.addAttribute("response", response);
+
         return "user/detail";
     }
 
