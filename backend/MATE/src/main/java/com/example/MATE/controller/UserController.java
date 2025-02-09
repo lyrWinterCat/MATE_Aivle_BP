@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -118,13 +120,15 @@ public class UserController {
     public String meetingDetail(@RequestParam("meetingId") Integer meetingId, Model model, HttpSession session) {
 
         String email = SecurityUtils.getCurrentUserEmail();
-        if (email != null) {
-            Optional<User> userOptional = userService.findByEmail(email);
-            if (userOptional.isPresent()) {
-                User user = userOptional.get();
-                model.addAttribute("userName", user.getName());
-            }
+        if (email == null) { // 로그인 안 된 사용자는 리스트로 리디렉트
+            return "redirect:/user/meetingList";
         }
+        Optional<User> userOptional = userService.findByEmail(email);
+        if (userOptional.isEmpty()) { // 존재하지 않는 사용자도 리디렉트
+            return "redirect:/user/meetingList";
+        }
+        User user = userOptional.get();
+        model.addAttribute("userName", user.getName());
 
         MeetingDetailDto meetingDetail = meetingService.getMeetingDetailById(meetingId);
         if (meetingDetail == null) {
@@ -132,10 +136,16 @@ public class UserController {
         }
         model.addAttribute("meetingDetail", meetingDetail);
 
+        //회의 참여자에서 내가 참여했는지 확인
+        List<MeetingParticipant> participants = meetingService.getParticipantsByMeetingId(meetingId);
+        boolean isParticipant = participants.stream()
+                .anyMatch(participant -> participant.getUser() != null && participant.getUser().getUserId().equals(user.getUserId()));
+
+        if (!isParticipant) {
+            return "redirect:/user/meetingList";
+        }
         return "user/meetingDetail";
     }
-
-
 
     //마이페이지 로그
     @GetMapping("/speechLog")
@@ -279,20 +289,24 @@ public class UserController {
     public String readFeedBack(@RequestParam("feedbackId") Integer feedbackId, Model model){
 
         String email = SecurityUtils.getCurrentUserEmail();
-        //DB에서 사용자 정보 조회-이름과 롤 가져오기 위함
-        if (email != null) {
-            Optional<User> userOptional = userService.findByEmail(email);
-            if (userOptional.isPresent()) { //DB에 있음
-                User user = userOptional.get();
-                System.out.println(">>> [UserController/readFeedBack] "+user.getName());
-                System.out.println(">>> [UserController/readFeedBack] "+user.getUserId());
-                model.addAttribute("userId", user.getUserId());
-                model.addAttribute("userName", user.getName());
-            }
+        if (email == null) { // 로그인 안 된 사용자는 리스트로 리디렉트
+            return "redirect:/user/userFix";
         }
+        Optional<User> userOptional = userService.findByEmail(email);
+        if (userOptional.isEmpty()) { // 존재하지 않는 사용자도 리디렉트
+            return "redirect:/user/userFix";
+        }
+        User user = userOptional.get();
+        model.addAttribute("userName", user.getName());
+        model.addAttribute("userId", user.getUserId());
+
         AdminFeedback adminFeedback = adminService.getFeedbackById(feedbackId);
         if(adminFeedback == null){
             throw new IllegalArgumentException("유효하지 않는 정정요청ID : "+feedbackId);
+        }
+        //피드백의 userId와 현재 userId 비교
+        if(!adminFeedback.getUser().getUserId().equals(user.getUserId())){
+            return "redirect:/user/userFix";
         }
         ToxicityLog toxicityLog = adminFeedback.getToxicityLog();
         SpeechLog speechLog = toxicityLog.getSpeechLog();
@@ -300,9 +314,6 @@ public class UserController {
         model.addAttribute("toxicitySpeechLog_time", DateUtil.format(speechLog.getTimestamp()));
         model.addAttribute("createdAt_format", DateUtil.format(adminFeedback.getCreatedAt()));
 
-//        if (adminFeedback.getFilepath() == null) {
-//            adminFeedback.setFilepath("");  // 빈 문자열로 설정하여 Mustache 오류 방지
-//        }
         model.addAttribute("feedback", adminFeedback);
         return "user/detail";
     }
