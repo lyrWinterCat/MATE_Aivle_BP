@@ -1,9 +1,15 @@
 let meetingId;
 let previousParticipants = []; // 이전 참여자 리스트 저장
-let participantFetchInterval;
 let previousStartTime = "";
+//Interval
+let participantFetchInterval;
 let summaryFetchInterval;
-
+//회의 요약 가져오기
+let topic = "";
+let yesno = "";
+let todo = "";
+let total = "";
+let isEmpty = 0;
 // meetingId 셋팅 대기
 function waitForMeetingId() {
     const checkInterval = setInterval(() => {
@@ -16,7 +22,11 @@ function waitForMeetingId() {
         }
     }, 500);
 }
-
+// 회의 참여자 갱신 (SSE 없이 setInterval 사용)
+function startMeetingUpdates() {
+    console.log("회의 참여자 갱신 시작");
+    participantFetchInterval = setInterval(() => fetchParticipants(meetingId), 5000);
+}
 // 참여자 목록 새로고침
 function fetchParticipants(meetingId) {
     if (!meetingId || meetingId === "undefined") {
@@ -28,7 +38,9 @@ function fetchParticipants(meetingId) {
         method: 'GET',
         success: function (data) {
             console.log(data); // 응답을 콘솔에 출력
-            const newParticipants = data.meetingParticipants.map(p => p.userName).sort();
+            const newParticipants = data.meetingParticipants.map(p => p.userName);
+
+            let isUpdated = false;
             if (JSON.stringify(previousParticipants) !== JSON.stringify(newParticipants)) {
                 console.log("참여자 변경 감지: UI 업데이트 중...");
                 updateParticipantList(newParticipants); // UI 업데이트
@@ -47,17 +59,36 @@ function fetchParticipants(meetingId) {
             }
             console.log(">>> [data.meetingStartTime] :", newStartTime);
         },
-        error: function (error) {
-            console.error('참여자 정보 가져오기 오류:', error);
+        error: function (xhr, textStatus, errorThrown) {
+            console.error("AJAX 요청 실패:", textStatus, errorThrown);
+
+            if (textStatus === "error" && errorThrown === "") {
+                console.warn("서버에 연결할 수 없습니다. (ERR_CONNECTION_REFUSED)");
+                handleConnectionError();
+            } else if (textStatus === "timeout") {
+                console.warn("요청 시간이 초과되었습니다. (서버 응답 없음)");
+                handleConnectionError();
+            } else {
+                console.warn("기타 네트워크 오류:", textStatus);
+            }
         }
     });
 }
-//회의 요약 가져오기
-let topic = "";
-let yesno = "";
-let todo = "";
-let total = "";
-let isEmpty = 0;
+function handleConnectionError() {
+    console.log("🚨 서버에 연결할 수 없습니다. 네트워크를 확인하세요.");
+}
+// 자동 업데이트 중지
+function stopMeetingUpdates() {
+    console.warn("회의참여자 자동 업데이트 중지");
+
+    if (participantFetchInterval) {
+        clearInterval(participantFetchInterval);
+        participantFetchInterval = null;
+        //회의 요약 가져오기 실행
+        summaryFetchInterval = setInterval(() => fetchSummary(), 5000);
+    }
+}
+//회의 요약가져오기
 function fetchSummary(){
     $.ajax({
         url: `/meeting/client/${meetingId}/summary`, // API 엔드포인트
@@ -65,11 +96,13 @@ function fetchSummary(){
         dataType:'json',
         success: function (data) {
             // data로 상태확인
+            document.getElementById("meetingImage").style.display="none";
+            document.getElementById("loadingGif").style.display="none";
             if(data.body==="요약 데이터가 없습니다."){
-                console.log(data.body);
+                document.getElementById("mode-wait").textContent = "요약 데이터가 없습니다.";
+                console.warn(data.body);
                 isEmpty = 0;
             }else{
-                
                 console.log(data);
                  // 응답을 콘솔에 출력
                 yesno = data.body.summaryPositiveNegative;
@@ -77,9 +110,13 @@ function fetchSummary(){
                 todo = data.body.todoList;
                 total = data.body.summaryTotal;
                 isEmpty = 1;
+                // 첫번째 탭 보여주기
+                setTimeout(() => {
+                    activateFirstTab();
+                }, 100); // 0.1초 지연 (DOM 렌더링 보장)
             }
-
-            //clearInterval(summaryFetchInterval);
+            //요약 업데이트 종료
+            clearInterval(summaryFetchInterval);
         },
         error: function (xhr) {
             console.warn("AJAX 요청 실패:", xhr);
@@ -91,17 +128,32 @@ function fetchSummary(){
         }
     });
 }
-// 자동 업데이트 중지
-function stopMeetingUpdates() {
-    console.log("자동 업데이트 중지");
+// 회의 요약 업데이트 성공 시 첫번째 탭 자동 선택
+function activateFirstTab() {
+    const firstTab = document.getElementById("summary-categori");
+    const topicText = document.getElementById("categori-content-area");
+    const notext = document.getElementById("notext");
+    const caution = document.getElementById("caution");
 
-    if (participantFetchInterval) {
-        clearInterval(participantFetchInterval);
-        participantFetchInterval = null;
-        //fetchSummary();
+    if (firstTab && topic.trim() !== "") {
+        // 모든 탭에서 active 클래스 제거
+        document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+        // 첫 번째 탭 활성화
+        firstTab.classList.add("active");
+        notext.style.display = "none"; // 기본 안내문 숨기기
+
+        // 요약 내용 표시
+        topicText.style.display = "block";
+        caution.style.display = "block";
+        topicText.innerHTML = topic.replace(/\n/g, "<br>");
+        console.log(" 첫 번째 탭 자동 활성화 완료");
+
+        //AI주의문구 표시
+
+    }else{
+        console.warn("회의 데이터가 없습니다.");
     }
 }
-
 // UI 업데이트 함수
 function updateParticipantList(newParticipants) {
     console.log("UI 업데이트");
@@ -117,14 +169,6 @@ function updateParticipantList(newParticipants) {
         participantList.append('<p>참여자가 없습니다.</p>'); // 참여자가 없을 경우 메시지 표시
     }
 }
-
-// 회의 참여자 갱신 (SSE 없이 setInterval 사용)
-function startMeetingUpdates() {
-    console.log("회의 참여자 갱신 시작");
-    participantFetchInterval = setInterval(() => fetchParticipants(meetingId), 5000);
-    summaryFetchInterval = setInterval(() => fetchSummary(), 5000);
-}
-
 document.addEventListener("DOMContentLoaded", function () {
     // 미팅ID 확인 시 참여자 목록 갱신 기능
     waitForMeetingId();

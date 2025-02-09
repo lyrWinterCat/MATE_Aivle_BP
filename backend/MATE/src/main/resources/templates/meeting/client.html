@@ -226,8 +226,8 @@
         height:30%;
         box-sizing:border-box;
         text-align:center;
-        justify-content:center;
         margin-top:30%;
+        margin-left:35%;
         display:none;
     }
     #notext p {
@@ -249,6 +249,17 @@
         justify-content:center;
         font-size:18px;
         color:#444;
+    }
+    .caution {
+        display:none;
+    }
+    .mode-caution {
+        text-align:center;
+        justify-content:center;
+        font-size:18px;
+        padding-right:10px;
+        padding-left:10px;
+        color:red;
     }
     </style>
 </head>
@@ -290,7 +301,7 @@
 <!--                <button class="control-btn" id="stopButton">휴식하기</button>-->
                 <button class="control-btn">자료 요약</button>
 <!--                <button class="control-btn" id="summaryButton">요약 보기</button>-->
-                <button class="control-btn" id="endMeetingButton">회의 종료</button>
+                <button class="control-btn" id="endMeetingButton">회의 나가기</button>
             </div>
         </div>
         <div class="meeting-client-container">
@@ -303,6 +314,9 @@
                             <img id="noshareImage" src="/img/noshare.png" alt="">
                             <p class="mode-wait">[자료요약] 버튼을 클릭하면<br> 공유된 자료에 대한 요약을 제공합니다.</p>
                         </div>
+                    </div>
+                    <div id="caution2" class="caution">
+                        <p class="mode-caution">⚠이 콘텐츠는 AI가 생성한 것으로, 사실과 다를 수 있습니다.</p>
                     </div>
                 </div>
                 <!-- Left Section: Summaries with Tabs -->
@@ -319,7 +333,7 @@
                             <div class="notext-content">
                                 <img id="meetingImage" src="/img/meeting.png">
                                 <img id="loadingGif" src="/img/loading.gif">
-                                <p class="mode-wait">기록자가 회의 종료 시, 회의 요약을 제공합니다.</p>
+                                <p id="mode-wait" class="mode-wait">기록자가 AI로부터 요약 요청 시, 실시간으로 회의 요약을 제공합니다.</p>
                             </div>
                         </div>
                         <div class="text-area" id="categori-content-area">
@@ -330,6 +344,9 @@
                         </div>
                         <div class="text-area" id="total-content-area">
                         </div>
+                    </div>
+                    <div id="caution" class="caution">
+                        <p class="mode-caution">⚠이 콘텐츠는 AI가 생성한 것으로, 사실과 다를 수 있습니다.</p>
                     </div>
                 </div>
             </div>

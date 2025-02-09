@@ -202,7 +202,7 @@ public class MeetingController {
         return ResponseEntity.ok(domain);
     }
 
-    //client  사용
+    //client  사용 - 참여자정보, 시작시간 가져오기
     @GetMapping("/client/{meetingId}/participants")
     public ResponseEntity<Map<String, Object>> getMeetingParticipantsClient(@PathVariable Integer meetingId) {
         try {
@@ -231,8 +231,7 @@ public class MeetingController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
-
-    //client  사용
+    //client  사용 - 요약 가져오기
     @PostMapping("/client/{meetingId}/summary")
     public ResponseEntity<?> getSummaryClient(@PathVariable Integer meetingId) {
         System.out.println(">>> [MeetingController / getSummaryClient] meetingId: " + meetingId);
@@ -243,6 +242,24 @@ public class MeetingController {
         } catch (RuntimeException e) {
             System.out.println(">>> [MeetingController / getSummaryClient] 요약 데이터 없음: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요약 데이터가 없습니다.");
+        }
+    }
+    //client  사용 - 종료시간 가져오기
+    @PostMapping("/client/{meetingId}/endTime")
+    public ResponseEntity<Map<String, Object>> getEndTime(@PathVariable Integer meetingId) {
+        System.out.println(">>> [MeetingController / getEndTime] meetingId: " + meetingId);
+
+        try {
+            Meeting meeting = meetingService.getMeetingByMeetingId(meetingId);
+            Map<String, Object> response = new HashMap<>();
+            response.put("meetingEndTime", meeting.getEndTime());
+            System.out.println(">>> meetingEndTime : "+meeting.getEndTime());
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", "종료시간을 가져오는 중 오류 발생: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 }
