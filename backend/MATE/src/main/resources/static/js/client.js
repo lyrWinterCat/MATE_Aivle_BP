@@ -1,10 +1,12 @@
 let meetingId;
 let previousParticipants = []; // 이전 참여자 리스트 저장
 let previousStartTime = "";
+let previousBreakTime = "";
 let isupdatedStartTime=false;
 //Interval
 let participantFetchInterval;
 let summaryFetchInterval;
+let breakTimeFetchInterval;
 //회의 요약 가져오기
 let topic = "";
 let yesno = "";
@@ -12,6 +14,7 @@ let todo = "";
 let total = "";
 let screen = "";
 let isEmpty = 0;
+let hasActivatedFirstTab = false;
 // meetingId 셋팅 대기
 function waitForMeetingId() {
     const checkInterval = setInterval(() => {
@@ -42,7 +45,6 @@ function fetchParticipants(meetingId) {
             console.log(data); // 응답을 콘솔에 출력
             const newParticipants = data.meetingParticipants.map(p => p.userName);
 
-            let isUpdated = false;
             if (JSON.stringify(previousParticipants) !== JSON.stringify(newParticipants)) {
                 console.log("참여자 변경 감지: UI 업데이트 중...");
                 updateParticipantList(newParticipants); // UI 업데이트
@@ -56,7 +58,7 @@ function fetchParticipants(meetingId) {
             if (previousStartTime && previousStartTime !== newStartTime) {
                 console.warn("회의 시작 시간이 변경됨. 자동 업데이트 중지.");
                 stopMeetingUpdates(); // 자동 갱신 중지
-                isupdatedStartTime = true;
+                document.getElementById("screenshareButton").classList.remove("noacitve");
             } else {
                 previousStartTime = newStartTime; // 기존 값 업데이트
             }
@@ -83,11 +85,10 @@ function handleConnectionError() {
 // 자동 업데이트 중지
 function stopMeetingUpdates() {
     console.warn("회의참여자 자동 업데이트 중지");
-
     if (participantFetchInterval) {
         clearInterval(participantFetchInterval);
         participantFetchInterval = null;
-        //회의 요약 가져오기 실행
+        breakTimeFetchInterval = setInterval(() => fetchBreakTime(), 5000);
         summaryFetchInterval = setInterval(() => fetchSummary(), 5000);
     }
 }
@@ -99,12 +100,14 @@ function fetchSummary(){
         dataType:'json',
         success: function (data) {
             // data로 상태확인
-            document.getElementById("meetingImage").style.display="none";
-            document.getElementById("loadingGif").style.display="none";
+            //document.getElementById("meetingImage").style.display="none";
+            //document.getElementById("loadingGif").style.display="none";
             if(data.body==="요약 데이터가 없습니다."){
-                document.getElementById("mode-wait").textContent = "요약 데이터가 없습니다.";
+                //document.getElementById("mode-wait").textContent = "요약 데이터가 없습니다.";
+                //DB insert과정에서 걸릴것 같아 console.log로만
                 console.warn(data.body);
                 isEmpty = 0;
+                return;
             }else{
                 console.log(data);
                  // 응답을 콘솔에 출력
@@ -114,12 +117,13 @@ function fetchSummary(){
                 total = data.body.summaryTotal;
                 isEmpty = 1;
                 // 첫번째 탭 보여주기
-                setTimeout(() => {
-                    activateFirstTab();
-                }, 100); // 0.1초 지연 (DOM 렌더링 보장)
+                if (!hasActivatedFirstTab) {
+                    setTimeout(() => {
+                        activateFirstTab();
+                        hasActivatedFirstTab = true;
+                    }, 100);
+                }
             }
-            //요약 업데이트 종료
-            clearInterval(summaryFetchInterval);
         },
         error: function (xhr) {
             console.warn("AJAX 요청 실패:", xhr);
@@ -150,10 +154,35 @@ function activateFirstTab() {
         caution.style.display = "block";
         topicText.innerHTML = topic.replace(/\n/g, "<br>");
         console.log(" 첫 번째 탭 자동 활성화 완료");
-
+        clearInterval(summaryFetchInterval);
     }else{
-        console.warn("회의 데이터가 없습니다.");
+        console.warn("요약 데이터가 없습니다.");
     }
+}
+//회의 쉬는시간 가져오기
+function fetchBreakTime() {
+    $.ajax({
+        url: `/meeting/client/${meetingId}/breakTime`, // API 엔드포인트
+        method: 'POST',
+        dataType:'json',
+        success: function (data) {
+            console.log(data); // 응답을 콘솔에 출력
+            if (!data || data.meetingBreakTime === null || data.meetingBreakTime === undefined) {
+                console.warn("회의 쉬는 시간이 없습니다.");
+                return;
+            }
+            console.log("회의 휴식 시간:", data.meetingBreakTime);
+            const newBreakTime = data.meetingBreakTime;
+            if (previousBreakTime && previousBreakTime !== newBreakTime) {
+                console.warn("회의 휴식 시간이 변경됨.");
+            } else {
+                previousBreakTime = newBreakTime; // 기존 값 업데이트
+            }
+        },
+        error: function (error) {
+            console.error('쉬는 시간 가져오기 오류:', error);
+        }
+    });
 }
 //자료 요약
 function fetchScreenSummary(){
@@ -306,6 +335,8 @@ function endMeeting() {
         method: 'POST',
         success: function (response) {
             console.log('회의 종료 시간 기록:', response);
+            clearInterval(breakTimeFetchInterval);
+            clearInterval(summaryFetchInterval);
             window.location.href = "/user/userMain";
         },
         error: function (error) {
@@ -318,13 +349,7 @@ document.getElementById('endMeetingButton').addEventListener('click', function (
     endMeeting(); // 회의 종료
 });
 document.getElementById('screenshareButton').addEventListener('click', function () {
-    if(isupdatedStartTime){
-        //true면 회의가 시작한 것
-        document.getElementById("screeenshareButton").classList.remove("noacitve");
-        fetchScreenSummary(); //자료 요약
-    }else{
-        alert("기록자가 회의 시작 후 클릭 시 공유 자료의 요약을 제공합니다.");
-    }
+    fetchScreenSummary(); //자료 요약
 });
 function moveMain() {
     window.location.href = "/"; //로고
