@@ -30,6 +30,19 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
     List<Integer> findMeetingIdsByUserId(Integer userId);
 
 
+    // write.html 모달창에서 회의를 확인하기 위한 용도
+    // findMeetingIdsByUserId 와는 다르게, 이미 끝난 회의도 가져올 수 있게 함 & 시작 안되고 생성만 된 회의 안가져옴
+    @Query(
+            """
+            SELECT DISTINCT m.id
+            FROM MeetingParticipant mp
+            JOIN mp.meeting m
+            WHERE mp.user.id = ?1
+            AND m.startTime IS NOT NULL
+            """
+    )
+    List<Integer> findMeetingIdsByUserIdIncludingDone(Integer userId);
+
 
     // 특정 사용자 userId를 가진 MeetingParticipant가 속한 Meeting을 페이징
     Page<Meeting> findByMeetingParticipants_User_UserId(Integer userId, Pageable pageable);
