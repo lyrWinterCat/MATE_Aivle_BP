@@ -1,54 +1,35 @@
-## 얼굴 피곤 탐지 커스텀 데이터 생성
+## FASTAPI 서버 코드
 
-원버튼 딸깍 실행파일 만들고 싶었으나 잘 안돼서 그냥 가이드라인 제작합니다.
+GPU 환경을 권장합니다. 또한 GPU 환경에서 사용할 경우 pytorch는 본인의 환경에 맞춰서 설치하셔야 합니다.
 
-CMD에서 실행하시는 것을 추천드립니다.
+1. 가상환경 생성 및 실행
 
-1. 가상환경 생성
+| conda create -y -n fastapi python=3.12.3
 
-| conda create -y -n face python=3.12.3
+| conda activate fastapi
 
-2. 가상환경 실행
-
-| conda activate face
-
-3. Face Recognition 라이브러리 설치를 위한 dlib 설치
-
-| conda install -c conda-forge dlib
-
-4. 라이브러리 설치
+2. Library 설치
 
 | pip install -r requirements.txt
 
-5. 파일 실행
+3. fastAPI 실행
 
-| python mk_faceDataset.py --name [저장될 파일에 들어갈 여러분 이름; e.g., yun] --num [저장할 데이터 수; default=1000]
-
-
-<br/>
+| uvicorn main:app 
 
 <br/>
 
-## 결과물 확인 후 원하는 파일 세트로 삭제하는 방법
-
-1. ../data/custom/bboxed/ 경로에서 지울 이미지를 골라 삭제한다.
-
-2. python mk_faceDataset.py --mode del 실행
-
-
+## 필수 파일 
+1. DB_URL.txt: mysql+aiomysql://db.address/url (mySql 기준으로 작성)<br>
+(Optional) DigiCertGlobalRootCA.crt.pem: SSL 인증키가 필요하면 있어야하며, 필요 없을 경우 코드 내부 수정 필요.
+2. huggingFace_token.txt: speakerdiarization에 사용되는 모델은 hugging face의 token이 필요함. token 발급 관련은 아래에 존재.
+3. my_openai_api.txt: openai api key 값이 입력된 텍스트 파일
 
 <br/>
 
-<br/>
+## huggingFace token 발급 방법
+huggingface의 토큰은 일단 발급을 받아야하는데 아래와 같은 방식으로 먼저 발급을 받으면 됩니다. 
 
-## "난 CMD 가 싫어요. VSCode가 좋아요!" 하시는 분들
+https://kjh1337.tistory.com/3
 
-1. VSCode를 킨다.
-
-2. 경로 설정을 mk_faceDataset.py가 있는 폴더로 해준다.
-
-3. call_args() 함수 내의 --name과 --num 의 default= 옆의 값을 원하는 값으로 수정해서 실행
-
-4. 파일 삭제를 원하시면 ../data/custom/bboxed/ 경로에서 지울 이미지를 골라 삭제 후 --mode의 default= 옆의 값을 del로 수정해서 실행
-
-![image](./call_args.PNG)
+그 후, https://huggingface.co/pyannote/speaker-diarization-3.0와 같은 페이지에서 모델 사용 권한을 각각 받아야합니다. 
+speaker-diarization-3.0, segmentation, embedding 등의 모델에 권한을 받아야합니다. 
