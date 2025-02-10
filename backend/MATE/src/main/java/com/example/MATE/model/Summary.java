@@ -30,4 +30,7 @@ public class Summary {
 
     @Column(name = "summary_total", columnDefinition = "TEXT", nullable = false)
     private String summaryTotal;
+
+    @Column(name = "summary_shared_file", columnDefinition = "TEXT")
+    private String summarySharedFile;
 }
