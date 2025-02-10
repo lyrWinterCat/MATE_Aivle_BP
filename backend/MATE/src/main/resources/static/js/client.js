@@ -352,8 +352,8 @@ function startAutoFetch() {
     // 30분 후 반복 중지
     setTimeout(() => {
         clearInterval(intervalId);
-        console.log("⏹ 자동 요약 데이터 요청 종료 (30분 경과)");
-    }, 30 * 60 * 1000);
+        console.log("⏹ 자동 요약 데이터 요청 종료 (10분 경과)");
+    }, 10 * 60 * 1000);
 }
 document.getElementById('endMeetingButton').addEventListener('click', function () {
     endMeeting(); // 회의 종료
