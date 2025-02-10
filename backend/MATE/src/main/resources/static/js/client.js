@@ -46,7 +46,6 @@ function fetchParticipants(meetingId) {
         url: `/meeting/client/${meetingId}/participants`, // API 엔드포인트
         method: 'GET',
         success: function (data) {
-            console.log(data); // 응답을 콘솔에 출력
             const newParticipants = data.meetingParticipants.map(p => p.userName);
 
             if (JSON.stringify(previousParticipants) !== JSON.stringify(newParticipants)) {
@@ -115,7 +114,6 @@ function fetchSummary(){
                 isEmpty = 0;
                 return;
             }else{
-                console.log(data);
                  // 응답을 콘솔에 출력
                 yesno = data.body.summaryPositiveNegative;
                 topic = data.body.summaryTopic;
@@ -172,7 +170,6 @@ function fetchBreakTime() {
         method: 'POST',
         dataType:'json',
         success: function (data) {
-            console.log(data); // 응답을 콘솔에 출력
             if (!data || data.meetingBreakTime === null || data.meetingBreakTime === undefined) {
                 console.warn("회의 쉬는 시간이 없습니다.");
                 return;
@@ -342,19 +339,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // 회의 종료하기 - 회의 종료 시간을 기록하는 함수
 function endMeeting() {
-    $.ajax({
-        url: `/meeting/${meetingId}/end`,
-        method: 'POST',
-        success: function (response) {
-            console.log('회의 종료 시간 기록:', response);
-            clearInterval(breakTimeFetchInterval);
-            clearInterval(summaryFetchInterval);
-            window.location.href = "/user/userMain";
-        },
-        error: function (error) {
-            console.error('회의 종료 시간 기록 오류:', error);
-        }
-    });
+    clearInterval(breakTimeFetchInterval);
+    clearInterval(summaryFetchInterval);
+    window.location.href = "/user/userMain";
 }
 function startAutoFetch() {
      // 30초마다 fetchScreenSummary 실행
