@@ -274,8 +274,8 @@ public class MeetingController {
     public ResponseEntity<?> getImageSummaryClient(@PathVariable Integer meetingId) {
         System.out.println(">>> [MeetingController / getImageSummaryClient] meetingId: " + meetingId);
         try {
-            ResponseEntity<?> summaryDto = summaryService.getSummaryByMeetingId(meetingId);
-            return ResponseEntity.ok(summaryDto);
+            // ResponseEntity를 그대로 반환
+            return summaryService.getSharedSummaryMeetingId(meetingId);
         } catch (RuntimeException e) {
             System.out.println(">>> [MeetingController / getImageSummaryClient] 요약 데이터 없음: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요약 데이터가 없습니다.");
