@@ -5,50 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>마이페이지</title>
     <style>
-   
+
     </style>
     <link rel="stylesheet" type="text/css" href="/css/header.css"/>
     <link rel="stylesheet" type="text/css" href="/css/board.css"/>
     <link rel="stylesheet" type="text/css" href="/css/boardfunction.css" />
     <script>
-        function filterTable(category, button) {
-            const rows = document.querySelectorAll("tbody tr");
-            let visibleRowCount = 0;
-
-            rows.forEach(row => {
-                const type = row.querySelector(".type").textContent.trim();
-                if (category === "전체" || type === category) {
-                    visibleRowCount++;
-                }
-            });
-            if (visibleRowCount === 0) {
-                alert("해당 카테고리에 해당하는 데이터가 없습니다.");
-                return;
-            }
-            //필터 실행
-            rows.forEach(row => {
-                const type = row.querySelector(".type").textContent.trim();
-                row.style.display = (category === "전체" || type === category) ? "" : "none";
-            });
-            // 버튼 색상 변경
-            const buttons = document.querySelectorAll(".filter-buttons button");
-            buttons.forEach(btn => btn.classList.remove("active"));
-            button.classList.add("active");
-        }
-
-        function openModal() {
-            document.querySelector(".modal").style.display = "flex";
+        function openModal(content) {
+            document.getElementById("modal-text").textContent = content;
+            document.getElementById("modal").style.display = "flex";
         }
 
         function closeModal() {
-            document.querySelector(".modal").style.display = "none";
+            document.getElementById("modal").style.display = "none";
         }
     </script>
+    <style>
+        /* "내용" 컬럼에서 글자 수 제한 후 말줄임표 표시 */
+        .table-container td:nth-child(4) {
+            max-width: 300px; /* 최대 가로 길이 제한 */
+            min-width: 300px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            position: relative;
+            cursor: pointer;
+        }
+
+        /* Hover 시 클릭 가능하도록 스타일 변경 */
+        .table-container td:nth-child(4):hover {
+            color: blue;
+            text-decoration: underline;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 50%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .modal .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 <header>
     <div class="header-left">
-        <!-- Mate 로고 (상대경로로 수정했습니다)-->
         <a href="/">
             <img src="/img/logo.png" alt="Mate Logo" class="logo-img">
         </a>
@@ -88,7 +110,6 @@
         </select>
         <button type="submit">조회</button>
     </form>
-
 </div>
 <div class="table-container">
     <div>
@@ -108,7 +129,7 @@
                 <td>{{timestamp}}</td>
                 <td class="type">{{speechType}}</td>
                 <td>{{userName}}</td>
-                <td>{{content}}</td>
+                <td onclick="openModal('{{content}}')">{{content}}</td>
                 <td>{{meetingName}}</td>
             </tr>
             {{/speechLogs}}
@@ -140,14 +161,11 @@
         </div>
     </div>
 </div>
-<div class="modal">
+<div id="modal" class="modal">
     <div class="modal-content">
-        <h2>요약 보기</h2>
-        <p>2025-01-10 : 15:00 회의 결과 / 참석자: A, B, C</p>
-        <p>주제: 새 프로젝트 주제 정하기</p>
-        <p>1안: 서술형 채점 교육 AI 서비스<br>찬성: A, B<br>> 교사들의 편의성 증가<br>반대: C<br>> 사람이 충분히 할 수 있다.</p>
-        <p>2안: 노래방 신청곡 자동 필터링 AI 서비스<br>찬성: B, C<br>> 사용자의 만족도 증가<br>반대: A<br>> 기업이 그걸 구매할 것 같지 않음.</p>
-        <button class="close-button" onclick="closeModal()">닫기</button>
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>전체 내용</h2>
+        <p id="modal-text"></p>
     </div>
 </div>
 <script>
