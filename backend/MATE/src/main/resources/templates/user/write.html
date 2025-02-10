@@ -285,5 +285,39 @@
         closeModal();
     }
 
+    // form submit 이벤트 핸들러 추가
+    document.querySelector('form').addEventListener('submit', function(event) {
+        const fileInput = document.getElementById('filepath');
+        const file = fileInput.files[0];
+
+        if (file) {
+            const fileName = file.name.toLowerCase();
+            const validExtensions = /(\.mp3|\.wav|\.m4a)$/i;
+
+            if (!validExtensions.test(fileName)) {
+                alert('MP3, WAV, M4A 파일만 업로드 가능합니다.');
+                event.preventDefault();
+                fileInput.value = '';
+                return false;
+            }
+        }
+    });
+
+    // 파일 선택 시 즉시 검증
+    document.getElementById('filepath').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+
+        if (file) {
+            const fileName = file.name.toLowerCase();
+            const validExtensions = /(\.mp3|\.wav|\.m4a)$/i;
+
+            if (!validExtensions.test(fileName)) {
+                alert('MP3, WAV, M4A 파일만 업로드 가능합니다.');
+                this.value = '';
+                return false;
+            }
+        }
+    });
+
 </script>
 </html>
