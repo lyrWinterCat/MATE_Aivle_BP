@@ -7,6 +7,7 @@ let isupdatedStartTime=false;
 let participantFetchInterval;
 let summaryFetchInterval;
 let breakTimeFetchInterval;
+let shareFetchInterval;
 //회의 요약 가져오기
 let topic = "";
 let yesno = "";
@@ -55,14 +56,14 @@ function fetchParticipants(meetingId) {
             // 참여자 수 업데이트
             $('#participantCount').text(data.participantCount);
             const newStartTime = data.meetingStartTime;
-            if (previousStartTime && previousStartTime !== newStartTime) {
-                console.warn("회의 시작 시간이 변경됨. 자동 업데이트 중지.");
+            if (previousStartTime!="" && previousStartTime !== newStartTime) {
+                console.warn("회의 시작 시간이 추가 및 됨. 자동 업데이트 중지.");
                 stopMeetingUpdates(); // 자동 갱신 중지
-                document.getElementById("screenshareButton").classList.remove("noacitve");
+                document.getElementById("screenshareButton").classList.remove("noactive");
+                console.log(">>> [data.meetingStartTime] :", newStartTime);
             } else {
                 previousStartTime = newStartTime; // 기존 값 업데이트
             }
-            console.log(">>> [data.meetingStartTime] :", newStartTime);
         },
         error: function (xhr, textStatus, errorThrown) {
             console.error("AJAX 요청 실패:", textStatus, errorThrown);
@@ -88,8 +89,8 @@ function stopMeetingUpdates() {
     if (participantFetchInterval) {
         clearInterval(participantFetchInterval);
         participantFetchInterval = null;
+        //휴식시간 업데이트
         breakTimeFetchInterval = setInterval(() => fetchBreakTime(), 5000);
-        summaryFetchInterval = setInterval(() => fetchSummary(), 5000);
     }
 }
 //회의 요약가져오기
@@ -100,8 +101,12 @@ function fetchSummary(){
         dataType:'json',
         success: function (data) {
             // data로 상태확인
-            //document.getElementById("meetingImage").style.display="none";
-            //document.getElementById("loadingGif").style.display="none";
+            let element = document.getElementById("meetingImage");
+            if (element) {
+                element.style.display = "none";
+            } else {
+                console.log("meetingImage 요소가 존재하지 않습니다.");
+            }
             if(data.body==="요약 데이터가 없습니다."){
                 //document.getElementById("mode-wait").textContent = "요약 데이터가 없습니다.";
                 //DB insert과정에서 걸릴것 같아 console.log로만
@@ -173,8 +178,10 @@ function fetchBreakTime() {
             }
             console.log("회의 휴식 시간:", data.meetingBreakTime);
             const newBreakTime = data.meetingBreakTime;
-            if (previousBreakTime && previousBreakTime !== newBreakTime) {
+            if (previousBreakTime !== newBreakTime) {
                 console.warn("회의 휴식 시간이 변경됨.");
+                //요약 업데이트
+                summaryFetchInterval = setInterval(() => fetchSummary(), 5000);
             } else {
                 previousBreakTime = newBreakTime; // 기존 값 업데이트
             }
@@ -186,29 +193,32 @@ function fetchBreakTime() {
 }
 //자료 요약
 function fetchScreenSummary(){
-    $.ajax({
-        url: `/meeting/client/${meetingId}/imagesummary`, // API 엔드포인트
-        method: 'POST',
-        dataType:'json',
-        success: function (data) {
-            document.getElementById("image-notext").style.display="none";
-            if(data.body === "요약 데이터가 없습니다."){
-                console.warn("전송된 데이터가 없습니다.");
-            }else{
-                console.log(data);
-                console.log("공유자료 요약 완료");
-                screen = data.body.summaryScreen;
-                document.getElementById("document-summary").innerHTML = screen.replace(/\n/g, "<br>");
-            }
-            console.log(data.body);
-        },
-        error: function (xhr) {
-            console.warn("AJAX 요청 실패:", xhr);
-            if (xhr.status === 404) {
-                console.warn("요약 데이터 없음 (404)");
-            } else {
-                console.error("요약 가져오기 오류:", xhr);
-            }
+     $.ajax({
+         url: `/meeting/client/${meetingId}/imagesummary`, // API 엔드포인트
+         method: 'POST',
+         dataType: 'text',
+         success: function (data) {
+
+             if (data.trim() === "요약 데이터가 없습니다.") {
+                 console.warn("요약 데이터가 없습니다.");
+                 document.getElementById("document-summary").innerHTML = "<p>요약 데이터가 없습니다.</p>";
+             } else {
+                 console.log("공유자료 요약 완료");
+                 let element = document.getElementById("image-notext");
+                 if (element) {
+                     element.style.display = "none";
+                 } else {
+                     console.warn("image-notext 요소가 존재하지 않습니다.");
+                 }
+                 document.getElementById("document-summary").innerHTML = data.replace(/\n/g, "<br>");
+             }
+         },
+         error: function (xhr) {
+             if (xhr.status === 404) {
+                 console.warn("공유자료 요약 데이터 없음 (404)");
+             } else {
+                 console.error("공유자료 요약 가져오기 오류:", xhr);
+             }
         }
     });
 }
@@ -349,7 +359,8 @@ document.getElementById('endMeetingButton').addEventListener('click', function (
     endMeeting(); // 회의 종료
 });
 document.getElementById('screenshareButton').addEventListener('click', function () {
-    fetchScreenSummary(); //자료 요약
+    //이미지 요약 업데이트
+   fetchScreenSummary();
 });
 function moveMain() {
     window.location.href = "/"; //로고

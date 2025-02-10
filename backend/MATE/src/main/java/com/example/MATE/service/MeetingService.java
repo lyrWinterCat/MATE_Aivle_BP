@@ -183,26 +183,4 @@ public class MeetingService {
 
         meetingRepository.save(meeting); // 저장 또는 업데이트
     }
-
-//    public void startMeeting(Integer meetingId) {
-//        Meeting meeting = meetingRepository.findById(meetingId).orElse(new Meeting());
-//        meeting.setStartTime(LocalDateTime.now()); // 현재 시간으로 시작 시간 설정
-////        meeting.setCreatedAt(LocalDateTime.now()); // 생성 시간 설정 (새 회의인 경우)
-//        meetingRepository.save(meeting); // 저장 또는 업데이트
-//    }
-//
-//    public void takeBreak(Integer meetingId) {
-//        Meeting meeting = meetingRepository.findById(meetingId).orElse(new Meeting());
-//        meeting.setLastBreakTime(LocalDateTime.now()); // 현재 시간으로 마지막 휴식 시간 설정
-//        meetingRepository.save(meeting); // 저장 또는 업데이트
-//    }
-//
-//    public void endMeeting(Integer meetingId) {
-//        Meeting meeting = meetingRepository.findById(meetingId).orElse(new Meeting());
-//        meeting.setEndTime(LocalDateTime.now()); // 현재 시간으로 종료 시간 설정
-//        meetingRepository.save(meeting); // 저장 또는 업데이트
-//    }
-
-
-
 }

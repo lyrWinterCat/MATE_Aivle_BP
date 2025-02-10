@@ -37,4 +37,21 @@ public class SummaryService {
         return ResponseEntity.ok(summaryDto);
     }
 
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> getSharedSummaryMeetingId(Integer meetingId) {
+        Meeting meeting = meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new RuntimeException("회의를 찾을 수 없습니다."));
+
+        Optional<Summary> optionalSummary = summaryRepository.findByMeeting(meeting);
+
+        if (optionalSummary.isEmpty()) {
+            System.out.println("해당 meetingId에 대한 요약이 없습니다. (meetingId: " + meetingId + ")");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요약 데이터가 없습니다.");
+        }
+
+        // summarySharedFile 값만 반환
+        String summarySharedFile = optionalSummary.get().getSummarySharedFile();
+        return ResponseEntity.ok(summarySharedFile);
+    }
+
 }

@@ -16,6 +16,7 @@ public class SummaryDto {
     private String summaryPositiveNegative;
     private String todoList;
     private String summaryTotal;
+    private String summarySharedFile;
 
     // ✅ 엔티티 → DTO 변환
     public static SummaryDto fromEntity(Summary summary) {
@@ -25,7 +26,8 @@ public class SummaryDto {
                 summary.getSummaryTopic(),
                 summary.getSummaryPositiveNegative(),
                 summary.getTodoList(),
-                summary.getSummaryTotal()
+                summary.getSummaryTotal(),
+                summary.getSummarySharedFile()
         );
     }
 
@@ -38,6 +40,7 @@ public class SummaryDto {
         summary.setSummaryPositiveNegative(this.summaryPositiveNegative);
         summary.setTodoList(this.todoList);
         summary.setSummaryTotal(this.summaryTotal);
+        summary.setSummarySharedFile(this.summarySharedFile);
         return summary;
     }
 }
