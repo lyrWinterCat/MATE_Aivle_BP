@@ -16,6 +16,9 @@ let total = "";
 let screen = "";
 let isEmpty = 0;
 let hasActivatedFirstTab = false;
+
+let intervalId;
+let duration = 30 * 60 * 1000;
 // meetingId 셋팅 대기
 function waitForMeetingId() {
     const checkInterval = setInterval(() => {
@@ -101,16 +104,14 @@ function fetchSummary(){
         dataType:'json',
         success: function (data) {
             // data로 상태확인
-            let element = document.getElementById("meetingImage");
-            if (element) {
-                element.style.display = "none";
-            } else {
-                console.log("meetingImage 요소가 존재하지 않습니다.");
-            }
             if(data.body==="요약 데이터가 없습니다."){
                 //document.getElementById("mode-wait").textContent = "요약 데이터가 없습니다.";
                 //DB insert과정에서 걸릴것 같아 console.log로만
                 console.warn(data.body);
+                isEmpty = 0;
+                return;
+            }else if(data.body.summaryPositiveNegative === "아직 요약이 존재하지 않습니다."){
+                console.warn(data.body.summaryPositiveNegative);
                 isEmpty = 0;
                 return;
             }else{
@@ -211,6 +212,7 @@ function fetchScreenSummary(){
                      console.warn("image-notext 요소가 존재하지 않습니다.");
                  }
                  document.getElementById("document-summary").innerHTML = data.replace(/\n/g, "<br>");
+                 clearInterval(fetchScreenSummary);
              }
          },
          error: function (xhr) {
@@ -354,13 +356,25 @@ function endMeeting() {
         }
     });
 }
+function startAutoFetch() {
+     // 30초마다 fetchScreenSummary 실행
+    shareFetchInterval = setInterval(() => {
+        fetchScreenSummary(meetingId);
+    }, 10000);
 
+    // 30분 후 반복 중지
+    setTimeout(() => {
+        clearInterval(intervalId);
+        console.log("⏹ 자동 요약 데이터 요청 종료 (30분 경과)");
+    }, 30 * 60 * 1000);
+}
 document.getElementById('endMeetingButton').addEventListener('click', function () {
     endMeeting(); // 회의 종료
 });
 document.getElementById('screenshareButton').addEventListener('click', function () {
     //이미지 요약 업데이트
-   fetchScreenSummary();
+   //fetchScreenSummary();
+   startAutoFetch();
 });
 function moveMain() {
     window.location.href = "/"; //로고
