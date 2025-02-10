@@ -87,7 +87,7 @@ async def post_image(image: UploadFile=File(...)):
     return "이미지 전송 완료"
 
 @app.post("/summarize_screen")
-async def post_screen(image: UploadFile=File(...), meeting_name:str = Form(...)):
+async def post_screen(image: UploadFile=File(...), meeting_name:str = Form(...), db: AsyncSession = Depends(get_db)):
     if not os.path.exists(meeting_name):
         os.mkdir(meeting_name)
     
@@ -95,7 +95,27 @@ async def post_screen(image: UploadFile=File(...), meeting_name:str = Form(...))
     with open(file_location, "wb") as buffer:
         buffer.write(await image.read())
     summ_img = image_summ(file_location, "gpt-4o").split(': \"')[-1].split('\"')[0]
+
+    summary, meeting_id = await get_summary_and_meeting_id(meeting_name, db)
     
+    if summary:
+        summary.summary_shared_file = summ_img
+    else:
+        none_text = "아직 요약이 존재하지 않습니다."
+
+        new_summary = Summary(
+            meeting_id=meeting_id,
+            summary_topic = none_text,
+            summary_positive_negative = none_text,
+            todo_list = none_text,
+            summary_total = none_text,
+            summary_shared_file = summ_img
+        )
+        # new_summary = Summary(meeting_id=meeting.meeting_id, summary_text=summ_all)
+        db.add(new_summary)
+
+    await db.commit()
+
     return summ_img
     
 
@@ -137,7 +157,8 @@ async def summarize_meeting(audio:UploadFile=File(...), meeting_name:str = Form(
         buffer.write(await audio.read())
 
     if status == "ing":
-        summ_topicwise, summ_posneg, summ_todo, summ_total, summ_all = summarize_audio(meeting_name)
+        # summ_topicwise, summ_posneg, summ_todo, summ_total, summ_all = summarize_audio(meeting_name)
+        summ_topicwise, summ_posneg, summ_todo, summ_total = await summarize_and_insert(meeting_name, db)
         # return {"summ_all": summ_all}
         return {"topicwise": summ_topicwise, "posneg": summ_posneg, "todo": summ_todo, "total": summ_total}
     elif status == "end":
@@ -226,11 +247,6 @@ async def speakerDiarization_and_insert(file_location, meeting_name, db):
     
     await db.commit()
 
-
-        
-
-
-
 def audio_to_text_by_pyannote(file_location, meeting_name):
     recording_start_time = datetime.now()
 
@@ -251,15 +267,7 @@ def audio_to_text_by_pyannote(file_location, meeting_name):
 async def summarize_and_insert(meeting_name, db : AsyncSession):
     summ_topicwise, summ_posneg, summ_todo, summ_total, summ_all = summarize_audio(meeting_name)
 
-    result = await db.execute(select(Meeting).filter(Meeting.meeting_name == meeting_name))
-    meeting = result.scalars().first()
-
-    if not meeting:
-        return {"error": "Meeting not found"}
-
-    # Summary 조회
-    result = await db.execute(select(Summary).filter(Summary.meeting_id == meeting.meeting_id))
-    summary = result.scalars().first()
+    summary, meeting_id = await get_summary_and_meeting_id(meeting_name, db)
 
     if summary:
         summary.summary_topic = summ_topicwise
@@ -269,7 +277,7 @@ async def summarize_and_insert(meeting_name, db : AsyncSession):
         # summary.summary_text = summ_all
     else:
         new_summary = Summary(
-            meeting_id=meeting.meeting_id,
+            meeting_id=meeting_id,
             summary_topic = summ_topicwise,
             summary_positive_negative = summ_posneg,
             todo_list = summ_todo,
@@ -285,6 +293,19 @@ async def summarize_and_insert(meeting_name, db : AsyncSession):
 def background_summarize(meeting_name):
     summ_topicwise, summ_posneg, summ_todo, summ_total = summarize_audio(meeting_name)
     
+async def get_summary_and_meeting_id(meeting_name, db : AsyncSession):
+    result = await db.execute(select(Meeting).filter(Meeting.meeting_name == meeting_name))
+    meeting = result.scalars().first()
+
+    if not meeting:
+        # return {"error": "Meeting not found"}
+        return None
+
+    # Summary 조회
+    result = await db.execute(select(Summary).filter(Summary.meeting_id == meeting.meeting_id))
+    summary = result.scalars().first()
+
+    return summary, meeting.meeting_id
 
 ###########################################################################
 ####################### AI Code ###########################################

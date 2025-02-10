@@ -18,6 +18,7 @@ class Summary(Base):
     summary_positive_negative = Column(Text)
     todo_list = Column(Text)
     summary_total = Column(Text)
+    summary_shared_file = Column(Text)
     
 class Meeting(Base):
     __tablename__ = "meeting"
