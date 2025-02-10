@@ -270,8 +270,8 @@
 
         console.log("일별 독성 발언 데이터:", dailyToxicityData);
 
-        var dailyLabels = Object.keys(dailyToxicityData); // 날짜 목록
-        var dailyValues = Object.values(dailyToxicityData); // 독성 발언 수
+        var dailyLabels = Object.keys(dailyToxicityData).map(date => date.slice(5)); // 연도 제거
+        var dailyValues = Object.values(dailyToxicityData);
 
         var dailyTrendCtx = document.getElementById("monthlyTrendChart").getContext("2d");
         new Chart(dailyTrendCtx, {
@@ -281,15 +281,35 @@
                 datasets: [{
                     label: '독성 발언 수',
                     data: dailyValues,
-                    backgroundColor: 'rgba(255, 51, 51, 0.7)',
-                    borderColor: '#B22222',
+                    backgroundColor: ['rgba(255, 99, 132, 0.3)', 'rgba(255, 159, 64, 0.3)', 'rgba(255, 205, 86, 0.3)',
+                        'rgba(75, 192, 192, 0.3)', 'rgba(54, 162, 235, 0.3)', 'rgba(153, 102, 255, 0.3)', 'rgba(201, 203, 207, 0.3)'],
+                    borderColor: ['rgba(255, 99, 132, 0.8)', 'rgba(255, 159, 64, 0.8)', 'rgba(255, 205, 86, 0.8)',
+                        'rgba(75, 192, 192, 0.8)', 'rgba(54, 162, 235, 0.8)', 'rgba(153, 102, 255, 0.8)', 'rgba(201, 203, 207, 0.8)'],
                     borderWidth: 1
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    datalabels: {
+                        display: false // 개별 바 위의 숫자 숨김
+                    }
+                },
                 scales: {
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 12
+                            },
+                            maxRotation: 0,
+                            minRotation: 0
+                        }
+                    },
                     y: {
                         beginAtZero: true,
                         ticks: {

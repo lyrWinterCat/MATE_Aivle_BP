@@ -171,16 +171,16 @@ public class AdminService {
 
         // 부서명(영어) -> 한글 매핑
         Map<String, String> departmentMap = Map.of(
-                "HR", "인사부서",
-                "IT", "IT개발부서",
-                "Finance", "재무부서",
-                "Marketing", "마케팅부서",
-                "Sales", "영업부서",
-                "Legal", "법무부서",
-                "Admin", "관리부서",
-                "Product", "제품개발부서",
-                "Support", "고객지원부서",
-                "R&D", "연구개발부서"
+                "HR", "인사",
+                "IT", "IT개발",
+                "Finance", "재무",
+                "Marketing", "마케팅",
+                "Sales", "영업",
+                "Legal", "법무",
+                "Admin", "관리",
+                "Product", "제품개발",
+                "Support", "고객지원",
+                "R&D", "연구개발"
         );
 
         // 결과를 가공하여 Map에 저장 (출력 순서를 유지하기 위해 LinkedHashMap 사용)
