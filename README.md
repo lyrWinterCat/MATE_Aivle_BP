@@ -48,6 +48,19 @@
 
 5. 회의 중 독성 발언 탐지
 
+
+## 적용된 AI 기술
+
+1. Pretrained Faster-Whisper
+
+2. OpenAI API-based GPT-4o
+
+3. Fine-tuned KoELECTRA
+
+4. Fine-tuned Pyannote
+
+5. Fine-tuned YOLO11
+
 ## 📈 기대효과
 
 #### 다양한 회의 피드백
@@ -77,3 +90,6 @@
 #### 3. Spring 및 FastAPI 서버 실행
 
 #### 4. 서비스
+
+
+## 새로 배울 수 있었던 점
