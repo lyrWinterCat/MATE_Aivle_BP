@@ -98,11 +98,13 @@
 
 ## ⚙ 사용 방법
 
-#### 1. API 키 설정
+#### 1. API 키 설정 및 Hugging Face 설정
 
 OpenAI API Key를 ./fastAPI/my_openai_api.txt 에 저장
 
-Hugging Face **내용써야됨**
+[Hugging Face 토큰 발급 가이드](https://kjh1337.tistory.com/3)를 참고하여 토큰을 발급받아 ./fastAPI/huggingFace_token.txt에 저장
+
+[speaker-diarization-3.0](https://huggingface.co/pyannote/speaker-diarization-3.0), [segmentation](https://huggingface.co/pyannote/segmentation), [embedding](https://huggingface.co/pyannote/embedding)의 모델 사용 권한을 각각 받기
 
 #### 2. FastAPI (백엔드)
 
@@ -124,14 +126,33 @@ cd fastAPI
 pip install -r requirements.txt
 ```
 
-4. FastAPI 실행
+4. 발화자 식별을 위한 Pyannote 데이터 준비
+
+준비물: 발화자별 음성파일, 음성파일 정보가 담긴 uem 파일, 발화자 정보가 담긴 rttm 파일, 데이터 경로가 담긴 yaml 파일
+
+- 음성파일: mp4, wav 등의 확장자로 되어있는 음성파일
+- uem파일:
+
+|   |          **파일 종류**         | **세부 내용**                                                        |
+|---|:----------------------------:|----------------------------------------------------------------------|
+| 1 | 음성 파일 | - mp4, wav 등 확장자의 음성 파일<br/>- ./fastAPI/voice 디렉토리 생성 후 해당 디렉토리에 음성파일 준비 |
+| 2 |     [uem 파일](https://github.com/lyrWinterCat/MATE_Aivle_BP/blob/main/fastAPI/AI/speakerdiarization/pyannote/train/uem/train1.uem)     | {파일명} {시작시간} {끝나는시간} 형태로 데이터가 작성된 파일  |
+| 3 |    [rttm 파일](https://github.com/lyrWinterCat/MATE_Aivle_BP/blob/main/fastAPI/AI/speakerdiarization/pyannote/train/rttm/train1.rttm)    | SPEAKER {파일명} 1 {시작시간} {음성길이} {발화자명} 형태로 데이터가 작성된 파일  |
+| 4 |     [yaml 파일](https://github.com/lyrWinterCat/MATE_Aivle_BP/blob/main/fastAPI/AI/speakerdiarization/pyannote/database.yml)    | 데이터 (음성파일, uem, rttm)의 경로가 작성된 파일  |
+
+
+5. FastAPI 실행
 ```(CMD)
 uvicorn main:app
 ```
 
 #### 3. Spring (프론트엔드)
 
+1. IntelliJ 실행 후 ./backend/MATE 를 프로젝트 폴더로 프로젝트 열기
 
+2. build.gradle
+
+3. 상기 프로젝트의 MATE/src/main/java/com/example/MATE/MateApplication 실행
 
 #### 4. 서비스
 
