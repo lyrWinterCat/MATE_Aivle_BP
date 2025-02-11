@@ -152,20 +152,20 @@ uvicorn main:app
         - meeting_name: string / 회의명<br/>
         - status: string / "ing" or "end" => 휴식하기를 눌렀을 때는 "ing", 회의종료를 눌렀을 때는 "end"로 받게 되어있음.
         
-    [summarize_meeting](./sample_imgs/summarize_meeting.png)
+    ![summarize_meeting](./sample_imgs/summarize_meeting.png)
   
   - detect_fatigue: 피로도 측정해서 측정 결과를 보내주는 함수<br/>
       + 필요 variable: image<br/>
         - image: File / 온라인 회의 화면 이미지
         
-    [detect_fatigue](./sample_imgs/detect_fatigue.png)
+    ![detect_fatigue](./sample_imgs/detect_fatigue.png)
   
   - summarize_screen: 공유된 화면의 내용을 정리해주는 함수<br/>
       + 필요 variable: image, meeting_name<br/>
         - image: File / 공유된 화면 이미지<br/>
         - meeting_name: string / 회의명
         
-    [summarize_screen](./sample_imgs/summarize_screen.png)
+    ![summarize_screen](./sample_imgs/summarize_screen.png)
 
 ### 3. Spring (프론트엔드)
 
