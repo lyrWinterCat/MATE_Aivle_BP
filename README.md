@@ -112,20 +112,8 @@
 
 ## Demo 시연
 
-#### 0. Root page
+![demo_gif](./sample_imgs/demo_width600.gif)
 
-![root](./sample_imgs/0.root.png)
-
-#### 1. SignIn page
-
-![singIn](./sample_imgs/1.signIn.png)
-
-#### 2. SignUp page
-
-![signUp](./sample_imgs/2-1.signUp.png)
-
-#### 3. User-side main page
-
-![userMain](./sample_imgs/3.userMain.png)
+[Full video](https://github.com/lyrWinterCat/MATE_Aivle_BP/sample_imgs/demo.mp4)
 
 ## 🤔새로 배울 수 있었던 점
