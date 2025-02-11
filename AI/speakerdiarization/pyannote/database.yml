@@ -1,0 +1,67 @@
+Databases:
+  # tell pyannote.database where to find AMI wav files.
+  # {uri} is a placeholder for the session name (eg. ES2004c).
+  # you might need to update this line to fit your own setup.
+  meeting: audio/{uri}.wav
+  AMI: amicorpus/{uri}/audio/{uri}.Mix-Headset.wav
+
+Protocols:
+  meeting:
+    SpeakerDiarization:
+      test:
+        train:
+            uri: train/train.txt
+            annotation: train/rttm/{uri}.rttm
+            annotated: train/uem/{uri}.uem
+        development:
+            uri: development/development.txt
+            annotation: development/rttm/{uri}.rttm
+            annotated: development/uem/{uri}.uem
+        test:
+            uri: test/test.txt
+            annotation: test/rttm/{uri}.rttm
+            annotated: test/uem/{uri}.uem
+
+  AMI:
+    SpeakerDiarization:
+      only_words:
+        train:
+            uri: ../lists/train.meetings.txt
+            annotation: ../only_words/rttms/train/{uri}.rttm
+            annotated: ../uems/train/{uri}.uem
+        development:
+            uri: ../lists/dev.meetings.txt
+            annotation: ../only_words/rttms/dev/{uri}.rttm
+            annotated: ../uems/dev/{uri}.uem
+        test:
+            uri: ../lists/test.meetings.txt
+            annotation: ../only_words/rttms/test/{uri}.rttm
+            annotated: ../uems/test/{uri}.uem
+
+      mini:
+        train:
+          uri: ../lists/train.mini.txt
+          annotation: ../only_words/rttms/train/{uri}.rttm
+          annotated: ../uems/train/{uri}.uem
+        development:
+          uri: ../lists/dev.mini.txt
+          annotation: ../only_words/rttms/dev/{uri}.rttm
+          annotated: ../uems/dev/{uri}.uem
+        test:
+          uri: ../lists/test.mini.txt
+          annotation: ../only_words/rttms/test/{uri}.rttm
+          annotated: ../uems/test/{uri}.uem
+ 
+      word_and_vocalsounds:
+        train:
+            uri: ../lists/train.meetings.txt
+            annotation: ../word_and_vocalsounds/rttms/train/{uri}.rttm
+            annotated: ../uems/train/{uri}.uem
+        development:
+            uri: ../lists/dev.meetings.txt
+            annotation: ../word_and_vocalsounds/rttms/dev/{uri}.rttm
+            annotated: ../uems/dev/{uri}.uem
+        test:
+            uri: ../lists/test.meetings.txt
+            annotation: ../word_and_vocalsounds/rttms/test/{uri}.rttm
+            annotated: ../uems/test/{uri}.uem
