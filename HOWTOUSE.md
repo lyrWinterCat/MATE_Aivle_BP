@@ -31,4 +31,4 @@ GPU 서버를 사용한 서비스 활용에 관해서는 README.md 파일의 사
 
 ## 세부 사용 설명서
 
-### [사용설명서](https://drive.google.com/drive/u/0/folders/1u3fAzv_fZu0alG4_KrUkwuUYVXDWgGMU)
+### [사용설명서](https://drive.google.com/file/d/1wX6cCy0pcKgoh--xqKA-CEvBfr9fvSxc/view?usp=sharing)
