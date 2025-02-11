@@ -12,12 +12,12 @@
 
 | 이름   | 주 업무 | Link |
 |--------|---------|------|
-| 이예림 | PL      |      |
-| 안지홍 | FE      |      |
-| 이승은 | SE      |      |
-| 고수현 | DE      |      |
+| 이예림 | PL      |  <a href="https://github.com/lyrWinterCat"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-181717.svg?&style=for-the-badge&logo=GitHub&logoColor=white"/>    |
+| 안지홍 | FE      |  <a href="https://github.com/dnwn129"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-181717.svg?&style=for-the-badge&logo=GitHub&logoColor=white"/>    |
+| 이승은 | SE      |  <a href="https://github.com/Greeense"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-181717.svg?&style=for-the-badge&logo=GitHub&logoColor=white"/>    |
+| 고수현 | DE      |  <a href="https://github.com/csj8566"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-181717.svg?&style=for-the-badge&logo=GitHub&logoColor=white"/>    |
 | 윤찬혁 | AI      |  <a href="https://github.com/ChanhyukYun"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-181717.svg?&style=for-the-badge&logo=GitHub&logoColor=white"/> |
-| 박언용 | BE      |      |
+| 박언용 | BE      |  <a href="https://github.com/onionpark"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-181717.svg?&style=for-the-badge&logo=GitHub&logoColor=white"/>    |
 
 ## 🗃 선정 배경
 
