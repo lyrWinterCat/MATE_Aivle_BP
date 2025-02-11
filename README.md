@@ -98,7 +98,7 @@
 
 ## ⚙ 사용 방법
 
-#### 1. API 키 설정 및 Hugging Face 설정
+### 1. API 키 설정 및 Hugging Face 설정
 
 OpenAI API Key를 ./fastAPI/my_openai_api.txt 에 저장
 
@@ -106,32 +106,28 @@ OpenAI API Key를 ./fastAPI/my_openai_api.txt 에 저장
 
 [speaker-diarization-3.0](https://huggingface.co/pyannote/speaker-diarization-3.0), [segmentation](https://huggingface.co/pyannote/segmentation), [embedding](https://huggingface.co/pyannote/embedding)의 모델 사용 권한을 각각 받기
 
-#### 2. FastAPI (백엔드)
+### 2. FastAPI (백엔드)
 
-1. 가상환경 생성
+&emsp;**1. 가상환경 생성**
    
 ```(CMD)
 conda create -y -n fastapi python=3.12.5
 ```
 
-2. 가상환경 활성화
+&emsp;**2. 가상환경 활성화**
 
 ```(CMD)
 conda activate fastapi
 ```
 
-3. 필요 라이브러리 설치
+&emsp;**3. 필요 라이브러리 설치**
 ```(CMD)
 cd fastAPI
 pip install -r requirements.txt
 ```
 
-4. 발화자 식별을 위한 Pyannote 데이터 준비
-
-준비물: 발화자별 음성파일, 음성파일 정보가 담긴 uem 파일, 발화자 정보가 담긴 rttm 파일, 데이터 경로가 담긴 yaml 파일
-
-- 음성파일: mp4, wav 등의 확장자로 되어있는 음성파일
-- uem파일:
+&emsp;**4. 발화자 식별을 위한 Pyannote 데이터 준비**  
+&emsp;&emsp;준비물: 발화자별 음성파일, 음성파일 정보가 담긴 uem 파일, 발화자 정보가 담긴 rttm 파일, 데이터 경로가 담긴 yaml 파일
 
 |   |          **파일 종류**         | **세부 내용**                                                        |
 |---|:----------------------------:|----------------------------------------------------------------------|
@@ -141,12 +137,12 @@ pip install -r requirements.txt
 | 4 |     [yaml 파일](https://github.com/lyrWinterCat/MATE_Aivle_BP/blob/main/fastAPI/AI/speakerdiarization/pyannote/database.yml)    | 데이터 (음성파일, uem, rttm)의 경로가 작성된 파일  |
 
 
-5. FastAPI 실행
+**5. FastAPI 실행**
 ```(CMD)
 uvicorn main:app
 ```
 
-#### 3. Spring (프론트엔드)
+### 3. Spring (프론트엔드)
 
 1. IntelliJ 실행 후 ./backend/MATE 를 프로젝트 폴더로 프로젝트 열기
 
@@ -154,7 +150,7 @@ uvicorn main:app
 
 3. 상기 프로젝트의 MATE/src/main/java/com/example/MATE/MateApplication 실행
 
-#### 4. 서비스
+### 4. 서비스
 
 [사용설명서](./HOWTOUSE.md)
 
