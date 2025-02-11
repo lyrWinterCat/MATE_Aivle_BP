@@ -188,8 +188,8 @@
 <body>
 
 <div class="left-container">
-    <img src="/img/logo.png" alt="Mate Logo">
-    <h1>Mate</h1>
+    <img src="/img/logo.png" alt="Mate Logo" onclick="moveMain()">
+    <h1 onclick="moveMain()" >Mate</h1>
     <p>쉽고 빠른 협업의 시작, Mate!</p>
     <div class="image">
         <img src="/img/login.png" alt="Collaboration">
@@ -258,7 +258,9 @@
         document.body.appendChild(form);
         form.submit();
     }
-
+    function moveMain(){
+        window.location.href="/";
+    }
 </script>
 </body>
 </html>
