@@ -146,6 +146,15 @@ uvicorn main:app
 
 &emsp;FastAPI endpoint들은 Form-data로 variable 값을 POST로 받게 설정됨
 
+  - detect_fatigue: 피로도 측정해서 측정 결과를 보내주는 함수<br/>
+      + 필요 variable: image<br/>
+        - image: File / 온라인 회의 화면 이미지
+  
+  - summarize_screen: 공유된 화면의 내용을 정리해주는 함수<br/>
+      + 필요 variable: image, meeting_name<br/>
+        - image: File / 공유된 화면 이미지<br/>
+        - meeting_name: string / 회의명
+       
   - summarize_meeting: 휴식하기 or 회의종료를 눌렀을 때 4가지의 요약 및 발화자 구분을 해주는 함수<br/>
       + 필요 variable: audio, meeting_name, status<br/>
         - audio: File / 음성파일<br/>
@@ -153,19 +162,7 @@ uvicorn main:app
         - status: string / "ing" or "end" => 휴식하기를 눌렀을 때는 "ing", 회의종료를 눌렀을 때는 "end"로 받게 되어있음.
         
     ![summarize_meeting](./sample_imgs/summarize_meeting.png)
-  
-  - detect_fatigue: 피로도 측정해서 측정 결과를 보내주는 함수<br/>
-      + 필요 variable: image<br/>
-        - image: File / 온라인 회의 화면 이미지
-        
-    ![detect_fatigue](./sample_imgs/detect_fatigue.png)
-  
-  - summarize_screen: 공유된 화면의 내용을 정리해주는 함수<br/>
-      + 필요 variable: image, meeting_name<br/>
-        - image: File / 공유된 화면 이미지<br/>
-        - meeting_name: string / 회의명
-        
-    ![summarize_screen](./sample_imgs/summarize_screen.png)
+
 
 ### 3. Spring (프론트엔드)
 
