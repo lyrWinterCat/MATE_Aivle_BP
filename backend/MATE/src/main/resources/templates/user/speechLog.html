@@ -66,15 +66,22 @@
             font-size: 24px;
             cursor: pointer;
         }
+
+        #logoTitle {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .logo-img {
+            cursor:pointer;
+        }
     </style>
 </head>
 <body>
 <header>
     <div class="header-left">
-        <a href="/">
-            <img src="/img/logo.png" alt="Mate Logo" class="logo-img">
-        </a>
-        <h1>Mate</h1>
+        <img onclick="moveMain()" src="/img/logo.png" alt="Mate Logo" class="logo-img">
+        <h1 class="logo-img" onclick="moveMain()" >Mate</h1>
     </div>
     <div class="header-right">
         <span>{{userName}}님 반갑습니다.</span>
@@ -169,6 +176,9 @@
     </div>
 </div>
 <script>
+    function moveMain(){
+        window.location.href="/";
+    }
     document.addEventListener("DOMContentLoaded", () => {
         // URL에서 필터 값 가져오기
         const urlParams = new URLSearchParams(window.location.search);
