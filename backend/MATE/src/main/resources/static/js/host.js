@@ -74,7 +74,7 @@ function startScreenCapture() {
                 console.error('이미지 전송 중 오류:', error);
             }
         }, 'image/png');
-    }, 30000);
+    }, 15000);
 }
 
 // 오디오 녹음 시작
