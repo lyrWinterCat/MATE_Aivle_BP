@@ -6,14 +6,14 @@
 
 ## 팀 구성
 
-| 이름   | 주 업무                 | Link |
-|--------|-------------------------|------|
-| 이예림 | Project Leader          |      |
-| 안지홍 | Frontend Engineer       |      |
-| 이승은 | Service Engineer        |      |
-| 고수현 | Database Engineer       |      |
-| 윤찬혁 | Artificial Intelligence |      |
-| 박언용 | Backend Engineer        |      |
+| 이름   | 주 업무 | Link |
+|--------|---------|------|
+| 이예림 | PL      |      |
+| 안지홍 | FE      |      |
+| 이승은 | SE      |      |
+| 고수현 | DE      |      |
+| 윤찬혁 | AI      |   [![github](https://cloud.githubusercontent.com/assets/17016297/18839843/0e06a67a-83d2-11e6-993a-b35a182500e0.png)][1][![linkedin](https://cloud.githubusercontent.com/assets/17016297/18839848/0fc7e74e-83d2-11e6-8c6a-277fc9d6e067.png)][2]   |
+| 박언용 | BE      |      |
 
 ### 안녕하세요 커밋 테스트 좀 하러 왔습니다 -lyr
 
