@@ -104,7 +104,7 @@ OpenAI API Key를 ./fastAPI/my_openai_api.txt 에 저장
 
 Hugging Face **내용써야됨**
 
-#### 2. FastAPI 환경설정
+#### 2. FastAPI (백엔드)
 
 1. 가상환경 생성
    
@@ -129,10 +129,13 @@ pip install -r requirements.txt
 uvicorn main:app
 ```
 
-#### 3. Spring 및 FastAPI 서버 실행
+#### 3. Spring (프론트엔드)
+
+
 
 #### 4. 서비스
 
+[사용설명서](./HOWTOUSE.md)
 
 
 
