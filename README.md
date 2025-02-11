@@ -8,7 +8,7 @@
 
 ![demo_gif](./sample_imgs/demo_width600.gif)
 
-음성이 포함된 동영상은 다운받아주세요. [Full video](./sample_imgs/demo.mp4)
+음성이 포함된 동영상은 다운로드 후 시청 부탁드립니다. [Full video](./sample_imgs/demo.mp4)
 
 
 ## 🗓 개발 기간
@@ -25,7 +25,7 @@
 | 이예림 | PL      |  <a href="https://github.com/lyrWinterCat"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-181717.svg?&style=for-the-badge&logo=GitHub&logoColor=white"/>    |
 | 안지홍 | FE      |  <a href="https://github.com/dnwn129"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-181717.svg?&style=for-the-badge&logo=GitHub&logoColor=white"/>    |
 | 이승은 | SE      |  <a href="https://github.com/Greeense"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-181717.svg?&style=for-the-badge&logo=GitHub&logoColor=white"/>    |
-| 고수현 | DE      |  <a href="https://github.com/csj8566"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-181717.svg?&style=for-the-badge&logo=GitHub&logoColor=white"/>    |
+| 고수현 | DB      |  <a href="https://github.com/csj8566"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-181717.svg?&style=for-the-badge&logo=GitHub&logoColor=white"/>    |
 | 윤찬혁 | AI      |  <a href="https://github.com/ChanhyukYun"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-181717.svg?&style=for-the-badge&logo=GitHub&logoColor=white"/> |
 | 박언용 | BE      |  <a href="https://github.com/onionpark"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-181717.svg?&style=for-the-badge&logo=GitHub&logoColor=white"/>    |
 
@@ -111,3 +111,11 @@
 
 
 ## 🤔새로 배울 수 있었던 점
+
+- 웹 크롤링을 활용한 데이터 수집 및 이를 활용한 모델 학습
+
+- Spring과 FastAPI 서버 간 음성·이미지 송·수신 구현 방법과, 그 과정에서 발생한 다양한 에러 해결
+
+- 클라우드 지식을 활용하여 Azure DB를 사용해 로컬 개발 환경에서 데이터를 공통으로 사용
+
+- 단순 AI 서비스 모델 개발하는 것이 아닌, 웹 서비스에서 기초로 요구하는 사항을 직접 공부하고 실현
