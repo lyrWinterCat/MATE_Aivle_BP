@@ -110,10 +110,10 @@
 
 
 
-## Demo 시연
+## 📹Demo 시연
 
 ![demo_gif](./sample_imgs/demo_width600.gif)
 
-[Full video](./sample_imgs/demo.mp4)
+음성이 포함된 동영상은 다운받아주세요. [Full video](./sample_imgs/demo.mp4)
 
 ## 🤔새로 배울 수 있었던 점
