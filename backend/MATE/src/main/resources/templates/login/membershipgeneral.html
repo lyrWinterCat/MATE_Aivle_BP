@@ -321,6 +321,9 @@
         .input-error {
             border: 2px solid red !important;
         }
+        .logo-image {
+            cursor:pointer;
+        }
     </style>
 </head>
 <body>
@@ -328,8 +331,8 @@
     {{#errorMessage}}{{errorMessage}}{{/errorMessage}}
 </div>
 <div class="left-container">
-    <img src="/img/logo.png" alt="Mate Logo">
-    <h1>Mate</h1>
+    <img class="logo-image" src="/img/logo.png" alt="Mate Logo" onclick="moveMain()">
+    <h1 class="logo-image" onclick="moveMain()">Mate</h1>
     <p>쉽고 빠른 협업의 시작, Mate!</p>
     <div class="image">
         <img src="/img/login.png" alt="Collaboration">
