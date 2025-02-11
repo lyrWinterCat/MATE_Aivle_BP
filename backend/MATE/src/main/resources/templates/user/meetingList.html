@@ -14,10 +14,8 @@
 <body>
 <header>
     <div class="header-left">
-        <a href="/">
-            <img src="/img/logo.png" alt="Mate Logo" class="logo-img">
-        </a>
-        <h1>Mate</h1>
+        <img onclick="moveMain()" src="/img/logo.png" alt="Mate Logo" class="logo-img">
+        <h1 onclick="moveMain()" class="logo-img">Mate</h1>
     </div>
     <div class="header-right">
         <span>{{userName}}님 반갑습니다.</span>
@@ -105,6 +103,9 @@
     </div>
 </div>
 <script>
+    function moveMain(){
+        window.location.href="/";
+    }
     // 페이지가 재렌더링돼도 필터링 필드에 파라미터를 계속해서 바인딩
     document.addEventListener("DOMContentLoaded", () => {
         // 현재 URL의 page 파라미터를 가져옴

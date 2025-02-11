@@ -221,4 +221,6 @@ table th {
     background-color: #a4a5de;
     color:#444;
 }
-
+.logo-img {
+    cursor:pointer;
+}
