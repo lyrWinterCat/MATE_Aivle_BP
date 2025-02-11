@@ -114,6 +114,6 @@
 
 ![demo_gif](./sample_imgs/demo_width600.gif)
 
-[Full video](https://github.com/lyrWinterCat/MATE_Aivle_BP/sample_imgs/demo.mp4)
+[Full video](./sample_imgs/demo.mp4)
 
 ## 🤔새로 배울 수 있었던 점
