@@ -41,8 +41,9 @@ GPU 서버를 사용한 서비스 활용에 관해서는 README.md 파일의 사
 
 ## 세부 설명
 
-이미지는 다음과 같이 작성하면 올라갑니다.
-![root](./how_to_use_imgs/root.png)
+이미지는 다음과 같이 작성하면 올라갑니다.<br/>
+파일명은 띄어쓰기 없이 생성해주세요.<br/>
+![root](./how_to_use_imgs/root imgs.png)
 
 #### 0. Root page
 
