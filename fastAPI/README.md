@@ -32,4 +32,5 @@ huggingface의 토큰은 일단 발급을 받아야하는데 아래와 같은 �
 https://kjh1337.tistory.com/3
 
 그 후, https://huggingface.co/pyannote/speaker-diarization-3.0와 같은 페이지에서 모델 사용 권한을 각각 받아야합니다. 
+
 speaker-diarization-3.0, segmentation, embedding 등의 모델에 권한을 받아야합니다. 
