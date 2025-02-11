@@ -98,9 +98,36 @@
 
 ## ⚙ 사용 방법
 
-#### 1. FastAPI 환경설정
+#### 1. API 키 설정
 
-#### 2. API 키 설정
+OpenAI API Key를 ./fastAPI/my_openai_api.txt 에 저장
+
+Hugging Face **내용써야됨**
+
+#### 2. FastAPI 환경설정
+
+1. 가상환경 생성
+   
+```(CMD)
+conda create -y -n fastapi python=3.12.5
+```
+
+2. 가상환경 활성화
+
+```(CMD)
+conda activate fastapi
+```
+
+3. 필요 라이브러리 설치
+```(CMD)
+cd fastAPI
+pip install -r requirements.txt
+```
+
+4. FastAPI 실행
+```(CMD)
+uvicorn main:app
+```
 
 #### 3. Spring 및 FastAPI 서버 실행
 
