@@ -68,11 +68,11 @@
 
 |   |          **AI 기술**         | **세부 내용**                                                        |
 |---|:----------------------------:|----------------------------------------------------------------------|
-| 1 | Faster-Whisper (Pre-trained) | - Speech-to-Text (STT) <br/>- API 기반 Whisper 대비 약 3배 빠른 추론 속도 |
-| 2 |      GPT-4o (OpenAI API)     | - 텍스트 요약 <br/>- 이미지 요약                                          |
-| 3 |    KoELECTRA (Fine-tuned)    | - 회의 음성 텍스트 중 독성 표현 (욕설, 비윤리적 발언) 탐지           |
-| 4 |     Pyannote (Fine-tuned)    | - 회의 중 발화자 식별                                                |
-| 5 |      YOLO11 (Fine-tuned)     | - 회의 참여자 얼굴 기반 피로 탐지                                    |
+| 1 | Faster-Whisper<br/>(Pre-trained) | - Speech-to-Text (STT) <br/>- API 기반 Whisper 대비 약 3배 빠른 추론 속도 |
+| 2 |      GPT-4o<br/>(OpenAI API)     | - 텍스트 요약 <br/>- 이미지 요약                                          |
+| 3 |    KoELECTRA<br/> (Fine-tuned)    | - 회의 음성 텍스트 중 독성 표현 (욕설, 비윤리적 발언) 탐지           |
+| 4 |     Pyannote<br/> (Fine-tuned)    | - 회의 중 발화자 식별                                                |
+| 5 |      YOLO11<br/> (Fine-tuned)     | - 회의 참여자 얼굴 기반 피로 탐지                                    |
 
 
 ## 📈 기대효과
