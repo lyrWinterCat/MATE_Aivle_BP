@@ -114,14 +114,14 @@
 
 #### 0. Root page
 
-![root](./sample_imgs/0. root.png)
+![root](./sample_imgs/0.root.png)
 
 #### 0-1. About Us page
 
-![about_us](./sample_imgs/0-1. about_us.png)
+![about_us](./sample_imgs/0-1.about_us.png)
 
 #### 0-2. Error page
 
-![error](./sample_imgs/0-2. error.png)
+![error](./sample_imgs/0-2.error.png)
 
 ## 🤔새로 배울 수 있었던 점
