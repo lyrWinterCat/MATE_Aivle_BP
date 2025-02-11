@@ -116,12 +116,16 @@
 
 ![root](./sample_imgs/0.root.png)
 
-#### 0-1. About Us page
+#### 1. SignIn page
 
-![about_us](./sample_imgs/0-1.about_us.png)
+![singIn](./sample_imgs/1.signin.png)
 
-#### 0-2. Error page
+#### 2. SignUp page
 
-![error](./sample_imgs/0-2.error.png)
+![signUp](./sample_imgs/2-1.signUp.png)
+
+#### 3. User-side main page
+
+![userMain](./sample_imgs/3.userMain.png)
 
 ## 🤔새로 배울 수 있었던 점
