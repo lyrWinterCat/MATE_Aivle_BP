@@ -43,6 +43,9 @@ GPU 서버를 사용한 서비스 활용에 관해서는 README.md 파일의 사
 ![root](./how_to_use_imgs/root imgs.png)
 
 #### 0. Root page
+![image](https://github.com/user-attachments/assets/c0864077-f0ae-4689-ba2b-3bff27e2d6f2)
+1) 서비스 사용 방법 안내창으로 이동
+2) 프로그램 개발자 소개
 
 
 
