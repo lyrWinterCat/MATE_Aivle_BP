@@ -106,7 +106,7 @@ OpenAI API Key를 ./fastAPI/my_openai_api.txt 에 저장
 
 [speaker-diarization-3.0](https://huggingface.co/pyannote/speaker-diarization-3.0), [segmentation](https://huggingface.co/pyannote/segmentation), [embedding](https://huggingface.co/pyannote/embedding)의 모델 사용 권한을 각각 받기
 
-### 2. FastAPI (백엔드)
+### 2. FastAPI
 
 &emsp;**1. 가상환경 생성**
    
@@ -164,7 +164,7 @@ uvicorn main:app
     ![summarize_meeting](./sample_imgs/summarize_meeting.png)
 
 
-### 3. Spring (프론트엔드)
+### 3. Spring
 
 1. IntelliJ 실행 후 ./backend/MATE 를 프로젝트 폴더로 프로젝트 열기
 
