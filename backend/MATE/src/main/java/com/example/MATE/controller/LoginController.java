@@ -79,11 +79,12 @@ public class LoginController {
         }
 
         //구글 API 인증 성공 후 회원가입
-        String signupEmail = (String) request.getAttribute("signupEmail");
-        String signupName = (String) request.getAttribute("signupName");
-        if(signupEmail != null && signupName != null){
-            model.addAttribute("signupEmail",signupEmail);
-            model.addAttribute("signupName",signupName);
+        String signupEmail = (String) request.getParameter("signupEmail");
+        String signupName = (String) request.getParameter("signupName");
+        if (signupEmail != null && !signupEmail.trim().isEmpty() &&
+                signupName != null && !signupName.trim().isEmpty()) {
+            model.addAttribute("signupEmail", signupEmail);
+            model.addAttribute("signupName", signupName);
         }
 
         return "/login/membershipgeneral";
@@ -91,7 +92,7 @@ public class LoginController {
 
     //회원가입
     @PostMapping("/signUp")
-    public String signup(@ModelAttribute("user")UserDto userDto,
+    public String signup(@ModelAttribute("user") UserDto userDto,
                          RedirectAttributes redirectAttributes,
                          HttpSession session){
         System.out.println(">>> [LoginController] 회원가입");
