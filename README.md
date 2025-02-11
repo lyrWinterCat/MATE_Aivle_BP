@@ -118,7 +118,7 @@
 
 #### 1. SignIn page
 
-![singIn](./sample_imgs/1.signin.png)
+![singIn](./sample_imgs/1.signIn.png)
 
 #### 2. SignUp page
 
