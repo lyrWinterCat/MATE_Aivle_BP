@@ -11,8 +11,13 @@
         width: 80%;
         height: auto;
         display: block; /* 이미지가 중앙 정렬되도록 */
-        margin: 20px auto; /* 상하 여백 추가 및 중앙 정렬 */
+        margin: -90px auto; /* 상하 여백 추가 및 중앙 정렬 */
     }
+
+    body {
+        overflow: hidden;
+    }
+
 </style>
 <body>
 <header>
@@ -23,8 +28,8 @@
         <h1>Mate</h1>
     </div>
     <div class="header-right">
-        <form action="javascript:history.back()" style="display:inline;">
-            <button type="button" class="nav-button">뒤로가기</button>
+        <form action="/user/userMain" method="get" style="display:inline;">
+            <button type="submit" class="nav-button">메인으로</button>
         </form>
     </div>
 </header>
