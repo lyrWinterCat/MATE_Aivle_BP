@@ -18,7 +18,7 @@ function captureShareScreen(){
         formData.append('meeting_name', meetingName);
 
         try{
-            const response = await fetch('https://meetingmate.site:3000/summarize_screen', {
+            const response = await fetch('https://mate-fastapi-hxaybhbzakhvfvhf.koreacentral-01.azurewebsites.net/summarize_screen', {
                 method: 'POST',
                 body: formData
             });
