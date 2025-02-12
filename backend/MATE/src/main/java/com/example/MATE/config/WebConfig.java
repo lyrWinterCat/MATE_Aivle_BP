@@ -12,7 +12,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("*")  // 여기를 변경
+                //.allowedOriginPatterns("*")  // 여기를 변경
+                .allowedOrigins(
+                    "https://meetingmate.site:3000",
+                    "https://mate-fastapi-hxaybhbzakhvfvhf.koreacentral-01.azurewebsites.net"
+                )
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true);
