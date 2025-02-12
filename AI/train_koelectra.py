@@ -285,22 +285,3 @@ if __name__ == "__main__":
         model = AutoModelForSequenceClassification.from_pretrained(save_fp)
         tokenizer = AutoTokenizer.from_pretrained(save_fp)
         eval(model, tokenizer, device, args)
-        # extra_sample_txt = ['자네 옷차림이 그게 뭔가',
-        #                     '이걸 회의자료라고 만들어왔어',
-        #                     '됐어 꺼져',
-        #                     '자네는 정말 도움이 1도 안되는구만',
-        #                     '정말 잘했어. 그래 그거야.',
-        #                     '개발자님 이거 오늘까지 되나요?',
-        #                     '이걸 지금 코드라고 짜왔어요?',
-        #                     '아냐 넌 지금 아무것도 이해하지 못했어',
-        #                     '됐다 말을 말자',
-        #                     '너 진짜 이 개념 이해하고 쓰는 거 맞아?',
-        #                     '넌 이것도 못 알아듣냐 멍청한 새끼야',
-        #                     '씨발 그게 무슨 말도 안 되는 소리야',
-        #                     '넌 정말 최고야',
-        #                     '아까 18페이지에서 pagination 기능 설명해주신거, 다시 설명해주실 수 있을까요?']
-        # preds, probs = predict_txts(extra_sample_txt, model, tokenizer, device)
-        # for txt, pred, prob in zip(extra_sample_txt, preds, probs):
-        #     print(f"\n문장: {txt}")
-        #     print(f'예측된 클래스: {pred}')
-        #     print(f'클래스별 확률: {prob}\n')
