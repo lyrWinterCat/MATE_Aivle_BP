@@ -47,7 +47,7 @@ function startScreenCapture() {
             formData.append('image', blob, sanitizedFilename);
 
             try {
-                const response = await fetch('http://121.166.170.167:3000/detect_fatigue', {
+                const response = await fetch('https://meetingmate.site:3000/detect_fatigue', {
                     method: 'POST',
                     body: formData
                 });
@@ -234,7 +234,7 @@ async function saveAudioToWav(chunks) {
 
 
         try {
-            const response = await fetch('http://121.166.170.167:3000/summarize_meeting', {
+            const response = await fetch('https://meetingmate.site:3000/summarize_meeting', {
                 method: 'POST',
                 body: formData
             });
