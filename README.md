@@ -10,6 +10,15 @@
 
 음성이 포함된 동영상은 다운로드 후 시청 부탁드립니다. [Full video](./sample_imgs/demo.mp4)
 
+<br/>
+
+## 실제 웹 서비스 제공 (~2025.02.25)
+
+내부 사정으로 인해 상기 기간보다 조기에 서비스가 중단될 수 있습니다.
+
+웹 서비스 링크: [MATE](https://mate-spring02-apfmbwa0hpg4e8aa.koreacentral-01.azurewebsites.net/)
+
+<br/>
 
 ## 🗓 개발 기간
 
