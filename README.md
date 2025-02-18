@@ -18,6 +18,18 @@
 
 웹 서비스 링크: [MATE](https://mate-spring02-apfmbwa0hpg4e8aa.koreacentral-01.azurewebsites.net/)
 
+<br>🧑‍💻 유저 계정 예시
+
+아이디: yelim@gmail.com
+
+비밀번호: 1234
+
+<br>🛡️ 관리자 계정 예시
+
+아이디: admin@gmail.com
+
+비밀번호: 11
+
 <br/>
 
 ## 🗓 개발 기간
