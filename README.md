@@ -8,7 +8,7 @@
 
 ![demo_gif](./sample_imgs/demo_width600.gif)
 
-음성이 포함된 동영상은 다운로드 후 시청 부탁드립니다. [Full video](./sample_imgs/demo.mp4)
+음성이 포함된 동영상은 유튜브에서 시청 가능합니다. [Full video](https://www.youtube.com/watch?v=W0DUKwzRiP4)
 
 <br/>
 
