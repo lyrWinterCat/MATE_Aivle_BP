@@ -8,7 +8,7 @@
 
 ![demo_gif](./sample_imgs/demo_width600.gif)
 
-음성이 포함된 동영상은 유튜브에서 시청 가능합니다. [Demo Full video](https://www.youtube.com/watch?v=W0DUKwzRiP4)
+음성이 포함된 동영상은 유튜브에서 시청 가능합니다. [Demo Full video](https://www.youtube.com/watch?v=W0DUKwzRiP4) <br>
 발표 영상이 궁금하다면 다음 링크를 클릭해주세요. [Presentation video](https://www.youtube.com/watch?v=DZEi7-tHVmk)
 
 ## 📝 빅프로젝트 발표회 후기
