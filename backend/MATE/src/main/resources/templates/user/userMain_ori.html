@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mate Meeting</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(90deg, #5b5fc7, #6B2399);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-img {
+            width: 80px;
+            height: 80px;
+        }
+
+        .logo-text {
+            color: white;
+            font-size: 62px;  /* Mate 글자만 크기 증가 */
+            font-weight: bold;
+        }
+
+        .nav-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .welcome-text {
+            color: black;
+            font-size: 24px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-button {
+            padding: 10px 25px;
+            background-color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* 전체 화면 정렬 */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100%;
+            padding-top: 30px;
+        }
+
+        /* 카드 스타일 */
+        .meeting-card {
+            background: white;
+            padding: 60px 30px 30px;
+            border-radius: 12px;
+            border:2px solid linear-gradient(90deg, #5b5fc7, #6B2399);
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
+            width: 500px;
+            position: relative;
+            overflow: hidden; /* 내부 요소가 넘치는 것 방지 */
+            margin-top:1vh;
+        }
+
+        /* 탭 버튼 컨테이너 - 카드 내부로 이동 */
+        .meeting-header {
+            display: flex;
+            width: 100%; /* 카드 전체 너비 차지 */
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* 탭 버튼 기본 스타일 */
+        .tab-button {
+            flex: 1; /* 두 개의 버튼이 동일한 너비 차지 */
+            text-align: center;
+            background-color: #a2a6bd;
+            color: white;
+            border: 1px solid white;
+            padding: 12px 0;
+            border-radius: 10px 10px 0 0; /* 위쪽만 둥글게 */
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .tab-button:first-child {
+            border-radius: 10px 0 0 0; /* 왼쪽 상단만 둥글게 */
+        }
+        .tab-button:last-child {
+            border-radius: 0 10px 0 0; /* 오른쪽 상단만 둥글게 */
+        }
+        .tab-button.active {
+            background: white;
+            color: black;
+            border-bottom: none; /* 아래쪽 테두리 없앰 */
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-top: 3px;
+            z-index: 10;
+        }
+        .input-label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .input-field {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        /* 접속 버튼 */
+        .connect-button {
+            background: linear-gradient(90deg, #5b5fc7, #6B2399);
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 19px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+        .connect-button:hover {
+            background:#3b3e8f;
+        }
+        /* 라디오 그룹 */
+        .radio-groups {
+            display: flex;
+            justify-content: space-between;
+            margin-top:2px;
+        }
+        .radio-groups2 {
+            justify-content: space-between;
+            margin-top:2px;
+            margin-bottom:10px;
+        }
+        .radio-content {
+            display:flex;
+        }
+        .radio-content label {
+            width:50%;
+            justify-content: center;
+            font-size:20px;
+            font-weight:bold;
+        }
+        /* 라디오 버튼 박스 */
+        .radio-container {
+            background: #e6e3fc;
+            padding-right: 20px;
+            padding-left:20px;
+            width: 30%;
+            padding-bottom:4px;
+        }
+        .radio-container-mode {
+            background: #e6e3fc;
+            padding-right: 20px;
+            padding-left:20px;
+            box-sizing:border-box;
+            padding-top:1px;
+            border-radius : 10px;
+            margin-left:4px;
+            margin-right:4px;
+            padding-bottom:4px;
+        }
+        .radio-container-mode .radio-title{
+            text-align:center;
+            background:#564fb0;
+            border-radius:4px;
+            color:white;
+            margin-top:10px;
+            padding-top:2px;
+            padding-bottom:2px;
+        }
+        .radio-container .radio-title {
+            text-align:center;
+            background:#564fb0;
+            border-radius:4px;
+            color:white;
+            margin-top:12px;
+            padding-top:2px;
+            padding-bottom:2px;
+        }
+        .radio-container:first-child {
+            border-radius: 10px 0 0 10px;
+            margin-left:3px;
+        }
+        .radio-container:last-child {
+            border-radius: 0 10px 10px 0;
+            margin-right:3px;
+        }
+        .radio-title.main {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .radio-title.sub {
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .radio-option input {
+            width: 18px;
+            height: 18px;
+            accent-color: #5b5fc7; /* 체크 표시 보라색 */
+        }
+        /* Select Box 기본 스타일 */
+        .select-field {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #5b5fc7; /* 보라색 테두리 */
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            outline: none;
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            display:none;
+        }
+        .input-field{
+            border: 2px solid #5b5fc7; /* 보라색 테두리 */
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        #meeingUrl-label-box{
+            width:100%;
+        }
+        #meetingUrl-input-select {
+            display:none;
+        }
+        .meeting-url-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 15px; /* 입력 필드와 버튼 사이 여백 추가 */
+        }
+
+        .meeting-url-input {
+            flex-grow: 1; /* 입력 필드가 가용 공간 최대한 활용 */
+            min-width: 0; /* 버튼 크기에 맞게 자동 조정 */
+        }
+
+        .meeting-select-button {
+            flex-shrink: 0; /* 버튼 크기 고정 */
+            width: 100px; /* 버튼 크기 설정 */
+            padding: 12px;
+            background-color: #5b5fc7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            white-space: nowrap; /* 버튼 크기 유지 */
+        }
+
+        .meeting-select-button:hover {
+            background-color: #3b3e8f;
+        }
+
+        #meeting-select-button {
+            display:block;
+        }
+        #meeting-select-button.checkedUrl {
+            display:block;
+            background-color: #3b3e8f;
+        }
+        .radio-span:hover {
+            text-decoration: underline;
+            text-decoration-color:#7803ff;
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="logo-section" onclick="moveMain()">
+        <img src="/img/logo.png" alt="Mate Logo" class="logo-img">
+        <span class="logo-text">Mate</span>
+    </div>
+    <div class="nav-section">
+        <span class="welcome-text">{{#userName}}{{userName}}{{/userName}}님 반갑습니다.</span>
+        <div class="nav-buttons">
+            <form action="/user/meetingList" method="get" style="display:inline;">
+                <button type="submit" class="nav-button">마이페이지</button>
+            </form>
+            <form action="/user/speechLog" method="get" style="display:inline;">
+                <button type="submit" class="nav-button">로그조회</button>
+            </form>
+            <form action="/user/userFix" method="get" style="display:inline;">
+                <button type="submit" class="nav-button">정정게시판</button>
+            </form>
+            <form action="/signOut" method="post" style="display:inline;">
+                <button type="submit" class="nav-button">로그아웃</button>
+            </form>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <input type="hidden" name="userId" id="userId" value="{{userId}}">
+    <div class="meeting-card">
+        <!-- 상단 탭 버튼 -->
+        <div class="meeting-header">
+            <button id="newRoom" class="tab-button active">새로 참가하기</button>
+            <button id="continueRoom" class="tab-button">이어 참가하기</button>
+        </div>
+        <!-- 라디오 버튼 그룹 -->
+        <div class="radio-groups2">
+            <div class="radio-container-mode">
+                <h4 class="radio-title main" id="meetingMode">회의 모드</h4>
+                <div class="radio-content">
+                    <label class="radio-option">
+                        <input type="radio" name="mode" id="client" value="client">
+                        <span class="radio-span">일반</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="mode" id="host" value="host" checked>
+                        <span class="radio-span">기록자용</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="radio-groups">
+            <div class="radio-container">
+                <h4 class="radio-title sub">실시간<br>피로도 탐지 기능</h4>
+                <label class="radio-option">
+                    <input type="radio" name="tired" id="tired-on" value="on" checked>
+                    <span class="radio-span">ON</span>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="tired" id="tired-off" value="off">
+                    <span class="radio-span">OFF</span>
+                </label>
+            </div>
+            <div class="radio-container">
+                <h4 class="radio-title sub">실시간<br>요약 기능</h4>
+                <label class="radio-option">
+                    <input type="radio" name="summary" id="summary-on" value="on" checked>
+                    <span class="radio-span">ON</span>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="summary" id="summary-off" value="off" >
+                    <span class="radio-span">OFF</span>
+                </label>
+            </div>
+            <div class="radio-container">
+                <h4 class="radio-title sub">실시간<br>독성 탐지 기능</h4>
+                <label class="radio-option">
+                    <input type="radio" name="toxicity" id="toxicity-on" value="on"checked>
+                    <span class="radio-span">ON</span>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="toxicity" id="toxicity-off" value="off">
+                    <span class="radio-span">OFF</span>
+                </label>
+            </div>
+        </div>
+        <div class="form-group" id="meetingUrl">
+            <label class="input-label" id="meetingUrl-label">회의방 URL</label>
+            <div class="meeting-url-container">
+                <input type="text" class="input-field meeting-url-input" id="meetingUrl-input-new" value="" placeholder="회의방 URL을 입력하세요">
+                <button id="meeting-select-button" class="meeting-select-button" onclick="checkMeeting()">조회</button>
+            </div>
+            <input type="text" class="input-field" id="meetingUrl-input-select" value="" placeholder="회의방 URL을 입력하세요">
+        </div>
+        <!-- 회의 제목, URL 입력 -->
+        <div class="form-group" id="meetingTitle">
+            <label class="input-label" id="meetingTitle-label">회의 제목</label>
+            <input type="text" class="input-field" id="meetingTitle-input" placeholder="회의 제목을 입력하세요">
+            <!-- 드롭다운 선택 박스 (처음에는 숨김) -->
+            <select class="select-field" id="meetingTitle-select">
+                <option value="" disabled selected>회의를 선택하세요</option>
+                <option value="회의1">회의 1</option>
+            </select>
+        </div>
+        <!-- 접속 버튼 -->
+        <div class="form-group">
+            <button type="submit" class="connect-button" onclick="connectMeeting()">접속</button>
+        </div>
+    </div>
+</main>
+</body>
+<script src="/js/userMain.js"></script>
+</html>
